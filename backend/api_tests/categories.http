@@ -1,0 +1,28 @@
+### List
+GET /api/categories HTTP/1.1
+Host: {{ host }}
+Authorization: {{token}}
+
+### create
+POST /api/categories HTTP/1.1
+Host: {{ host }}
+Authorization: {{token}}
+
+{
+    "name": "CatName"
+}
+
+### remove
+DELETE /api/categories/1 HTTP/1.1
+Host: {{ host }}
+Authorization: {{token}}
+
+
+### Update
+PATCH /api/categories/1 HTTP/1.1
+Host: {{ host }}
+Authorization: {{token}}
+
+{
+    "name": "CatName"
+}

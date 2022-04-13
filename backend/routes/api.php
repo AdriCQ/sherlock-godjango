@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -19,5 +20,20 @@ Route::prefix('users')->group(function () {
         Route::post('login', [UserController::class, 'login']);
         Route::patch('{id}', [UserController::class, 'updatePassword']);
         Route::delete('{id}', [UserController::class, 'remove']);
+    });
+});
+
+
+Route::middleware('auth:sanctum', function () {
+    /**
+     * -----------------------------------------
+     *	Categories
+     * -----------------------------------------
+     */
+    Route::prefix('categories', function () {
+        Route::get('', [CategoryController::class, 'list']);
+        Route::post('', [CategoryController::class, 'create']);
+        Route::patch('{id}', [CategoryController::class, 'update']);
+        Route::delete('{id}', [CategoryController::class, 'remove']);
     });
 });

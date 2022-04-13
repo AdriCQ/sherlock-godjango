@@ -86,7 +86,7 @@ class UserController extends Controller
             'password' => ['required', 'string', 'confirmed']
         ]);
         if ($validator->fails()) {
-            return $this->sendError($validator->errors()->toArray());
+            return $this->sendResponse($validator->errors(), 'Verifique los datos enviados', 400);
         }
         $validator = $validator->validate();
         $user = User::query()->find($id);

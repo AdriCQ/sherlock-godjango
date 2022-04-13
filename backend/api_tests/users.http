@@ -1,0 +1,38 @@
+### Create
+POST /api/users HTTP/1.1
+Host: {{ host }}
+Authorization: {{token}}
+
+{
+    "name": "userName",
+    "email": "admin@admin.com",
+    "phone": "55115511",
+    "password": "admin",
+    "password_confirmation": "admin"
+}
+
+### Auth Login
+POST /api/users/login HTTP/1.1
+Host: {{ host }}
+
+{
+    "email": "admin@admin.com",
+    "password": "admin"
+}
+
+### Get
+GET /api/users HTTP/1.1
+Host: {{ host }}
+Authorization: {{token}}
+
+
+### Update password
+PATCH /api/users/1 HTTP/1.1
+Host: {{ host }}
+Authorization: {{token}}
+
+{
+    "current_password": "password",
+    "password": "password",
+    "password_confirmation": "password"
+}

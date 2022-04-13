@@ -11,6 +11,36 @@ use Illuminate\Support\Facades\Validator;
 class UserController extends Controller
 {
     /**
+     * Create
+     * @param Request request
+     * @return Illuminate\Http\JsonResponse
+     */
+    public function create(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'name' => ['required', 'string'],
+            'email' => ['required', 'email', 'unique:users'],
+            'phone' => ['nullable', 'string'],
+            'password' => ['required', 'string', 'confirmed'],
+        ]);
+        if ($validator->fails()) {
+            return $this->sendResponse($validator->errors()->toArray(), 'Verifique los datos enviados', 400);
+        }
+        $validator = $validator->validate();
+        $user = new User($validator);
+        $user->save();
+        return $this->sendResponse($user, 'Usuario creado', 201);
+    }
+
+    /**
+     * Current
+     * @return Illuminate\Http\JsonResponse
+     */
+    public function current()
+    {
+        return $this->sendResponse(auth()->user());
+    }
+    /**
      * login
      * @param Request request
      * @return Illuminate\Http\JsonResponse
@@ -34,11 +64,22 @@ class UserController extends Controller
     }
 
     /**
+     * Remove
+     * @param int $id
+     * @return Illuminate\Http\JsonResponse
+     */
+    public function remove(int $id)
+    {
+        return  User::find($id) && User::find($id)->delete() ? $this->sendResponse() : $this->sendResponse(null, 'Usuario no encontrado', 400);
+    }
+
+    /**
      * Update Password
+     * @param int id
      * @param Request request
      * @return Illuminate\Http\JsonResponse
      */
-    public function updatePassword(Request $request)
+    public function updatePassword(int $id, Request $request)
     {
         $validator = Validator::make($request->all(), [
             'current_password' => ['required', 'string'],
@@ -48,7 +89,8 @@ class UserController extends Controller
             return $this->sendError($validator->errors()->toArray());
         }
         $validator = $validator->validate();
-        $user = User::query()->find(auth()->id());
+        $user = User::query()->find($id);
+        if (!$user) return $this->sendAuthError();
         if (!Hash::check($validator['current_password'], $user->password))
             return $this->sendAuthError();
         $user->password = bcrypt($validator['password']);

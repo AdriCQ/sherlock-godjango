@@ -13,6 +13,8 @@ class AssignmentJoin extends Model
     protected $guarded = ['id'];
     public $timestamps = false;
 
+    public static $STATUS = ['waiting', 'canceled', 'completed'];
+
 
     public function assignment()
     {

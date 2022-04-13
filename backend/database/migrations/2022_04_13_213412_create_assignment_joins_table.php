@@ -17,8 +17,7 @@ class CreateAssignmentJoinsTable extends Migration
         Schema::create('assignment_joins', function (Blueprint $table) {
             $table->id();
             $table->string('checkpoint');
-            // TODO: Check if required split column into 'completed' & 'onway'
-            $table->boolean('completed')->default(false);
+            $table->unsignedTinyInteger('status')->default(0);
             $table->timestamp('initiated_ts');
             $table->timestamp('ended_ts')->nullable();
         });

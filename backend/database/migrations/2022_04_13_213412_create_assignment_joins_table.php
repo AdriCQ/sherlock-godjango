@@ -18,6 +18,7 @@ class CreateAssignmentJoinsTable extends Migration
             $table->id();
             $table->string('checkpoint');
             $table->unsignedTinyInteger('status')->default(0);
+            $table->string('contact')->nullable();
             $table->timestamp('initiated_ts');
             $table->timestamp('ended_ts')->nullable();
         });

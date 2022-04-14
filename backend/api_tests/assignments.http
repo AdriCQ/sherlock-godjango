@@ -39,5 +39,6 @@ Authorization: {{token}}
     "observations": "Assignment observations",
     "event": "Assignment evebt",
     "state": "Assignment state",
-    "agent_id": 2
+    "agent_id": 2,
+    "contact": "contact"
 }

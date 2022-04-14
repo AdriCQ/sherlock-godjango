@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AgentController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
@@ -31,5 +32,15 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('', [CategoryController::class, 'create']);
         Route::patch('{id}', [CategoryController::class, 'update']);
         Route::delete('{id}', [CategoryController::class, 'remove']);
+    });
+
+    /**
+     * -----------------------------------------
+     *	Agents
+     * -----------------------------------------
+     */
+    Route::prefix('agents')->group(function () {
+        Route::post('', [AgentController::class, 'create']);
+        Route::get('{id}', [AgentController::class, 'find']);
     });
 });

@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AgentController;
+use App\Http\Controllers\AssignmentController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
@@ -45,5 +46,18 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('{id}', [AgentController::class, 'find']);
         Route::delete('{id}', [AgentController::class, 'remove']);
         Route::patch('{id}', [AgentController::class, 'update']);
+    });
+
+    /**
+     * -----------------------------------------
+     *	Assignments
+     * -----------------------------------------
+     */
+    Route::prefix('assignments')->group(function () {
+        Route::get('', [AssignmentController::class, 'list']);
+        Route::post('', [AssignmentController::class, 'create']);
+        Route::get('{id}', [AssignmentController::class, 'find']);
+        Route::delete('{id}', [AssignmentController::class, 'remove']);
+        Route::patch('{id}', [AssignmentController::class, 'update']);
     });
 });

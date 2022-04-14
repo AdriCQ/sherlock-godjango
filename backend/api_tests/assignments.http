@@ -1,0 +1,36 @@
+### Create
+POST /api/assignments HTTP/1.1
+Host: {{ host }}
+Authorization: {{token}}
+
+{
+    "name": "agentName",
+    "description": "AssignmentDescription",
+    "observations": "Assignment observations",
+    "event": "Assignment evebt",
+    "state": "Assignment state"
+}
+
+### FIND
+GET /api/assignments/1 HTTP/1.1
+Host: {{ host }}
+Authorization: {{token}}
+
+### Remove
+DELETE /api/assignments/1 HTTP/1.1
+Host: {{ host }}
+Authorization: {{token}}
+
+### Update
+PATCH /api/assignments/1 HTTP/1.1
+Host: {{ host }}
+Authorization: {{token}}
+
+{
+    "name": "agentName",
+    "description": "AssignmentDescription",
+    "observations": "Assignment observations",
+    "event": "Assignment evebt",
+    "state": "Assignment state",
+    "agent_id": 2
+}

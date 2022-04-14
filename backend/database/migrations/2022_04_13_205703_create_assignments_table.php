@@ -24,7 +24,7 @@ class CreateAssignmentsTable extends Migration
         });
 
         Schema::table('assignments', function (Blueprint $table) {
-            $table->foreignIdFor(Agent::class);
+            $table->foreignIdFor(Agent::class)->nullable();
         });
     }
 

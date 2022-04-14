@@ -21,10 +21,11 @@ class CreateAssignmentsTable extends Migration
             $table->string('observations');
             $table->string('event');
             $table->string('state');
+            $table->unsignedBigInteger('agent_id')->nullable();
         });
 
         Schema::table('assignments', function (Blueprint $table) {
-            $table->foreignIdFor(Agent::class)->nullable();
+            $table->foreign('agent_id')->references('id')->on('agents')->onDelete('cascade');
         });
     }
 

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Agent;
 use App\Models\Assignment;
+use App\Models\AssignmentJoin;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -22,6 +23,10 @@ class AssignmentController extends Controller
             'observations' => ['required', 'string'],
             'event' => ['required', 'string'],
             'state' => ['required', 'string'],
+            'joins' => ['required', 'array'],
+            'joins.*.checkpoint' => ['required', 'string'],
+            'joins.*.status' => ['required', 'in:' . implode(',', AssignmentJoin::$STATUS)],
+            'joins.*.initiated_ts' => ['required', 'string'],
         ]);
         if ($validator->fails()) {
             return $this->sendResponse($validator->errors(), 'Verifique los datos enviados', 400);
@@ -29,9 +34,12 @@ class AssignmentController extends Controller
         $validator = $validator->validate();
         // if (!Agent::query()->first()) return $this->sendResponse(null, 'Necesita un agente', 400);
         // $validator['agent_id'] = Agent::query()->first()->id;
+        $joins = $validator['joins'];
+        unset($validator['joins']);
         $ass = new Assignment($validator);
         $ass->save();
-        return $this->sendResponse($ass, 'Asignacion Creada', 201);
+        $ass->joins()->createMany($joins);
+        return $this->sendResponse(Assignment::query()->where('id', $ass->id)->with('joins')->first(), 'Asignacion Creada', 201);
     }
 
     /**

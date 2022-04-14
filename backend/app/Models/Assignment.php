@@ -11,6 +11,7 @@ class Assignment extends Model
 
     protected $table = 'assignments';
     protected $guarded = ['id'];
+    public $timestamps = false;
 
 
     /**
@@ -24,7 +25,7 @@ class Assignment extends Model
         return $this->belongsTo(Agent::class);
     }
 
-    public function joints()
+    public function joins()
     {
         return $this->hasMany(AssignmentJoin::class);
     }

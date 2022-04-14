@@ -5,7 +5,7 @@ Authorization: {{token}}
 
 {
     "name": "agentName",
-    "email": "agent@email.com",
+    "email": "a@email.com",
     "phone": "55887799",
     "address": "Agent Address",
     "others": "Others",
@@ -18,3 +18,23 @@ Authorization: {{token}}
 GET /api/agents/1 HTTP/1.1
 Host: {{ host }}
 Authorization: {{token}}
+
+### Remove
+DELETE /api/agents/1 HTTP/1.1
+Host: {{ host }}
+Authorization: {{token}}
+
+### Update
+PATCH /api/agents/1 HTTP/1.1
+Host: {{ host }}
+Authorization: {{token}}
+
+{
+    "name": "agentName",
+    "phone": "55887799",
+    "address": "Agent Address",
+    "others": "Others",
+    "user_name": "AgentUserName",
+    "password": "AgentPassword",
+    "categories": [3,2]
+}

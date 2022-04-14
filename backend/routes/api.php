@@ -40,7 +40,10 @@ Route::middleware('auth:sanctum')->group(function () {
      * -----------------------------------------
      */
     Route::prefix('agents')->group(function () {
+        Route::get('', [AgentController::class, 'list']);
         Route::post('', [AgentController::class, 'create']);
         Route::get('{id}', [AgentController::class, 'find']);
+        Route::delete('{id}', [AgentController::class, 'remove']);
+        Route::patch('{id}', [AgentController::class, 'update']);
     });
 });

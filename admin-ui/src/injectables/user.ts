@@ -1,7 +1,7 @@
 import { LocalStorage } from 'quasar';
 import { $api } from 'src/boot/axios';
 import { notificationHelper } from 'src/helpers';
-import { IAuthRequest, IAuthResponse, IUserProfile } from 'src/types';
+import { IApiResponse, IAuthRequest, IAuthResponse, IUserProfile } from 'src/types';
 import { InjectionKey, ref } from 'vue';
 /**
  * UserInjectable
@@ -43,9 +43,9 @@ class UserInjectable {
    */
   async login(login: IAuthRequest) {
     try {
-      const resp = await $api.post<IAuthResponse>('users/login', login);
-      this.api_token = resp.data.api_token;
-      this.profile = resp.data.profile;
+      const resp = await $api.post<IApiResponse<IAuthResponse>>('users/login', login);
+      this.api_token = resp.data.data.api_token;
+      this.profile = resp.data.data.profile;
       this.save();
       return resp.data;
     } catch (error) {

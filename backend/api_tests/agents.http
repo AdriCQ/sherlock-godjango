@@ -11,7 +11,11 @@ Authorization: {{token}}
     "others": "Others",
     "user_name": "AgentUserName",
     "password": "AgentPassword",
-    "categories": [3,2]
+    "categories": [3,2],
+    "coordinate": {
+        "lat":0,
+        "lng":0
+    }
 }
 
 ### FIND
@@ -36,5 +40,9 @@ Authorization: {{token}}
     "others": "Others",
     "user_name": "AgentUserName",
     "password": "AgentPassword",
-    "categories": [3,2]
+    "categories": [3,2],
+    "coordinate": {
+        "lat":0,
+        "lng":0
+    }
 }

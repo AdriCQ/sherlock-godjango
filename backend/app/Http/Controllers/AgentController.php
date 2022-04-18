@@ -25,6 +25,9 @@ class AgentController extends Controller
             'user_name' => ['required', 'string'],
             'password' => ['required', 'string'],
             'categories' => ['required', 'array'],
+            'coordinate' => ['required', 'array'],
+            'coordinate.lat' => ['required', 'numeric'],
+            'coordinate.lng' => ['required', 'numeric'],
             'categories.*' => ['required', 'integer'],
         ]);
         if ($validator->fails()) {
@@ -95,6 +98,9 @@ class AgentController extends Controller
             'password' => ['nullable', 'string'],
             'categories' => ['nullable', 'array'],
             'categories.*' => ['nullable', 'integer'],
+            'coordinate' => ['nullable', 'array'],
+            'coordinate.lat' => ['nullable', 'numeric'],
+            'coordinate.lng' => ['nullable', 'numeric'],
         ]);
         if ($validator->fails()) {
             return $this->sendResponse($validator->errors(), 'Verifique los datos enviados', 400);
@@ -104,7 +110,7 @@ class AgentController extends Controller
         if (!$agent) return $this->sendResponse(null, 'No encontrado', 400);
         $catArray = $validator['categories'];
         unset($validator['categories']);
-        Agent::query()->update($validator);
+        Agent::query()->where('id', $id)->update($validator);
         $agent = Agent::find($id);
         $agent->path =
             'agents/' . hash('sha256', $agent->user_name . $agent->password) . '.sd';

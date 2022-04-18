@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Agent;
 use App\Models\Assignment;
+use App\Models\AssignmentCheckpoint;
 use App\Models\AssignmentJoin;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -21,13 +22,17 @@ class AssignmentController extends Controller
             'name' => ['required', 'string'],
             'description' => ['required', 'string'],
             'observations' => ['required', 'string'],
-            'contact' => ['nullable', 'string'],
             'event' => ['required', 'string'],
             'state' => ['required', 'string'],
-            'joins' => ['required', 'array'],
-            'joins.*.checkpoint' => ['required', 'string'],
-            'joins.*.status' => ['required', 'in:' . implode(',', AssignmentJoin::$STATUS)],
-            'joins.*.initiated_ts' => ['required', 'string'],
+            'agent_id' => ['nullable', 'integer'],
+
+            'checkpoints' => ['required', 'array'],
+            'checkpoints.*.coordinate' => ['required', 'array'],
+            'checkpoints.*.coordinate.lat' => ['required', 'numeric'],
+            'checkpoints.*.coordinate.lng' => ['required', 'numeric'],
+            'checkpoints.*.status' => ['required', 'in:' . implode(',', AssignmentCheckpoint::$STATUS)],
+            'checkpoints.*.initiated_ts' => ['required', 'string'],
+            'checkpoints.*.contact' => ['nullable', 'string'],
         ]);
         if ($validator->fails()) {
             return $this->sendResponse($validator->errors(), 'Verifique los datos enviados', 400);
@@ -35,12 +40,12 @@ class AssignmentController extends Controller
         $validator = $validator->validate();
         // if (!Agent::query()->first()) return $this->sendResponse(null, 'Necesita un agente', 400);
         // $validator['agent_id'] = Agent::query()->first()->id;
-        $joins = $validator['joins'];
-        unset($validator['joins']);
+        $checkpoints = $validator['checkpoints'];
+        unset($validator['checkpoints']);
         $ass = new Assignment($validator);
         $ass->save();
-        $ass->joins()->createMany($joins);
-        return $this->sendResponse(Assignment::query()->where('id', $ass->id)->with('joins')->first(), 'Asignacion Creada', 201);
+        $ass->checkpoints()->createMany($checkpoints);
+        return $this->sendResponse(Assignment::query()->where('id', $ass->id)->with('checkpoints')->first(), 'Asignacion Creada', 201);
     }
 
     /**
@@ -84,16 +89,24 @@ class AssignmentController extends Controller
             'name' => ['nullable', 'string'],
             'description' => ['nullable', 'string'],
             'observations' => ['nullable', 'string'],
-            'contact' => ['nullable', 'string'],
             'event' => ['nullable', 'string'],
             'state' => ['nullable', 'string'],
             'agent_id' => ['nullable', 'integer'],
+
+            'checkpoints' => ['nullable', 'array'],
+            'checkpoints.*.coordinate' => ['required', 'array'],
+            'checkpoints.*.coordinate.lat' => ['required', 'numeric'],
+            'checkpoints.*.coordinate.lng' => ['required', 'numeric'],
+            'checkpoints.*.status' => ['required', 'in:' . implode(',', AssignmentCheckpoint::$STATUS)],
+            'checkpoints.*.initiated_ts' => ['required', 'string'],
+            'checkpoints.*.contact' => ['nullable', 'string'],
         ]);
         if ($validator->fails()) {
             return $this->sendResponse($validator->errors(), 'Verifique los datos enviados', 400);
         }
         $validator = $validator->validate();
+        if (!Assignment::find($id)) return $this->sendResponse(null, 'No encontrado', 400);
         Assignment::query()->where('id', $id)->update($validator);
-        return $this->sendResponse(Assignment::find($id));
+        return $this->sendResponse(Assignment::query()->where('id', $id)->with('checkpoints')->first());
     }
 }

@@ -24,6 +24,8 @@ class CreateAgentsTable extends Migration
             $table->string('user_name');
             $table->string('path');
             $table->string('password');
+            $table->string('coordinate');
+            $table->boolean('bussy')->default(false);
             $table->timestamps();
         });
 

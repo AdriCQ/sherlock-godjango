@@ -21,6 +21,7 @@ class CreateAssignmentsTable extends Migration
             $table->string('observations');
             $table->string('event');
             $table->string('state');
+            // $table->string('coordinates');
             $table->unsignedBigInteger('agent_id')->nullable();
         });
 

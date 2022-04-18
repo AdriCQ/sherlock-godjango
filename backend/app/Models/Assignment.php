@@ -12,6 +12,7 @@ class Assignment extends Model
     protected $table = 'assignments';
     protected $guarded = ['id'];
     public $timestamps = false;
+    protected $casts = ['coordinates' => 'json'];
 
 
     /**
@@ -25,8 +26,8 @@ class Assignment extends Model
         return $this->belongsTo(Agent::class);
     }
 
-    public function joins()
+    public function checkpoints()
     {
-        return $this->hasMany(AssignmentJoin::class);
+        return $this->hasMany(AssignmentCheckpoint::class);
     }
 }

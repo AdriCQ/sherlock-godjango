@@ -11,7 +11,7 @@ class Agent extends Model
 
     protected $table = 'agents';
     protected $guarded = ['id'];
-
+    protected $casts = ['coordinate' => 'json'];
 
     /**
      * -----------------------------------------

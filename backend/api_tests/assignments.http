@@ -9,11 +9,15 @@ Authorization: {{token}}
     "observations": "Assignment observations",
     "event": "Assignment evebt",
     "state": "Assignment state",
-    "joins":[
+    "checkpoints":[
         {
-            "checkpoint": "checkpoint",
+            "coordinate":{
+                "lat":0,
+                "lng":0
+            },
             "status": "waiting",
-            "initiated_ts": "2020-05-13"
+            "initiated_ts": "2020-05-13",
+            "contact": "55445566"
         }
     ]
 }
@@ -39,6 +43,5 @@ Authorization: {{token}}
     "observations": "Assignment observations",
     "event": "Assignment evebt",
     "state": "Assignment state",
-    "agent_id": 2,
-    "contact": "contact"
+    "agent_id": 1
 }

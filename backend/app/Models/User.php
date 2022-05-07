@@ -43,8 +43,6 @@ class User extends \TCG\Voyager\Models\User
         'email_verified_at' => 'datetime',
     ];
 
-
-
     /**
      * assignRole
      * @return boolean

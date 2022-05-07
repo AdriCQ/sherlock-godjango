@@ -16,6 +16,7 @@ class CreateAssignmentCheckpointsTable extends Migration
     {
         Schema::create('assignment_checkpoints', function (Blueprint $table) {
             $table->id();
+            $table->string('name');
             $table->string('coordinate');
             $table->unsignedTinyInteger('status')->default(0);
             $table->string('contact')->nullable();

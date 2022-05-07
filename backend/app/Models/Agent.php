@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Storage;
 
 class Agent extends Model
 {
@@ -31,5 +32,20 @@ class Agent extends Model
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+    /**
+     * -----------------------------------------
+     *	Helpers
+     * -----------------------------------------
+     */
+
+    public function readFromFiles()
+    {
+        // Check folder
+        if (!Storage::exists($this->path)) return false;
+
+        // Check coordinates
+        if (!Storage::exists($this->path . '/coordinates')) return false;
+        $coordsArray = Storage::files($this->path . '/coordinates');
     }
 }

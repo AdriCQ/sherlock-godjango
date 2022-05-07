@@ -27,6 +27,7 @@ class AssignmentController extends Controller
             'agent_id' => ['nullable', 'integer'],
 
             'checkpoints' => ['required', 'array'],
+            'checkpoints.*.name' => ['required', 'string'],
             'checkpoints.*.coordinate' => ['required', 'array'],
             'checkpoints.*.coordinate.lat' => ['required', 'numeric'],
             'checkpoints.*.coordinate.lng' => ['required', 'numeric'],
@@ -94,12 +95,13 @@ class AssignmentController extends Controller
             'agent_id' => ['nullable', 'integer'],
 
             'checkpoints' => ['nullable', 'array'],
-            'checkpoints.*.coordinate' => ['required', 'array'],
-            'checkpoints.*.coordinate.lat' => ['required', 'numeric'],
-            'checkpoints.*.coordinate.lng' => ['required', 'numeric'],
-            'checkpoints.*.status' => ['required', 'in:' . implode(',', AssignmentCheckpoint::$STATUS)],
-            'checkpoints.*.initiated_ts' => ['required', 'string'],
-            'checkpoints.*.contact' => ['nullable', 'string'],
+            'checkpoints.*.name' => ['sometimes', 'string'],
+            'checkpoints.*.coordinate' => ['sometimes', 'array'],
+            'checkpoints.*.coordinate.lat' => ['sometimes', 'numeric'],
+            'checkpoints.*.coordinate.lng' => ['sometimes', 'numeric'],
+            'checkpoints.*.status' => ['sometimes', 'in:' . implode(',', AssignmentCheckpoint::$STATUS)],
+            'checkpoints.*.initiated_ts' => ['sometimes', 'string'],
+            'checkpoints.*.contact' => ['sometimes', 'string'],
         ]);
         if ($validator->fails()) {
             return $this->sendResponse($validator->errors(), 'Verifique los datos enviados', 400);

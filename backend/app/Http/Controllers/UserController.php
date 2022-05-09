@@ -23,13 +23,19 @@ class UserController extends Controller
             'email' => ['required', 'email', 'unique:users'],
             'phone' => ['nullable', 'string'],
             'password' => ['required', 'string', 'confirmed'],
+            'role_id' => ['required', 'integer']
         ]);
         if ($validator->fails()) {
             return $this->sendResponse($validator->errors()->toArray(), 'Verifique los datos enviados', 400);
         }
         $validator = $validator->validate();
+        $role = Role::find($validator['role_id']);
+        if (!$role) return $this->sendResponse(null, 'No existe el rol', 400);
+        unset($validator['role_id']);
         $user = new User($validator);
         $user->save();
+        $user->assignRole($role->name);
+        $user->role;
         return $this->sendResponse($user, 'Usuario creado', 201);
     }
 
@@ -83,6 +89,31 @@ class UserController extends Controller
     public function remove(int $id)
     {
         return  User::find($id) && User::find($id)->delete() ? $this->sendResponse() : $this->sendResponse(null, 'Usuario no encontrado', 400);
+    }
+
+    /**
+     * Update
+     * @param Request request
+     * @return Illuminate\Http\JsonResponse
+     */
+    public function update(int $id, Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'name' => ['nullable', 'string'],
+            'phone' => ['nullable', 'string'],
+            'password' => ['nullable', 'string'],
+            'role_id' => ['nullable', 'integer']
+        ]);
+        if ($validator->fails()) {
+            return response()->json($validator->errors()->toArray(), 400, [], JSON_NUMERIC_CHECK);
+        }
+        $validator = $validator->validate();
+        $user = User::find($id);
+        if (!$user) return $this->sendResponse(null, 'No existe el usuario', 400);
+        if (isset($validator['password'])) $validator['password'] = bcrypt($validator['password']);
+        $user->update($validator);
+        $user->role;
+        return $this->sendResponse($user, 'Usuario actualizado');
     }
 
     /**

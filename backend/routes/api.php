@@ -19,7 +19,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('', [UserController::class, 'create'])->middleware('role:advanced');
         Route::get('', [UserController::class, 'current']);
         Route::get('list', [UserController::class, 'list'])->middleware('role:advanced');
-        Route::patch('{id}', [UserController::class, 'updatePassword']);
+        Route::patch('{id}', [UserController::class, 'update']);
         Route::delete('{id}', [UserController::class, 'remove'])->middleware('role:advanced');
     });
 

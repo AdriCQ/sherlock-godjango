@@ -6,6 +6,7 @@ import {
   IAuthResponse,
   IUserCreateRequest,
   IUserProfile,
+  IUserRole,
 } from 'src/types';
 import { InjectionKey, ref } from 'vue';
 /**
@@ -24,6 +25,7 @@ class UserInjectable {
       name: 'user',
     },
   });
+  private _roles = ref<IUserRole[]>([]);
   /**
    * -----------------------------------------
    *	Getters & Setters
@@ -40,6 +42,12 @@ class UserInjectable {
   }
   set profile(profile: IUserProfile) {
     this._profile.value = profile;
+  }
+  get roles() {
+    return this._roles.value;
+  }
+  set roles(r: IUserRole[]) {
+    this._roles.value = r;
   }
   /**
    * -----------------------------------------
@@ -60,6 +68,14 @@ class UserInjectable {
    */
   async list() {
     return $api.get<IApiResponse<IUserProfile[]>>('users/list');
+  }
+  /**
+   * listRoles
+   */
+  async listRoles() {
+    this.roles = (
+      await $api.get<IApiResponse<IUserRole[]>>('users/roles')
+    ).data.data;
   }
   /**
    * login

@@ -1,7 +1,7 @@
 /**
  * User Role Name
  */
-export type IUserRoleName = 'admin' | 'advanced' | 'deliver' | 'user';
+export type IUserRoleName = 'admin' | 'advanced' | 'user';
 /**
  * IUserRole
  */

@@ -33,6 +33,16 @@
           </template>
         </q-input>
 
+        <q-select
+          v-model="form.role_id"
+          :options="roles"
+          emit-value
+          map-options
+          option-label="display_name"
+          option-value="id"
+          label="Permisos"
+        />
+
         <q-input
           name="password"
           v-model="form.password"
@@ -107,6 +117,7 @@ const form = ref<IUserCreateRequest>({
   role_id: 2,
 });
 const isUpdate = computed(() => ($props.user ? true : false));
+const roles = computed(() => $user.roles);
 /**
  * validator
  */
@@ -157,7 +168,10 @@ async function onSubmit() {
   }
 }
 
-onBeforeMount(() => {
+onBeforeMount(async () => {
+  if (!roles.value.length) {
+    await $user.listRoles();
+  }
   if ($props.user) {
     form.value = {
       email: $props.user.email,

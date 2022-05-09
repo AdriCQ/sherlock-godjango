@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use TCG\Voyager\Models\Role;
 
 class UserController extends Controller
 {
@@ -30,6 +31,16 @@ class UserController extends Controller
         $user = new User($validator);
         $user->save();
         return $this->sendResponse($user, 'Usuario creado', 201);
+    }
+
+    /**
+     * List
+     * @return Illuminate\Http\JsonResponse
+     */
+    public function list()
+    {
+        $roleId = Role::query()->where('name', 'user')->first();
+        return $this->sendResponse(User::query()->where('id', '>', 1)->with('role')->get());
     }
 
     /**
@@ -57,6 +68,7 @@ class UserController extends Controller
         $validator = $validator->validate();
         if (!Auth::attempt($validator)) return $this->sendAuthError();
         $user = Auth::user();
+        $user->role;
         return $this->sendResponse([
             'profile' => $user,
             'api_token' => $user->createToken('auth-token')->plainTextToken

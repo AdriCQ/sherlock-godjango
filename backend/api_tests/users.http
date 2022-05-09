@@ -11,12 +11,17 @@ Authorization: {{token}}
     "password_confirmation": "admin"
 }
 
+### list users
+GET /api/users/list HTTP/1.1
+Host: {{ host }}
+Authorization: {{token}}
+
 ### Auth Login
 POST /api/users/login HTTP/1.1
 Host: {{ host }}
 
 {
-    "email": "admin@admin.com",
+    "email": "admin@godjango.dev",
     "password": "admin"
 }
 

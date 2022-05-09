@@ -26,6 +26,13 @@ class RolesTableSeeder extends Seeder
             ])->save();
         }
 
+        $role = Role::firstOrNew(['name' => 'deliver']);
+        if (!$role->exists) {
+            $role->fill([
+                'display_name' => 'Deliver',
+            ])->save();
+        }
+
         $role = Role::firstOrNew(['name' => 'advanced']);
         if (!$role->exists) {
             $role->fill([

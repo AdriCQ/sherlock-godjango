@@ -19,17 +19,17 @@ class DatabaseSeeder extends Seeder
 
         $developer = new User([
             'name' => 'Developer',
-            'email' => 'info@nairda.net',
-            'phone' => '55555555',
-            'password' => bcrypt('info@nairda.net')
+            'email' => 'dev@godjango.dev',
+            'phone' => '500000',
+            'password' => bcrypt('dev@godjango.dev')
         ]);
         $developer->save();
         $developer->assignRole('admin');
 
         $user = new User([
             'name' => 'Admin',
-            'email' => 'admin@admin.com',
-            'phone' => '55555555',
+            'email' => 'admin@godjango.dev',
+            'phone' => '500001',
             'password' => bcrypt('admin')
         ]);
         $user->save();

@@ -1,11 +1,12 @@
 /**
  * User Role Name
  */
-export type IUserRoleName = 'admin' | 'deliver' | 'client';
+export type IUserRoleName = 'admin' | 'advanced' | 'deliver' | 'user';
 /**
  * IUserRole
  */
 export interface IUserRole {
+  id: number;
   name: IUserRoleName;
   display_name: string;
 }
@@ -19,6 +20,17 @@ export interface IUserProfile {
   email: string;
   phone?: string;
   role: IUserRole;
+}
+/**
+ * User Create Request
+ */
+export interface IUserCreateRequest {
+  name: string;
+  email: string;
+  phone?: string;
+  role_id: number;
+  password: string;
+  password_confirmation: string;
 }
 /**
  * IAuthResponse

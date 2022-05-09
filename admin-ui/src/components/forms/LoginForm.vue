@@ -1,9 +1,7 @@
 <template>
   <q-card class="login-card">
     <q-card-section class="text-center text-grey-9">
-      <div class="text-body1">
-        Inicia sesión para vivir una mejor experiencia
-      </div>
+      <div class="text-body1">Bienvenido a Sherlock</div>
     </q-card-section>
     <q-form @submit.prevent="login">
       <q-card-section class="q-gutter-y-md">

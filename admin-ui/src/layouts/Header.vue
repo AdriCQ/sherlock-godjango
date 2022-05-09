@@ -22,7 +22,7 @@ import { computed } from 'vue';
 const $app = injectStrict(_app);
 
 const title = computed(() =>
-  $app.mode === 'admin' ? 'Administración' : 'Modo Servicios'
+  $app.mode === 'advanced' ? 'Administración' : 'Modo Servicios'
 );
 function toggleDrawer() {
   $app.toggleLeftDrawer();

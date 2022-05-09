@@ -1,9 +1,9 @@
 <template>
   <q-layout view="lHh Lpr lff">
-    <q-page-container class="bg-primary">
-      <div class="full-width q-px-sm bg-transparent">
+    <q-page-container class="bg-grey-9">
+      <q-page>
         <login-form class="absolute-center" @auth="onAuth" />
-      </div>
+      </q-page>
     </q-page-container>
   </q-layout>
 </template>
@@ -25,7 +25,8 @@ const $router = useRouter();
  * onAuth
  */
 function onAuth() {
-  if ($app.mode === 'admin') void $router.push({ name: ROUTE_NAME.ADMIN_HOME });
+  if ($app.mode === 'advanced')
+    void $router.push({ name: ROUTE_NAME.ADMIN_HOME });
   else void $router.push({ name: ROUTE_NAME.DELIVER_HOME });
 }
 </script>

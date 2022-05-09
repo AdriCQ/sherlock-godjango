@@ -1,19 +1,19 @@
 <template>
   <q-layout view="lHh LpR fFf">
     <app-header />
-    <q-page-container class="text-grey-9 bg-grey-2">
+    <q-page-container class="text-grey-9 bg-grey-4">
       <router-view />
     </q-page-container>
 
     <!-- leftDrawer -->
-    <admin-left-drawer />
+    <left-drawer />
     <!-- / leftDrawer -->
   </q-layout>
 </template>
 
 <script setup lang="ts">
 import AppHeader from './Header.vue';
-import AdminLeftDrawer from './AdminLeftDrawer.vue';
+import LeftDrawer from './LeftDrawer.vue';
 import { onBeforeMount } from 'vue';
 import { useMeta } from 'quasar';
 import { injectStrict, _app } from 'src/injectables';
@@ -30,7 +30,7 @@ const $app = injectStrict(_app);
  */
 
 onBeforeMount(() => {
-  if ($app.mode === 'admin') useMeta({ title: 'Sherlock Admin' });
+  if ($app.mode === 'advanced') useMeta({ title: 'Sherlock Admin' });
   else useMeta({ title: 'Sherlock Deliver' });
 });
 </script>

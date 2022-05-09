@@ -4,6 +4,7 @@ import {
   IApiResponse,
   IAuthRequest,
   IAuthResponse,
+  IUserCreateRequest,
   IUserProfile,
 } from 'src/types';
 import { InjectionKey, ref } from 'vue';
@@ -18,8 +19,9 @@ class UserInjectable {
     name: '',
     phone: '',
     role: {
+      id: 2,
       display_name: 'User',
-      name: 'client',
+      name: 'user',
     },
   });
   /**
@@ -45,6 +47,21 @@ class UserInjectable {
    * -----------------------------------------
    */
   /**
+   * create
+   * @param user
+   * @returns
+   */
+  async create(user: IUserCreateRequest) {
+    return $api.post<IApiResponse<IUserProfile>>('users', user);
+  }
+  /**
+   * list
+   * @returns
+   */
+  async list() {
+    return $api.get<IApiResponse<IUserProfile[]>>('users/list');
+  }
+  /**
    * login
    * @param login
    * @returns
@@ -58,6 +75,23 @@ class UserInjectable {
     this.profile = resp.data.data.profile;
     this.save();
     return resp.data;
+  }
+  /**
+   * remove
+   * @param userId
+   * @returns
+   */
+  async remove(userId: number) {
+    return $api.delete(`users/${userId}`);
+  }
+  /**
+   * update
+   * @param id
+   * @param user
+   * @returns
+   */
+  async update(id: number, user: IUserCreateRequest) {
+    return $api.patch<IApiResponse<IUserProfile>>(`users/${id}`, user);
   }
   /**
    * -----------------------------------------
@@ -89,8 +123,9 @@ class UserInjectable {
       name: '',
       phone: '',
       role: {
+        id: 2,
         display_name: 'User',
-        name: 'client',
+        name: 'user',
       },
     };
     this.save();

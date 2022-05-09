@@ -27,13 +27,13 @@
         </q-item>
         <!-- / Mis Pedidos -->
 
-        <q-item clickable>
+        <q-item clickable @click="logout">
           <q-item-section avatar top>
-            <q-avatar size="md" icon="mdi-wrench" />
+            <q-avatar size="md" icon="mdi-exit-to-app" />
           </q-item-section>
 
           <q-item-section class="text-grey-9">
-            <q-item-label lines="1">Configuracion</q-item-label>
+            <q-item-label lines="1">Salir</q-item-label>
           </q-item-section>
         </q-item>
       </q-list>
@@ -44,8 +44,10 @@
 
 <script setup lang="ts">
 import { computed } from '@vue/reactivity';
-import { injectStrict, _app } from 'src/injectables';
+import { useGuiHelper } from 'src/helpers';
+import { injectStrict, _app, _user } from 'src/injectables';
 import { ROUTE_NAME } from 'src/router';
+import { useRouter } from 'vue-router';
 /**
  * -----------------------------------------
  *	Inject
@@ -53,9 +55,29 @@ import { ROUTE_NAME } from 'src/router';
  */
 
 const $app = injectStrict(_app);
+const $gui = useGuiHelper();
+const $router = useRouter();
+const $user = injectStrict(_user);
 
 const sidebarOpen = computed(() => $app.leftDrawer);
 
+/**
+ * logout
+ */
+function logout() {
+  $gui.deleteDialog({
+    title: 'Salir',
+    message: '¿Está seguro que desea salir?',
+    onOk: () => {
+      $user.logout();
+      $router.push({ name: ROUTE_NAME.LOGIN });
+    },
+  });
+}
+/**
+ * updateSidebarOpen
+ * @param open
+ */
 function updateSidebarOpen(open: boolean) {
   $app.leftDrawer = open;
 }

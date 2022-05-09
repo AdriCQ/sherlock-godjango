@@ -1,5 +1,5 @@
 import { AxiosError } from 'axios';
-import { QVueGlobals } from 'quasar';
+import { Dialog, Notify } from 'quasar';
 import { $router } from 'src/boot/router';
 import { $user } from 'src/injectables';
 import { ROUTE_NAME } from 'src/router';
@@ -8,7 +8,7 @@ import { ROUTE_NAME } from 'src/router';
  * @param $q
  * @returns
  */
-export function uiHelper($q: QVueGlobals) {
+export function useGuiHelper() {
   /**
    * Deletes dialog
    * @param _config
@@ -18,7 +18,7 @@ export function uiHelper($q: QVueGlobals) {
     message: string;
     onOk: CallableFunction;
   }) {
-    $q.dialog({
+    Dialog.create({
       title: _config.title,
       message: _config.message,
       ok: true,
@@ -39,7 +39,7 @@ export function uiHelper($q: QVueGlobals) {
     if (_error && _error.response && _error.response.data) {
       if (_error.response.status === 401) {
         // Show notification
-        $q.notify({
+        Notify.create({
           type: 'negative',
           icon: 'mdi-alert-circle-outline',
           message: _default,
@@ -64,7 +64,7 @@ export function uiHelper($q: QVueGlobals) {
         //     message: _error.response.data.message,
         //     position: 'center'
         // });
-        $q.notify({
+        Notify.create({
           type: 'negative',
           icon: 'mdi-alert-circle-outline',
           message: _default,
@@ -81,7 +81,7 @@ export function uiHelper($q: QVueGlobals) {
         });
       }
     } else {
-      $q.notify({
+      Notify.create({
         type: 'negative',
         icon: 'mdi-alert-circle-outline',
         message: _default,

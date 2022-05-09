@@ -23,7 +23,7 @@ export class AppStore {
    * mode setter & getter
    */
   get mode(): IUserRoleName {
-    if (!$user.profile || !$user.profile.role) return 'client';
+    if (!$user.profile || !$user.profile.role) return 'user';
     return $user.profile.role.name;
   }
 

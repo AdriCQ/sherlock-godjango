@@ -1,4 +1,6 @@
+import { IUserRoleName } from 'src/types';
 import { ref, InjectionKey } from 'vue';
+import { $user } from './user';
 /**
  * STORAGE_KEY
  */
@@ -16,6 +18,13 @@ export class AppStore {
   }
   set leftDrawer(_open: boolean) {
     this._leftDrawer.value = _open;
+  }
+  /**
+   * mode setter & getter
+   */
+  get mode(): IUserRoleName {
+    if (!$user.profile || !$user.profile.role) return 'client';
+    return $user.profile.role.name;
   }
 
   /**

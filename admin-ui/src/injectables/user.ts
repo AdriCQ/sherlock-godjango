@@ -1,7 +1,11 @@
 import { LocalStorage } from 'quasar';
 import { $api } from 'src/boot/axios';
-import { notificationHelper } from 'src/helpers';
-import { IApiResponse, IAuthRequest, IAuthResponse, IUserProfile } from 'src/types';
+import {
+  IApiResponse,
+  IAuthRequest,
+  IAuthResponse,
+  IUserProfile,
+} from 'src/types';
 import { InjectionKey, ref } from 'vue';
 /**
  * UserInjectable
@@ -13,6 +17,10 @@ class UserInjectable {
     id: 0,
     name: '',
     phone: '',
+    role: {
+      display_name: 'User',
+      name: 'client',
+    },
   });
   /**
    * -----------------------------------------
@@ -42,15 +50,14 @@ class UserInjectable {
    * @returns
    */
   async login(login: IAuthRequest) {
-    try {
-      const resp = await $api.post<IApiResponse<IAuthResponse>>('users/login', login);
-      this.api_token = resp.data.data.api_token;
-      this.profile = resp.data.data.profile;
-      this.save();
-      return resp.data;
-    } catch (error) {
-      notificationHelper.axiosError(error, ['Credenciales incorrectas']);
-    }
+    const resp = await $api.post<IApiResponse<IAuthResponse>>(
+      'users/login',
+      login
+    );
+    this.api_token = resp.data.data.api_token;
+    this.profile = resp.data.data.profile;
+    this.save();
+    return resp.data;
   }
   /**
    * -----------------------------------------
@@ -81,6 +88,10 @@ class UserInjectable {
       id: 0,
       name: '',
       phone: '',
+      role: {
+        display_name: 'User',
+        name: 'client',
+      },
     };
     this.save();
   }

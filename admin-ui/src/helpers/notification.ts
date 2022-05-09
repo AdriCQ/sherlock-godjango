@@ -12,7 +12,7 @@ class NotificationHelper {
    * axiosError
    * @param _error
    */
-  axiosError<T = unknown>(_error: unknown, _default: string[]) {
+  axiosError<T = unknown>(_error: unknown, _default: string) {
     console.log({ AxiosError: _error as T });
     const error = _error as AxiosError<IApiResponse<T>>;
     if (error.response) {
@@ -24,8 +24,8 @@ class NotificationHelper {
       }
       if (error.response.data.message) {
         this.error([error.response.data.message]);
-      } else this.error(_default);
-    } else this.error(_default);
+      } else this.error([_default]);
+    } else this.error([_default]);
   }
   /**
    * Loading

@@ -1,3 +1,7 @@
 export enum ROUTE_NAME {
+  ADMIN_HOME = 'ADMIN.HOME',
+  ADMIN_USERS = 'ADMIN.USERS',
+  // Deliver
+  DELIVER_HOME = 'DELIVER.HOME',
   LOGIN = 'AUTH.LOGIN',
 }

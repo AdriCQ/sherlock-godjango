@@ -50,6 +50,15 @@ class UserController extends Controller
     }
 
     /**
+     * List Roles
+     * @return Illuminate\Http\JsonResponse
+     */
+    public function listRoles()
+    {
+        return $this->sendResponse(Role::all());
+    }
+
+    /**
      * Current
      * @return Illuminate\Http\JsonResponse
      */

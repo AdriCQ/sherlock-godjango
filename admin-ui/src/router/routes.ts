@@ -1,6 +1,6 @@
 import { RouteRecordRaw } from 'vue-router';
 import authRoutes from './authRoutes';
-import adminRoutes from './adminRoutes';
+import adminRoutes from './managerRoutes';
 import { authGuard } from './guards';
 /**
  * App Routes

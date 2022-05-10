@@ -20,4 +20,5 @@ export * from './agent';
 export * from './app';
 export * from './assignment';
 export * from './assignmentJoin';
+export * from './map';
 export * from './user';

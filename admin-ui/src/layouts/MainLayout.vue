@@ -6,14 +6,16 @@
     </q-page-container>
 
     <!-- leftDrawer -->
-    <left-drawer />
+    <manager-left-drawer />
     <!-- / leftDrawer -->
+    <main-footer />
   </q-layout>
 </template>
 
 <script setup lang="ts">
 import AppHeader from './Header.vue';
-import LeftDrawer from './LeftDrawer.vue';
+import MainFooter from './MainFooter.vue';
+import ManagerLeftDrawer from './ManagerLeftDrawer.vue';
 import { onBeforeMount } from 'vue';
 import { useMeta } from 'quasar';
 import { injectStrict, _app } from 'src/injectables';

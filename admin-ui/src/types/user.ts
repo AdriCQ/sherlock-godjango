@@ -29,8 +29,8 @@ export interface IUserCreateRequest {
   email: string;
   phone?: string;
   role_id: number;
-  password: string;
-  password_confirmation: string;
+  password?: string;
+  password_confirmation?: string;
 }
 /**
  * IAuthResponse

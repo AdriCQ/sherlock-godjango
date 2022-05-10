@@ -32,6 +32,7 @@ class UserController extends Controller
         $role = Role::find($validator['role_id']);
         if (!$role) return $this->sendResponse(null, 'No existe el rol', 400);
         unset($validator['role_id']);
+        $validator['password'] = bcrypt($validator['password']);
         $user = new User($validator);
         $user->save();
         $user->assignRole($role->name);
@@ -119,8 +120,12 @@ class UserController extends Controller
         $validator = $validator->validate();
         $user = User::find($id);
         if (!$user) return $this->sendResponse(null, 'No existe el usuario', 400);
+        $role = Role::find($validator['role_id']);
+        if (!$role) return $this->sendResponse(null, 'No existe el rol', 400);
+        unset($validator['role_id']);
         if (isset($validator['password'])) $validator['password'] = bcrypt($validator['password']);
         $user->update($validator);
+        $user->assignRole($role->name);
         $user->role;
         return $this->sendResponse($user, 'Usuario actualizado');
     }

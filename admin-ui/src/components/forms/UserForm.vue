@@ -48,30 +48,16 @@
           v-model="form.password"
           type="password"
           label="Contraseña"
-          :error="$v.password.$error"
-          bottom-slots
-        >
-          <template v-slot:error>
-            <div v-for="e of $v.password.$errors" :key="e.$uid">
-              {{ e.$message }}
-            </div>
-          </template>
-        </q-input>
+          :required="!isUpdate"
+        />
 
         <q-input
           name="password_confirmation"
           v-model="form.password_confirmation"
           type="password"
           label="Repita Contraseña"
-          :error="$v.password_confirmation.$error"
-          bottom-slots
-        >
-          <template v-slot:error>
-            <div v-for="e of $v.password_confirmation.$errors" :key="e.$uid">
-              {{ e.$message }}
-            </div>
-          </template>
-        </q-input>
+          :required="!isUpdate"
+        />
       </q-card-section>
       <q-card-actions>
         <q-btn
@@ -91,7 +77,7 @@ import { ref, computed, onBeforeMount } from 'vue';
 import { injectStrict, _user } from 'src/injectables';
 import { notificationHelper } from 'src/helpers';
 import useVuelidate from '@vuelidate/core';
-import { email, helpers, required, sameAs } from '@vuelidate/validators';
+import { email, helpers, required } from '@vuelidate/validators';
 import { IUserCreateRequest, IUserProfile } from 'src/types';
 /**
  * -----------------------------------------
@@ -130,16 +116,16 @@ const $v = useVuelidate(
     name: {
       required: helpers.withMessage('Necesitamos su nombre', required),
     },
-    password: {
-      required: helpers.withMessage('La contraseña es necesaria', required),
-    },
-    password_confirmation: {
-      required: helpers.withMessage('La contraseña es necesaria', required),
-      sameAsPassword: helpers.withMessage(
-        'La contraseña no coincide',
-        sameAs(computed(() => form.value.password))
-      ),
-    },
+    // password: {
+    //   required: helpers.withMessage('La contraseña es necesaria', required),
+    // },
+    // password_confirmation: {
+    //   // required: helpers.withMessage('La contraseña es necesaria', required),
+    //   sameAsPassword: helpers.withMessage(
+    //     'La contraseña no coincide',
+    //     sameAs(computed(() => form.value.password))
+    //   ),
+    // },
   },
   form
 );
@@ -176,8 +162,8 @@ onBeforeMount(async () => {
     form.value = {
       email: $props.user.email,
       name: $props.user.name,
-      password: '',
-      password_confirmation: '',
+      password: undefined,
+      password_confirmation: undefined,
       role_id: $props.user.role.id,
     };
   } else {

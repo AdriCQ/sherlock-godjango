@@ -1,12 +1,14 @@
 import { RouteRecordRaw } from 'vue-router';
 import authRoutes from './authRoutes';
 import adminRoutes from './adminRoutes';
+import { authGuard } from './guards';
 /**
  * App Routes
  */
 const routes: RouteRecordRaw[] = [
   {
     path: '/',
+    beforeEnter: authGuard,
     component: () => import('layouts/MainLayout.vue'),
     children: [{ path: '', component: () => import('pages/IndexPage.vue') }],
   },

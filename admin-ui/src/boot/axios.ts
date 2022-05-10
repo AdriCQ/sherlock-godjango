@@ -1,21 +1,21 @@
 import { boot } from 'quasar/wrappers';
 import axios, { AxiosInstance, AxiosRequestHeaders } from 'axios';
 import { $user } from 'src/injectables';
+import { getCookie } from 'src/helpers/cookie';
 
 declare module '@vue/runtime-core' {
   interface ComponentCustomProperties {
     $axios: AxiosInstance;
   }
 }
-// let _baseURL = 'https://ustora.expresscuba.com';
-let _baseURL = 'http://localhost:8000';
-if (!process.env.DEV) {
-  const location = window.location;
-  if (location.hostname !== 'localhost') {
-    _baseURL = location.origin;
-  }
-}
-const baseURL = _baseURL;
+const baseURL = 'https://godjango.nairda.net';
+// const baseURL = 'http://localhost:8000';
+// if (!process.env.DEV) {
+//   const location = window.location;
+//   if (location.hostname !== 'localhost') {
+//     _baseURL = location.origin;
+//   }
+// }
 
 const $api = axios.create({
   baseURL: `${baseURL}/api`,
@@ -54,5 +54,12 @@ export default boot(({ app }) => {
 
   app.config.globalProperties.$api = $api;
 });
-
-export { $api, baseURL };
+/**
+ * csrf
+ * @returns
+ */
+const $csrf = async () => {
+  if (!getCookie('XSRF-TOKEN'))
+    return axios.get<void>(`${baseURL}/sanctum/csrf-cookie`);
+};
+export { $api, $csrf, baseURL };

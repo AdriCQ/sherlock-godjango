@@ -1,10 +1,11 @@
 import MainLayoutVue from 'src/layouts/MainLayout.vue';
 import { RouteRecordRaw } from 'vue-router';
+import { authGuard } from './guards';
 import { ROUTE_NAME } from './names';
-// import { authGuard } from './guards';
 
 const route: RouteRecordRaw = {
   path: '/admin',
+  beforeEnter: authGuard,
   component: MainLayoutVue,
   children: [
     {

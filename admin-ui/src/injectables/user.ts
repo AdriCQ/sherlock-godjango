@@ -1,5 +1,5 @@
 import { LocalStorage } from 'quasar';
-import { $api } from 'src/boot/axios';
+import { $api, $csrf } from 'src/boot/axios';
 import {
   IApiResponse,
   IAuthRequest,
@@ -9,6 +9,7 @@ import {
   IUserRole,
 } from 'src/types';
 import { InjectionKey, ref } from 'vue';
+const STORAGE_KEY = 'godjango-sherlock/UserInjectable';
 /**
  * UserInjectable
  */
@@ -60,6 +61,7 @@ class UserInjectable {
    * @returns
    */
   async create(user: IUserCreateRequest) {
+    await $csrf();
     return $api.post<IApiResponse<IUserProfile>>('users', user);
   }
   /**
@@ -83,6 +85,7 @@ class UserInjectable {
    * @returns
    */
   async login(login: IAuthRequest) {
+    await $csrf();
     const resp = await $api.post<IApiResponse<IAuthResponse>>(
       'users/login',
       login
@@ -98,6 +101,7 @@ class UserInjectable {
    * @returns
    */
   async remove(userId: number) {
+    await $csrf();
     return $api.delete(`users/${userId}`);
   }
   /**
@@ -107,6 +111,7 @@ class UserInjectable {
    * @returns
    */
   async update(id: number, user: IUserCreateRequest) {
+    await $csrf();
     return $api.patch<IApiResponse<IUserProfile>>(`users/${id}`, user);
   }
   /**
@@ -118,9 +123,8 @@ class UserInjectable {
    * load
    */
   load() {
-    const _key = 'store/UserInjectable';
-    if (LocalStorage.has(_key)) {
-      const resp = LocalStorage.getItem(_key)?.toString();
+    if (LocalStorage.has(STORAGE_KEY)) {
+      const resp = LocalStorage.getItem(STORAGE_KEY)?.toString();
       if (resp) {
         const json = JSON.parse(resp) as unknown as IAuthResponse;
         this.profile = json.profile;
@@ -151,7 +155,7 @@ class UserInjectable {
    */
   save() {
     LocalStorage.set(
-      'store/UserInjectable',
+      STORAGE_KEY,
       JSON.stringify({
         profile: this.profile,
         api_token: this.api_token,

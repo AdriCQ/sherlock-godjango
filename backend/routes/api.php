@@ -3,6 +3,7 @@
 use App\Http\Controllers\AgentController;
 use App\Http\Controllers\AssignmentController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\PersonalGroupController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -48,6 +49,27 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('{id}', [AgentController::class, 'find']);
         Route::delete('{id}', [AgentController::class, 'remove']);
         Route::patch('{id}', [AgentController::class, 'update']);
+    });
+
+    /**
+     * -----------------------------------------
+     *	Personal
+     * -----------------------------------------
+     */
+    Route::prefix('personal')->group(function () {
+        /**
+         * -------------------------------------
+         *	Groups
+         * -------------------------------------
+         */
+        Route::middleware('role:manager')->prefix('groups')->group(function () {
+            Route::get('', [PersonalGroupController::class, 'list']);
+            Route::post('', [PersonalGroupController::class, 'create']);
+            Route::patch('{id}', [PersonalGroupController::class, 'update']);
+            Route::delete('{id}', [PersonalGroupController::class, 'remove']);
+            Route::post('{id}/add-user', [PersonalGroupController::class, 'addUser']);
+            Route::post('{id}/remove-user', [PersonalGroupController::class, 'removeUser']);
+        });
     });
 
     /**

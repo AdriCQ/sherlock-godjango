@@ -7,11 +7,11 @@
       id="tab-buttons"
       no-caps
     >
-      <q-route-tab exact>
+      <q-route-tab exact :to="{ name: ROUTE_NAME.ADMIN_HOME }">
         <q-icon name="mdi-home" size="1.6rem" />
       </q-route-tab>
       <q-route-tab exact>
-        <q-icon name="mdi-store" size="1.6rem" />
+        <q-icon name="mdi-map-marker" size="1.6rem" />
       </q-route-tab>
       <q-route-tab exact>
         <q-icon name="mdi-bell-outline" size="1.6rem" />
@@ -33,6 +33,7 @@
 </template>
 <script lang="ts" setup>
 import { injectStrict, _app } from 'src/injectables';
+import { ROUTE_NAME } from 'src/router';
 /**
  * -----------------------------------------
  *	Setup

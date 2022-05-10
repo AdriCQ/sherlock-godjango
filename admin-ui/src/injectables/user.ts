@@ -14,6 +14,7 @@ const STORAGE_KEY = 'godjango-sherlock/UserInjectable';
  * UserInjectable
  */
 class UserInjectable {
+  private _allUsers = ref<IUserProfile[]>([]);
   private _api_token = ref<null | string>(null);
   private _profile = ref<IUserProfile>({
     email: '',
@@ -32,6 +33,12 @@ class UserInjectable {
    *	Getters & Setters
    * -----------------------------------------
    */
+  get allUsers() {
+    return this._allUsers.value;
+  }
+  set allUsers(u: IUserProfile[]) {
+    this._allUsers.value = u;
+  }
   get api_token() {
     return this._api_token.value;
   }
@@ -69,7 +76,10 @@ class UserInjectable {
    * @returns
    */
   async list() {
-    return $api.get<IApiResponse<IUserProfile[]>>('users/list');
+    this.allUsers = (
+      await $api.get<IApiResponse<IUserProfile[]>>('users/list')
+    ).data.data;
+    return this.allUsers;
   }
   /**
    * listRoles

@@ -51,6 +51,7 @@ import { IUserProfile } from 'src/types';
 import { onBeforeMount, ref } from 'vue';
 import UserWidget from 'src/components/widgets/UserWidget.vue';
 import UserForm from 'src/components/forms/UserForm.vue';
+import { computed } from '@vue/reactivity';
 /**
  * -----------------------------------------
  *	Inject
@@ -64,7 +65,7 @@ const $user = injectStrict(_user);
  * -----------------------------------------
  */
 const dialogUserForm = ref(false);
-const users = ref<IUserProfile[]>([]);
+const users = computed(() => $user.allUsers);
 const editUser = ref<IUserProfile | undefined>();
 /**
  * -----------------------------------------
@@ -98,7 +99,7 @@ function reqEditUser(p: IUserProfile) {
  */
 async function listUsers() {
   try {
-    users.value = (await $user.list()).data.data;
+    await $user.list();
   } catch (error) {
     notificationHelper.axiosError(error, 'No se pudo listar los usuarios');
   }

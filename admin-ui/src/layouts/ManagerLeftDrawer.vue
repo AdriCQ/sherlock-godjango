@@ -15,6 +15,18 @@
     <!-- list -->
     <div class="q-gutter-sm q-mt-md">
       <q-list class="rounded-borders" style="max-width: 350px">
+        <!-- Home -->
+        <q-item clickable exact :to="{ name: ROUTE_NAME.ADMIN_HOME }">
+          <q-item-section avatar top>
+            <q-avatar size="md" icon="mdi-home" />
+          </q-item-section>
+
+          <q-item-section class="text-grey-9">
+            <q-item-label lines="1">Inicio</q-item-label>
+          </q-item-section>
+        </q-item>
+        <!-- /Home -->
+
         <!-- Personal -->
         <q-expansion-item :content-inset-level="0.25">
           <template v-slot:header>
@@ -68,7 +80,7 @@
               </q-item-section>
 
               <q-item-section>
-                <q-item-label lines="1">Agentes</q-item-label>
+                <q-item-label lines="1">Usuarios</q-item-label>
               </q-item-section>
             </template>
           </q-expansion-item>

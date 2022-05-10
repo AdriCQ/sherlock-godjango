@@ -37,6 +37,7 @@ class UserController extends Controller
         $user->save();
         $user->assignRole($role->name);
         $user->role;
+        $user->personal_group;
         return $this->sendResponse($user, 'Usuario creado', 201);
     }
 
@@ -47,7 +48,7 @@ class UserController extends Controller
     public function list()
     {
         $roleId = Role::query()->where('name', 'user')->first();
-        return $this->sendResponse(User::query()->where('id', '>', 1)->with('role')->get());
+        return $this->sendResponse(User::query()->where('id', '>', 1)->with(['role', 'personal_group'])->get());
     }
 
     /**
@@ -85,6 +86,7 @@ class UserController extends Controller
         if (!Auth::attempt($validator)) return $this->sendAuthError();
         $user = Auth::user();
         $user->role;
+        $user->personal_group;
         return $this->sendResponse([
             'profile' => $user,
             'api_token' => $user->createToken('auth-token')->plainTextToken
@@ -127,6 +129,7 @@ class UserController extends Controller
         $user->update($validator);
         $user->assignRole($role->name);
         $user->role;
+        $user->personal_group;
         return $this->sendResponse($user, 'Usuario actualizado');
     }
 

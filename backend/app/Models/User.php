@@ -53,4 +53,12 @@ class User extends \TCG\Voyager\Models\User
         if ($roleQry) $this->role_id = $roleQry->id;
         return $this->save();
     }
+
+    /**
+     * personal_group
+     */
+    public function personal_group()
+    {
+        return $this->belongsTo(PersonalGroup::class, 'group_id', 'id');
+    }
 }

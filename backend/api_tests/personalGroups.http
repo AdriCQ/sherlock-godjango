@@ -1,0 +1,15 @@
+### List
+GET /api/personal/groups HTTP/1.1
+Host: {{ host }}
+Authorization: {{token}}
+
+
+
+### Add User
+POST /api/personal/groups/1/add-user HTTP/1.1
+Host: {{ host }}
+Authorization: {{token}}
+
+{
+    "user_id": 6
+}

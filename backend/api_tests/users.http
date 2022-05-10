@@ -22,7 +22,7 @@ Host: {{ host }}
 
 {
     "email": "admin@godjango.dev",
-    "password": "admin"
+    "password": "admin@godjango.dev"
 }
 
 ### Get

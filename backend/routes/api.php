@@ -16,12 +16,12 @@ Route::middleware('auth:sanctum')->group(function () {
      * -----------------------------------------
      */
     Route::prefix('users')->group(function () {
-        Route::post('', [UserController::class, 'create'])->middleware('role:advanced');
+        Route::post('', [UserController::class, 'create'])->middleware('role:manager');
         Route::get('', [UserController::class, 'current']);
-        Route::get('list', [UserController::class, 'list'])->middleware('role:advanced');
-        Route::get('roles', [UserController::class, 'listRoles'])->middleware('role:advanced');
+        Route::get('list', [UserController::class, 'list'])->middleware('role:manager');
+        Route::get('roles', [UserController::class, 'listRoles'])->middleware('role:manager');
         Route::patch('{id}', [UserController::class, 'update']);
-        Route::delete('{id}', [UserController::class, 'remove'])->middleware('role:advanced');
+        Route::delete('{id}', [UserController::class, 'remove'])->middleware('role:manager');
     });
 
 

@@ -27,12 +27,12 @@ class DatabaseSeeder extends Seeder
         $developer->assignRole('admin');
 
         $user = new User([
-            'name' => 'Admin',
+            'name' => 'Manager Principal',
             'email' => 'admin@godjango.dev',
             'phone' => '500001',
-            'password' => bcrypt('admin')
+            'password' => bcrypt('admin@godjango.dev')
         ]);
         $user->save();
-        $user->assignRole('advanced');
+        $user->assignRole('manager');
     }
 }

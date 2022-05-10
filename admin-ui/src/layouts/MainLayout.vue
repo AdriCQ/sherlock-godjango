@@ -30,7 +30,7 @@ const $app = injectStrict(_app);
  */
 
 onBeforeMount(() => {
-  if ($app.mode === 'advanced') useMeta({ title: 'Sherlock Admin' });
-  else useMeta({ title: 'Sherlock Deliver' });
+  if ($app.mode === 'manager') useMeta({ title: 'Sherlock Manager' });
+  else useMeta({ title: 'Sherlock Agente' });
 });
 </script>

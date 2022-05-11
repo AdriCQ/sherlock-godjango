@@ -23,10 +23,6 @@ class CreateUsersTable extends Migration
             $table->rememberToken();
             $table->timestamps();
         });
-
-        Schema::table('users', function (Blueprint $table) {
-            $table->foreign('group_id')->references('id')->on('personal_groups');
-        });
     }
 
     /**

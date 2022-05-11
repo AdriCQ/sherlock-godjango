@@ -18,6 +18,11 @@ class CreatePersonalGroupsTable extends Migration
             $table->string('name');
             $table->text('description')->nullable();
         });
+
+
+        Schema::table('users', function (Blueprint $table) {
+            $table->foreign('group_id')->references('id')->on('personal_groups');
+        });
     }
 
     /**

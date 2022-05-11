@@ -47,7 +47,7 @@
             expand-icon-class="text-transparent"
             :expand-separator="false"
             exact
-            :to="{ name: ROUTE_NAME.ADMIN_PERSONAL_GROUP }"
+            :to="{ name: ROUTE_NAME.ADMIN_AGENT_GROUP }"
           >
             <template v-slot:header>
               <q-item-section avatar top>

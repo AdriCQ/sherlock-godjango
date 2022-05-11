@@ -20,10 +20,7 @@
             v-for="(group, gKey) in groups"
             :key="`group-${group.id}-${gKey}`"
           >
-            <personal-group-widget
-              :group="group"
-              @click="onGroupClick(group)"
-            />
+            <agent-group-widget :group="group" @click="onGroupClick(group)" />
           </div>
         </div>
       </q-card-section>
@@ -31,7 +28,7 @@
 
     <!-- Dialog Form -->
     <q-dialog v-model="dialogCreate">
-      <personal-group-form
+      <agent-group-form
         class="full-width"
         @cancel="closeDialogs"
         @complete="closeDialogs"
@@ -40,14 +37,14 @@
     <!-- / Dialog Form -->
 
     <!-- Dialog users -->
-    <q-dialog v-model="dialogUsers">
-      <personal-group-advanced-widget
+    <q-dialog v-model="dialogAgents">
+      <agent-group-advanced-widget
         style="min-width: 20rem"
-        :key="`d-key-${dialogUsersKey}`"
+        :key="`d-key-${dialogAgentsKey}`"
         :group="selectedGroup"
         v-if="selectedGroup"
-        @add-user="updateDialogUsers"
-        @remove-user="updateDialogUsers"
+        @add-agent="updateDialogAgents"
+        @remove-agent="updateDialogAgents"
         @cancel="closeDialogs"
       />
     </q-dialog>
@@ -56,30 +53,29 @@
 </template>
 
 <script setup lang="ts">
-import PersonalGroupWidget from 'src/components/widgets/PersonalGroupWidget.vue';
-import PersonalGroupAdvancedWidget from 'src/components/widgets/PersonalGroupAdvancedWidget.vue';
-import PersonalGroupForm from 'src/components/forms/PersonalGroupForm.vue';
+import AgentGroupWidget from 'src/components/widgets/AgentGroupWidget.vue';
+import AgentGroupAdvancedWidget from 'src/components/widgets/AgentGroupAdvancedWidget.vue';
+import AgentGroupForm from 'src/components/forms/AgentGroupForm.vue';
 import { notificationHelper } from 'src/helpers';
-import { injectStrict, _personalGroup, _user } from 'src/injectables';
+import { injectStrict, _agentInjectable } from 'src/injectables';
 import { computed, onBeforeMount, ref } from 'vue';
-import { IPersonalGroup } from 'src/types';
+import { IAgentGroup } from 'src/types';
 /**
  * -----------------------------------------
  *	Injext
  * -----------------------------------------
  */
-const $pGroup = injectStrict(_personalGroup);
-const $user = injectStrict(_user);
+const $agent = injectStrict(_agentInjectable);
 /**
  * -----------------------------------------
  *	Data
  * -----------------------------------------
  */
 const dialogCreate = ref(false);
-const dialogUsers = ref(false);
-const dialogUsersKey = ref('a');
-const groups = computed(() => $pGroup.allGroups.value);
-const selectedGroup = ref<IPersonalGroup>();
+const dialogAgents = ref(false);
+const dialogAgentsKey = ref('a');
+const groups = computed(() => $agent.groups);
+const selectedGroup = ref<IAgentGroup>();
 
 /**
  * -----------------------------------------
@@ -91,34 +87,31 @@ const selectedGroup = ref<IPersonalGroup>();
  */
 function closeDialogs() {
   dialogCreate.value = false;
-  dialogUsers.value = false;
+  dialogAgents.value = false;
   selectedGroup.value = undefined;
 }
 /**
  * onGroupClick
  * @param g
  */
-function onGroupClick(g: IPersonalGroup) {
+function onGroupClick(g: IAgentGroup) {
   closeDialogs();
   selectedGroup.value = g;
-  dialogUsers.value = true;
+  dialogAgents.value = true;
 }
 /**
- * updateDialogUsers
+ * updateDialogAgents
  */
-async function updateDialogUsers() {
-  await $pGroup.list();
+async function updateDialogAgents() {
+  await $agent.list();
   const index = groups.value.findIndex((g) => g.id === selectedGroup.value?.id);
   selectedGroup.value = groups.value[index];
-  dialogUsersKey.value = btoa(Date());
+  dialogAgentsKey.value = btoa(Date());
 }
 
-onBeforeMount(async () => {
-  try {
-    await $pGroup.list();
-    await $user.list();
-  } catch (error) {
-    notificationHelper.axiosError(error, 'Error');
-  }
+onBeforeMount(() => {
+  Promise.all([void $agent.list(), void $agent.listGroup()]).catch((e) => {
+    notificationHelper.axiosError(e, 'Error de red');
+  });
 });
 </script>

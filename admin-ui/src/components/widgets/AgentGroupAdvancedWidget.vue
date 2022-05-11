@@ -16,12 +16,12 @@
         <q-item v-if="group.id !== 1">
           <q-item-section>
             <q-select
-              v-model="selectedUser"
-              :options="allUsers"
+              v-model="selectedAgent"
+              :options="agents"
               emit-value
               map-options
               option-value="id"
-              option-label="name"
+              option-label="nick"
               label="Añadir Agente"
               dense
             />
@@ -30,22 +30,22 @@
             avatar
             class="cursor-pointer"
             v-if="group.id !== 1"
-            @click="addUser"
+            @click="addAgent"
           >
             <q-icon color="positive" name="mdi-plus" />
           </q-item-section>
         </q-item>
 
         <q-item
-          v-for="(user, uKey) in group.users"
-          :key="`user-list-${uKey}-${user.id}`"
+          v-for="(agent, uKey) in group.agents"
+          :key="`agent-list-${uKey}-${agent.id}`"
         >
-          <q-item-section>{{ user.name }}</q-item-section>
+          <q-item-section>{{ agent.nick }}</q-item-section>
           <q-item-section
             avatar
             class="cursor-pointer"
             v-if="group.id !== 1"
-            @click="removeUser(user.id)"
+            @click="removeAgent(agent.id)"
           >
             <q-icon color="negative" name="mdi-delete" />
           </q-item-section>
@@ -57,41 +57,43 @@
 
 <script setup lang="ts">
 import { notificationHelper, useGuiHelper } from 'src/helpers';
-import { injectStrict, _personalGroup, _user } from 'src/injectables';
-import { IPersonalGroup } from 'src/types';
+import { injectStrict, _agentInjectable } from 'src/injectables';
 import { computed, ref, toRefs } from 'vue';
-
+import { IAgentGroup } from 'src/types';
+/**
+ * -----------------------------------------
+ *	Injection
+ * -----------------------------------------
+ */
+const $agent = injectStrict(_agentInjectable);
 const $emit = defineEmits<{
-  (e: 'add-user'): void;
-  (e: 'remove-user'): void;
+  (e: 'add-agent'): void;
+  (e: 'remove-agent'): void;
   (e: 'update'): void;
   (e: 'cancel'): void;
 }>();
 const $gui = useGuiHelper();
-const $pGroup = injectStrict(_personalGroup);
-const $props = defineProps<{ group: IPersonalGroup }>();
-const $user = injectStrict(_user);
+const $props = defineProps<{ group: IAgentGroup }>();
 /**
  * -----------------------------------------
  *	Data
  * -----------------------------------------
  */
-const allUsers = computed(() => $user.allUsers);
+const agents = computed(() => $agent.agents);
 const { group } = toRefs($props);
-const selectedUser = ref();
+const selectedAgent = ref();
 /**
- * addUser
+ * Add Agent
  */
-async function addUser() {
+async function addAgent() {
   $gui.deleteDialog({
     title: 'Añadir Agente',
     message: 'Va a agregar un nuevo Agente al grupo',
     onOk: async () => {
       notificationHelper.loading();
       try {
-        await $pGroup.addUser(group.value.id, selectedUser.value);
-        // notificationHelper.success(['Agente agragado']);
-        $emit('add-user');
+        await $agent.addAgentToGroup(selectedAgent.value, group.value.id);
+        $emit('add-agent');
       } catch (error) {
         notificationHelper.axiosError(error, 'No se pudo Agente el usuario');
       }
@@ -100,18 +102,17 @@ async function addUser() {
   });
 }
 /**
- * removeUser
+ * Remove Agent
  */
-async function removeUser(id: number) {
+async function removeAgent(id: number) {
   $gui.deleteDialog({
     title: 'Eliminar Agente',
     message: 'Va a eliminar un nuevo Agente del grupo',
     onOk: async () => {
       notificationHelper.loading();
       try {
-        await $pGroup.removeUser(group.value.id, id);
-        // notificationHelper.success(['Agente Eliminado']);
-        $emit('add-user');
+        await $agent.removeAgentFromGroup(id, group.value.id);
+        $emit('remove-agent');
       } catch (error) {
         notificationHelper.axiosError(error, 'No se pudo eliminar el Agente');
       }

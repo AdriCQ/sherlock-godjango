@@ -6,7 +6,7 @@
         <q-icon name="mdi-account-multiple" class="q-mr-sm" />
         <span
           >{{
-            $props.group.users?.length ? $props.group.users.length : 0
+            $props.group.agents?.length ? $props.group.agents.length : 0
           }}
           Agentes</span
         >
@@ -16,6 +16,6 @@
 </template>
 
 <script setup lang="ts">
-import { IPersonalGroup } from 'src/types';
-const $props = defineProps<{ group: IPersonalGroup }>();
+import { IAgentGroup } from 'src/types';
+const $props = defineProps<{ group: IAgentGroup }>();
 </script>

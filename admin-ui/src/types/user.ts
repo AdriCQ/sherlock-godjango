@@ -20,16 +20,6 @@ export interface IUserProfile {
   email: string;
   phone: string;
   role: IUserRole;
-  personal_group?: IPersonalGroup;
-}
-/**
- * IPersonalGroup
- */
-export interface IPersonalGroup {
-  id: number;
-  name: string;
-  description?: string;
-  users?: IUserProfile[];
 }
 /**
  * User Create Request

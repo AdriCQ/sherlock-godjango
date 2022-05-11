@@ -20,7 +20,7 @@ class FakeSeeder extends Seeder
         $this->call([DatabaseSeeder::class]);
 
         $this->seedUsers();
-        $this->seedAgentGroups();
+        $this->seedAgentGroups(2);
         $this->seedAgents();;
     }
 

@@ -10,13 +10,13 @@ import {
   $user,
   _map,
   $mapInjectable,
-  _personalGroup,
-  $personalGroup,
+  _agentInjectable,
+  $agentInjectable,
 } from './injectables';
 import { provide } from 'vue';
 
 provide(_app, $app);
 provide(_map, $mapInjectable);
-provide(_personalGroup, $personalGroup);
+provide(_agentInjectable, $agentInjectable);
 provide(_user, $user);
 </script>

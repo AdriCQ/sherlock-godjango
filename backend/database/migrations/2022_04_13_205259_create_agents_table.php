@@ -20,7 +20,7 @@ class CreateAgentsTable extends Migration
             $table->string('address');
             $table->string('nick');
             $table->text('others')->nullable();
-            $table->json('position');
+            $table->json('position')->nullable();
             $table->boolean('bussy')->default(false);
             $table->timestamps();
         });

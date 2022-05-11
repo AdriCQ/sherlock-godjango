@@ -26,17 +26,17 @@
 
 <script setup lang="ts">
 import { notificationHelper } from 'src/helpers';
-import { injectStrict, _personalGroup } from 'src/injectables';
-import { IPersonalGroup } from 'src/types';
+import { injectStrict, _agentInjectable } from 'src/injectables';
 import { ref } from 'vue';
+import { IAgentGroup } from 'src/types';
 
 const $emit = defineEmits<{
   (e: 'complete'): void;
   (e: 'cancel'): void;
 }>();
-const $pGroup = injectStrict(_personalGroup);
+const $agent = injectStrict(_agentInjectable);
 
-const form = ref<Omit<IPersonalGroup, 'id' | 'users'>>({
+const form = ref<Omit<IAgentGroup, 'id'>>({
   name: '',
   description: '',
 });
@@ -45,7 +45,7 @@ const form = ref<Omit<IPersonalGroup, 'id' | 'users'>>({
  */
 async function onSubmit() {
   try {
-    await $pGroup.create(form.value);
+    await $agent.createGroup(form.value);
     $emit('complete');
   } catch (error) {
     notificationHelper.axiosError(error, 'No se pudo guardar');

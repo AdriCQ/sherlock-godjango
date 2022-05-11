@@ -14,14 +14,14 @@ const route: RouteRecordRaw = {
       component: () => import('src/pages/admin/AdminHomePage.vue'),
     },
     {
-      path: 'personal',
+      path: 'users',
       name: ROUTE_NAME.ADMIN_USERS,
       component: () => import('src/pages/admin/AdminUsersPage.vue'),
     },
     {
-      path: 'personal/groups',
-      name: ROUTE_NAME.ADMIN_PERSONAL_GROUP,
-      component: () => import('src/pages/admin/PersonalGroupPage.vue'),
+      path: 'agents/groups',
+      name: ROUTE_NAME.ADMIN_AGENT_GROUP,
+      component: () => import('src/pages/admin/AgentGroupPage.vue'),
     },
   ],
 };

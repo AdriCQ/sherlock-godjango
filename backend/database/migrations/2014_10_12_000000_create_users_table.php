@@ -19,13 +19,13 @@ class CreateUsersTable extends Migration
             $table->string('email')->unique();
             $table->string('phone')->nullable();
             $table->string('password');
+            $table->unsignedBigInteger('group_id')->nullable();
             $table->rememberToken();
             $table->timestamps();
         });
 
         Schema::table('users', function (Blueprint $table) {
-            $table->unsignedBigInteger('group_id')->nullable();
-            $table->foreign('group_id')->references('personal_groups');
+            $table->foreign('group_id')->references('id')->on('personal_groups');
         });
     }
 

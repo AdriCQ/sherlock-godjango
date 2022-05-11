@@ -18,7 +18,7 @@ export interface IUserProfile {
   id: number;
   name: string;
   email: string;
-  phone?: string;
+  phone: string;
   role: IUserRole;
   personal_group?: IPersonalGroup;
 }
@@ -37,7 +37,7 @@ export interface IPersonalGroup {
 export interface IUserCreateRequest {
   name: string;
   email: string;
-  phone?: string;
+  phone: string;
   role_id: number;
   password?: string;
   password_confirmation?: string;

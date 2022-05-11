@@ -59,7 +59,7 @@ class PersonalGroupInjectable {
     await $csrf();
     await $api.delete<IApiResponse<void>>(`personal/groups/${id}`);
     const index = this.allGroups.value.findIndex((g) => g.id === id);
-    if (index) this.allGroups.value.splice(index, 1);
+    if (index >= 0) this.allGroups.value.splice(index, 1);
   }
 
   /**
@@ -78,7 +78,7 @@ class PersonalGroupInjectable {
       )
     ).data.data;
     const index = this.allGroups.value.findIndex((g) => g.id === groupId);
-    if (index) this.allGroups.value[index] = data;
+    if (index >= 0) this.allGroups.value[index] = data;
   }
   /**
    * update
@@ -93,7 +93,7 @@ class PersonalGroupInjectable {
       c
     );
     const index = this.allGroups.value.findIndex((g) => g.id === id);
-    if (index) this.allGroups.value[index] = resp.data.data;
+    if (index >= 0) this.allGroups.value[index] = resp.data.data;
   }
 }
 

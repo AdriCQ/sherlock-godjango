@@ -8,7 +8,7 @@
   >
     <!-- profile -->
     <div class="text-center q-mt-md">
-      <div class="text-grey-9 text-body1">Hola, Usuario</div>
+      <div class="text-grey-9 text-body1">Hola, {{ userName }}</div>
     </div>
     <!-- / profile -->
 
@@ -119,6 +119,7 @@ const $gui = useGuiHelper();
 const $router = useRouter();
 const $user = injectStrict(_user);
 
+const userName = computed(() => $user.profile.name);
 const sidebarOpen = computed(() => $app.leftDrawer);
 
 /**

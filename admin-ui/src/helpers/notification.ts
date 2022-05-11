@@ -35,7 +35,7 @@ class NotificationHelper {
    * success
    * @param _p
    */
-  success(_p: string[], timeout = 7000, position: INotifyPosition = 'center') {
+  success(_p: string[], timeout = 4000, position: INotifyPosition = 'center') {
     _p.forEach((message) => {
       Notify.create({
         type: 'positive',
@@ -59,7 +59,7 @@ class NotificationHelper {
    * success
    * @param _p
    */
-  error(_p: string[], timeout = 7000, position: INotifyPosition = 'center') {
+  error(_p: string[], timeout = 4000, position: INotifyPosition = 'center') {
     _p.forEach((message) => {
       Notify.create({
         type: 'negative',

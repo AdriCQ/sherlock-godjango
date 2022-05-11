@@ -8,7 +8,7 @@
     <!-- leftDrawer -->
     <manager-left-drawer />
     <!-- / leftDrawer -->
-    <main-footer />
+    <main-footer v-if="$q.platform.is.mobile" />
   </q-layout>
 </template>
 
@@ -17,7 +17,7 @@ import AppHeader from './Header.vue';
 import MainFooter from './MainFooter.vue';
 import ManagerLeftDrawer from './ManagerLeftDrawer.vue';
 import { onBeforeMount } from 'vue';
-import { useMeta } from 'quasar';
+import { useMeta, useQuasar } from 'quasar';
 import { injectStrict, _app } from 'src/injectables';
 /**
  * -----------------------------------------
@@ -25,6 +25,7 @@ import { injectStrict, _app } from 'src/injectables';
  * -----------------------------------------
  */
 const $app = injectStrict(_app);
+const $q = useQuasar();
 /**
  * -----------------------------------------
  *	Lifecycle

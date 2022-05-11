@@ -35,7 +35,7 @@
       <q-dialog v-model="dialogUserForm" maximized class="q-pa-md">
         <user-form
           :user="editUser"
-          @form-complete="onFormCompleted"
+          @form-complete="closeDialog"
           @cancel="closeDialog"
         />
       </q-dialog>
@@ -103,20 +103,6 @@ async function listUsers() {
   } catch (error) {
     notificationHelper.axiosError(error, 'No se pudo listar los usuarios');
   }
-}
-/**
- * onFormCompleted
- * @param user
- */
-function onFormCompleted(user: IUserProfile) {
-  const index = users.value?.findIndex((u) => u.id === user.id);
-  if (index < 0) {
-    users.value?.push(user);
-  } else {
-    users.value[index] = user;
-  }
-  void closeDialog();
-  notificationHelper.success(['Usuario Guardado']);
 }
 /**
  * onUserRemoved

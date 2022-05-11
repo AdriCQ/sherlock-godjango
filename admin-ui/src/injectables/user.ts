@@ -69,7 +69,9 @@ class UserInjectable {
    */
   async create(user: IUserCreateRequest) {
     await $csrf();
-    return $api.post<IApiResponse<IUserProfile>>('users', user);
+    const resp = await $api.post<IApiResponse<IUserProfile>>('users', user);
+    this.allUsers.push(resp.data.data);
+    return resp.data.data;
   }
   /**
    * list
@@ -112,7 +114,10 @@ class UserInjectable {
    */
   async remove(userId: number) {
     await $csrf();
-    return $api.delete(`users/${userId}`);
+    const resp = await $api.delete(`users/${userId}`);
+    const index = this.allUsers.findIndex((u) => u.id == userId);
+    if (index >= 0) this.allUsers.splice(index, 1);
+    return resp.data.data;
   }
   /**
    * update
@@ -122,7 +127,13 @@ class UserInjectable {
    */
   async update(id: number, user: IUserCreateRequest) {
     await $csrf();
-    return $api.patch<IApiResponse<IUserProfile>>(`users/${id}`, user);
+    const resp = await $api.patch<IApiResponse<IUserProfile>>(
+      `users/${id}`,
+      user
+    );
+    const index = this.allUsers.findIndex((u) => u.id == id);
+    if (index >= 0) this.allUsers[index] = resp.data.data;
+    return resp.data.data;
   }
   /**
    * -----------------------------------------

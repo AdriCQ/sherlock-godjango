@@ -33,6 +33,22 @@
           </template>
         </q-input>
 
+        <q-input
+          name="phone"
+          v-model="form.phone"
+          type="tel"
+          label="Teléfono"
+          bottom-slots
+          :readonly="isUpdate"
+          :error="$v.phone.$error"
+        >
+          <template v-slot:error>
+            <div v-for="e of $v.phone.$errors" :key="e.$uid">
+              {{ e.$message }}
+            </div>
+          </template>
+        </q-input>
+
         <q-select
           v-model="form.role_id"
           :options="roles"
@@ -85,7 +101,7 @@ import { IUserCreateRequest, IUserProfile } from 'src/types';
  * -----------------------------------------
  */
 const $emit = defineEmits<{
-  (e: 'form-complete', p: IUserProfile): void;
+  (e: 'form-complete', p?: IUserProfile): void;
   (e: 'cancel'): void;
 }>();
 const $props = defineProps<{ user?: IUserProfile }>();
@@ -98,6 +114,7 @@ const $user = injectStrict(_user);
 const form = ref<IUserCreateRequest>({
   email: '',
   name: '',
+  phone: '',
   password: '',
   password_confirmation: '',
   role_id: 2,
@@ -112,6 +129,9 @@ const $v = useVuelidate(
     email: {
       required: helpers.withMessage('El email es necesario', required),
       email: helpers.withMessage('El email no es válido', email),
+    },
+    phone: {
+      required: helpers.withMessage('El telefono es necesario', required),
     },
     name: {
       required: helpers.withMessage('Necesitamos su nombre', required),
@@ -140,14 +160,14 @@ const $v = useVuelidate(
 async function onSubmit() {
   if (await $v.value.$validate()) {
     try {
+      console.log(form.value);
       if ($props.user) {
-        $emit(
-          'form-complete',
-          (await $user.update($props.user?.id, form.value)).data.data
-        );
+        await $user.update($props.user?.id, form.value);
       } else {
-        $emit('form-complete', (await $user.create(form.value)).data.data);
+        await $user.create(form.value);
       }
+      $emit('form-complete');
+      notificationHelper.success(['Usuario Guardado']);
     } catch (error) {
       notificationHelper.axiosError(error, 'No se pudo guardar el usuario');
     }
@@ -164,6 +184,7 @@ onBeforeMount(async () => {
       name: $props.user.name,
       password: undefined,
       password_confirmation: undefined,
+      phone: $props.user.phone,
       role_id: $props.user.role.id,
     };
   } else {
@@ -172,6 +193,7 @@ onBeforeMount(async () => {
       name: '',
       password: '',
       password_confirmation: '',
+      phone: '',
       role_id: 2,
     };
   }

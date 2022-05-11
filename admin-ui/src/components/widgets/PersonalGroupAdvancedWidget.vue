@@ -13,7 +13,7 @@
     </q-card-section>
     <q-card-section class="q-pa-sm">
       <q-list bordered separator>
-        <q-item>
+        <q-item v-if="group.id !== 1">
           <q-item-section>
             <q-select
               v-model="selectedUser"
@@ -26,7 +26,12 @@
               dense
             />
           </q-item-section>
-          <q-item-section avatar class="cursor-pointer" @click="addUser">
+          <q-item-section
+            avatar
+            class="cursor-pointer"
+            v-if="group.id !== 1"
+            @click="addUser"
+          >
             <q-icon color="positive" name="mdi-plus" />
           </q-item-section>
         </q-item>
@@ -39,6 +44,7 @@
           <q-item-section
             avatar
             class="cursor-pointer"
+            v-if="group.id !== 1"
             @click="removeUser(user.id)"
           >
             <q-icon color="negative" name="mdi-delete" />
@@ -84,7 +90,7 @@ async function addUser() {
       notificationHelper.loading();
       try {
         await $pGroup.addUser(group.value.id, selectedUser.value);
-        notificationHelper.success(['Agente agragado']);
+        // notificationHelper.success(['Agente agragado']);
         $emit('add-user');
       } catch (error) {
         notificationHelper.axiosError(error, 'No se pudo Agente el usuario');
@@ -104,7 +110,7 @@ async function removeUser(id: number) {
       notificationHelper.loading();
       try {
         await $pGroup.removeUser(group.value.id, id);
-        notificationHelper.success(['Agente Eliminado']);
+        // notificationHelper.success(['Agente Eliminado']);
         $emit('add-user');
       } catch (error) {
         notificationHelper.axiosError(error, 'No se pudo eliminar el Agente');

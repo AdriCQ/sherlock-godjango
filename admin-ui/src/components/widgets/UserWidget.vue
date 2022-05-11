@@ -14,6 +14,9 @@
         <q-icon name="mdi-email-outline" class="q-mr-sm" />{{ user.email }}
       </div>
       <div class="text-body2">
+        <q-icon name="mdi-phone" class="q-mr-sm" />{{ user.phone }}
+      </div>
+      <div class="text-body2">
         <q-icon name="mdi-account-settings" class="q-mr-sm" />{{
           user.role.display_name
         }}

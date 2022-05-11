@@ -47,27 +47,6 @@
             expand-icon-class="text-transparent"
             :expand-separator="false"
             exact
-            :to="{ name: ROUTE_NAME.ADMIN_AGENT_GROUP }"
-          >
-            <template v-slot:header>
-              <q-item-section avatar top>
-                <q-avatar
-                  size="md"
-                  icon="mdi-account-circle"
-                  text-color="primary"
-                />
-              </q-item-section>
-
-              <q-item-section>
-                <q-item-label lines="1">Grupos</q-item-label>
-              </q-item-section>
-            </template>
-          </q-expansion-item>
-
-          <q-expansion-item
-            expand-icon-class="text-transparent"
-            :expand-separator="false"
-            exact
             :to="{ name: ROUTE_NAME.ADMIN_USERS }"
           >
             <template v-slot:header>
@@ -84,6 +63,48 @@
               </q-item-section>
             </template>
           </q-expansion-item>
+
+          <!-- Agentes -->
+          <q-expansion-item
+            expand-icon-class="text-transparent"
+            :expand-separator="false"
+            exact
+            :to="{ name: ROUTE_NAME.ADMIN_AGENTS }"
+          >
+            <template v-slot:header>
+              <q-item-section avatar top>
+                <q-avatar size="md" icon="mdi-account" text-color="primary" />
+              </q-item-section>
+
+              <q-item-section>
+                <q-item-label lines="1">Agentes</q-item-label>
+              </q-item-section>
+            </template>
+          </q-expansion-item>
+          <!-- / Agentes -->
+
+          <!-- Gripos -->
+          <q-expansion-item
+            expand-icon-class="text-transparent"
+            :expand-separator="false"
+            exact
+            :to="{ name: ROUTE_NAME.ADMIN_AGENT_GROUP }"
+          >
+            <template v-slot:header>
+              <q-item-section avatar top>
+                <q-avatar
+                  size="md"
+                  icon="mdi-account-circle"
+                  text-color="primary"
+                />
+              </q-item-section>
+
+              <q-item-section>
+                <q-item-label lines="1">Grupos</q-item-label>
+              </q-item-section>
+            </template>
+          </q-expansion-item>
+          <!-- / Gripos -->
         </q-expansion-item>
         <!-- / Personal -->
 

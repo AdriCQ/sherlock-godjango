@@ -31,3 +31,16 @@ export interface IAgentCategory {
   id: number;
   name: string;
 }
+
+export type IAgentCreateRequest = Omit<IAgent, 'id' | 'bussy'>;
+export type IAgentUpdateRequest = Partial<Omit<IAgent, 'id' | 'user_id'>>;
+
+/**
+ * Agent Create Group Request
+ */
+export type IAgentGroupCreateRequest = Omit<IAgentGroup, 'id'>;
+
+/**
+ * Agent Update Group Request
+ */
+export type IAgentGroupUpdateRequest = Partial<IAgentGroupCreateRequest>;

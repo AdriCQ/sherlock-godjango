@@ -2,7 +2,7 @@
   <q-page padding>
     <q-card class="no-box-shadow">
       <q-card-section>
-        <div class="text-h6 text-center">Grupos</div>
+        <div class="text-h6 text-center">Administrar Grupos</div>
         <div class="text-subtitle2">
           <q-btn
             color="primary"

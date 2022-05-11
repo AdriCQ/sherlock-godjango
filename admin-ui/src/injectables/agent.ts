@@ -1,5 +1,14 @@
-import { $api } from 'src/boot/axios';
-import { IAgent, IAgentCategory, IAgentGroup, IApiResponse } from 'src/types';
+import { $api, $csrf } from 'src/boot/axios';
+import {
+  IAgent,
+  IAgentCreateRequest,
+  IAgentUpdateRequest,
+  IAgentCategory,
+  IAgentGroup,
+  IAgentGroupCreateRequest,
+  IAgentGroupUpdateRequest,
+  IApiResponse,
+} from 'src/types';
 import { InjectionKey, ref } from 'vue';
 /**
  * @var API_PATH
@@ -45,7 +54,8 @@ class AgentInjectable {
    * @param p
    * @returns
    */
-  async create(p: Omit<IAgent, 'id' | 'bussy'>) {
+  async create(p: IAgentCreateRequest) {
+    await $csrf();
     const agent = (await $api.post<IApiResponse<IAgent>>(API_PATH, p)).data
       .data;
     this.agents.push(agent);
@@ -64,6 +74,7 @@ class AgentInjectable {
    * @param id
    */
   async remove(id: number) {
+    await $csrf();
     await $api.delete(`${API_PATH}/${id}`);
     const index = this.agents.findIndex((a) => a.id === id);
     if (index >= 0) this.agents.splice(index, 1);
@@ -73,7 +84,8 @@ class AgentInjectable {
    * @param id
    * @param u
    */
-  async update(id: number, u: Partial<Omit<IAgent, 'id' | 'user_id'>>) {
+  async update(id: number, u: IAgentUpdateRequest) {
+    await $csrf();
     const agent = (
       await $api.patch<IApiResponse<IAgent>>(`${API_PATH}/${id}`, u)
     ).data.data;
@@ -93,6 +105,7 @@ class AgentInjectable {
    * @returns
    */
   async addAgentToGroup(agent_id: number, groupId: number) {
+    await $csrf();
     const group = (
       await $api.post<IApiResponse<IAgentGroup>>(
         `${API_PATH}/groups/${groupId}/add-agent`,
@@ -108,7 +121,8 @@ class AgentInjectable {
    * @param p
    * @returns
    */
-  async createGroup(p: Omit<IAgentGroup, 'id'>) {
+  async createGroup(p: IAgentGroupCreateRequest) {
+    await $csrf();
     const group = (
       await $api.post<IApiResponse<IAgentGroup>>(`${API_PATH}/groups`, p)
     ).data.data;
@@ -130,6 +144,7 @@ class AgentInjectable {
    * @param id
    */
   async removeGroup(id: number) {
+    await $csrf();
     await $api.delete(`${API_PATH}/groups/${id}`);
     const index = this.groups.findIndex((a) => a.id === id);
     if (index >= 0) this.groups.splice(index, 1);
@@ -142,6 +157,7 @@ class AgentInjectable {
    * @returns
    */
   async removeAgentFromGroup(agent_id: number, groupId: number) {
+    await $csrf();
     const group = (
       await $api.post<IApiResponse<IAgentGroup>>(
         `${API_PATH}/groups/${groupId}/remove-agent`,
@@ -157,7 +173,8 @@ class AgentInjectable {
    * @param id
    * @param u
    */
-  async updateGroup(id: number, u: Partial<Omit<IAgentGroup, 'id'>>) {
+  async updateGroup(id: number, u: IAgentGroupUpdateRequest) {
+    await $csrf();
     const group = (
       await $api.patch<IApiResponse<IAgentGroup>>(`${API_PATH}/groups/${id}`, u)
     ).data.data;

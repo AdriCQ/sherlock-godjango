@@ -23,9 +23,9 @@ class AgentController extends Controller
             'nick' => ['required', 'string'],
             'user_id' => ['required', 'integer'],
             'agent_group_id' => ['required', 'integer'],
-            'position' => ['required', 'array'],
-            'position.lat' => ['required', 'numeric'],
-            'position.lng' => ['required', 'numeric'],
+            'position' => ['nullable', 'array'],
+            'position.lat' => ['sometimes', 'numeric'],
+            'position.lng' => ['sometimes', 'numeric'],
             'categories' => ['required', 'array'],
             'categories.*' => ['required', 'integer'],
         ]);
@@ -101,14 +101,16 @@ class AgentController extends Controller
         $validator = $validator->validate();
         $agent = Agent::find($id);
         if (!$agent) return $this->sendResponse(null, 'No encontrado', 400);
-        $catArray = $validator['categories'];
-        unset($validator['categories']);
-        Agent::query()->where('id', $id)->update($validator);
-        $agent = Agent::find($id);
-        $agent->categories()->delete();
-        $agent->categories()->attach($catArray);
-
-        return $agent->save() ? $this->sendResponse($agent) : $this->sendResponse($agent->errors, 'No se pudo guardar', 500);
+        // Update categories
+        if (isset($validator['categories'])) {
+            $catArray = $validator['categories'];
+            unset($validator['categories']);
+            $agent->categories()->delete();
+            $agent->categories()->attach($catArray);
+        }
+        return $agent->update($validator)
+            ? $this->sendResponse(Agent::find($id))
+            : $this->sendResponse(null, 'No se pudo guardar', 500);
     }
 
     /**

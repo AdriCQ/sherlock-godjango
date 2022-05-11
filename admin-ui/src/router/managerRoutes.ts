@@ -19,6 +19,11 @@ const route: RouteRecordRaw = {
       component: () => import('src/pages/admin/AdminUsersPage.vue'),
     },
     {
+      path: 'agents',
+      name: ROUTE_NAME.ADMIN_AGENTS,
+      component: () => import('src/pages/admin/AgentsPage.vue'),
+    },
+    {
       path: 'agents/groups',
       name: ROUTE_NAME.ADMIN_AGENT_GROUP,
       component: () => import('src/pages/admin/AgentGroupPage.vue'),

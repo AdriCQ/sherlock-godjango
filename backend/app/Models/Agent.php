@@ -4,7 +4,6 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\Storage;
 
 class Agent extends Model
 {
@@ -12,7 +11,7 @@ class Agent extends Model
 
     protected $table = 'agents';
     protected $guarded = ['id'];
-    protected $casts = ['coordinate' => 'json'];
+    protected $casts = ['position' => 'array'];
 
     /**
      * -----------------------------------------
@@ -27,25 +26,17 @@ class Agent extends Model
         return $this->belongsToMany(Category::class, 'agent_categories');
     }
     /**
+     * group
+     */
+    public function group()
+    {
+        return $this->belongsTo(AgentGroup::class);
+    }
+    /**
      * user
      */
     public function user()
     {
         return $this->belongsTo(User::class);
-    }
-    /**
-     * -----------------------------------------
-     *	Helpers
-     * -----------------------------------------
-     */
-
-    public function readFromFiles()
-    {
-        // Check folder
-        if (!Storage::exists($this->path)) return false;
-
-        // Check coordinates
-        if (!Storage::exists($this->path . '/coordinates')) return false;
-        $coordsArray = Storage::files($this->path . '/coordinates');
     }
 }

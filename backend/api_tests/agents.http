@@ -4,18 +4,16 @@ Host: {{ host }}
 Authorization: {{token}}
 
 {
-    "name": "agentName",
-    "email": "a@email.com",
-    "phone": "55887799",
     "address": "Agent Address",
     "others": "Others",
-    "user_name": "AgentUserName",
-    "password": "AgentPassword",
-    "categories": [3,2],
-    "coordinate": {
+    "nick": "AgentUserName",
+    "categories": [1],
+    "position": {
         "lat":0,
         "lng":0
-    }
+    },
+    "user_id": 3,
+    "agent_group_id": 1
 }
 
 ### FIND
@@ -34,15 +32,19 @@ Host: {{ host }}
 Authorization: {{token}}
 
 {
-    "name": "agentName",
-    "phone": "55887799",
     "address": "Agent Address",
     "others": "Others",
-    "user_name": "AgentUserName",
-    "password": "AgentPassword",
-    "categories": [3,2],
-    "coordinate": {
+    "nick": "AgentUserName",
+    "categories": [1],
+    "position": {
         "lat":0,
         "lng":0
-    }
+    },
+    "agent_group_id": 1,
+    "bussy": true
 }
+
+### WHOAMI
+GET /api/agents/whoami HTTP/1.1
+Host: {{ host }}
+Authorization: {{token}}

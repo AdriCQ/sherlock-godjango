@@ -5,18 +5,18 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class PersonalGroup extends Model
+class AgentGroup extends Model
 {
     use HasFactory;
-    protected $table = 'personal_groups';
+    protected $table = 'agent_groups';
     protected $guarded = ['id'];
     public $timestamps = false;
 
     /**
      * users
      */
-    public function users()
+    public function agents()
     {
-        return $this->hasMany(User::class, 'group_id', 'id');
+        return $this->hasMany(Agent::class);
     }
 }

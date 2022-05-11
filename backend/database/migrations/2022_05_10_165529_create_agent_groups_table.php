@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreatePersonalGroupsTable extends Migration
+class CreateAgentGroupsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,15 +13,10 @@ class CreatePersonalGroupsTable extends Migration
      */
     public function up()
     {
-        Schema::create('personal_groups', function (Blueprint $table) {
+        Schema::create('agent_groups', function (Blueprint $table) {
             $table->id();
             $table->string('name');
             $table->text('description')->nullable();
-        });
-
-
-        Schema::table('users', function (Blueprint $table) {
-            $table->foreign('group_id')->references('id')->on('personal_groups');
         });
     }
 

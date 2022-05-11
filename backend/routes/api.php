@@ -3,7 +3,7 @@
 use App\Http\Controllers\AgentController;
 use App\Http\Controllers\AssignmentController;
 use App\Http\Controllers\CategoryController;
-use App\Http\Controllers\PersonalGroupController;
+use App\Http\Controllers\AgentGroupController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -44,32 +44,26 @@ Route::middleware('auth:sanctum')->group(function () {
      * -----------------------------------------
      */
     Route::prefix('agents')->group(function () {
-        Route::get('', [AgentController::class, 'list']);
-        Route::post('', [AgentController::class, 'create']);
-        Route::get('{id}', [AgentController::class, 'find']);
-        Route::delete('{id}', [AgentController::class, 'remove']);
-        Route::patch('{id}', [AgentController::class, 'update']);
-    });
-
-    /**
-     * -----------------------------------------
-     *	Personal
-     * -----------------------------------------
-     */
-    Route::prefix('personal')->group(function () {
         /**
          * -------------------------------------
-         *	Groups
+         *	Agent Groups
          * -------------------------------------
          */
         Route::middleware('role:manager')->prefix('groups')->group(function () {
-            Route::get('', [PersonalGroupController::class, 'list']);
-            Route::post('', [PersonalGroupController::class, 'create']);
-            Route::patch('{id}', [PersonalGroupController::class, 'update']);
-            Route::delete('{id}', [PersonalGroupController::class, 'remove']);
-            Route::post('{id}/add-user', [PersonalGroupController::class, 'addUser']);
-            Route::post('{id}/remove-user', [PersonalGroupController::class, 'removeUser']);
+            Route::get('', [AgentGroupController::class, 'list']);
+            Route::post('', [AgentGroupController::class, 'create']);
+            Route::patch('{id}', [AgentGroupController::class, 'update']);
+            Route::delete('{id}', [AgentGroupController::class, 'remove']);
+            Route::post('{id}/add-agent', [AgentGroupController::class, 'addAgent']);
+            Route::post('{id}/remove-agent', [AgentGroupController::class, 'removeAgent']);
         });
+
+        Route::get('', [AgentController::class, 'list']);
+        Route::post('', [AgentController::class, 'create']);
+        Route::get('whoami', [AgentController::class, 'whoami']);
+        Route::get('{id}', [AgentController::class, 'find']);
+        Route::delete('{id}', [AgentController::class, 'remove']);
+        Route::patch('{id}', [AgentController::class, 'update']);
     });
 
     /**

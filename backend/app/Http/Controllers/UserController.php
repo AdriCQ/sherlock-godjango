@@ -37,7 +37,6 @@ class UserController extends Controller
         $user->save();
         $user->assignRole($role->name);
         $user->role;
-        $user->personal_group;
         return $this->sendResponse($user, 'Usuario creado', 201);
     }
 
@@ -47,8 +46,8 @@ class UserController extends Controller
      */
     public function list()
     {
-        $roleId = Role::query()->where('name', 'user')->first();
-        return $this->sendResponse(User::query()->where('id', '>', 1)->with(['role', 'personal_group'])->get());
+        // $roleId = Role::query()->where('name', 'user')->first();
+        return $this->sendResponse(User::query()->where('id', '>', 2)->with(['role'])->get());
     }
 
     /**
@@ -86,7 +85,6 @@ class UserController extends Controller
         if (!Auth::attempt($validator)) return $this->sendAuthError();
         $user = Auth::user();
         $user->role;
-        $user->personal_group;
         return $this->sendResponse([
             'profile' => $user,
             'api_token' => $user->createToken('auth-token')->plainTextToken
@@ -122,14 +120,16 @@ class UserController extends Controller
         $validator = $validator->validate();
         $user = User::find($id);
         if (!$user) return $this->sendResponse(null, 'No existe el usuario', 400);
-        $role = Role::find($validator['role_id']);
-        if (!$role) return $this->sendResponse(null, 'No existe el rol', 400);
-        unset($validator['role_id']);
         if (isset($validator['password'])) $validator['password'] = bcrypt($validator['password']);
         $user->update($validator);
-        $user->assignRole($role->name);
+        // Update Role
+        if (isset($validator['role_id'])) {
+            $role = Role::find($validator['role_id']);
+            if (!$role) return $this->sendResponse(null, 'No existe el rol', 400);
+            unset($validator['role_id']);
+            $user->assignRole($role->name);
+        }
         $user->role;
-        $user->personal_group;
         return $this->sendResponse($user, 'Usuario actualizado');
     }
 

@@ -1,0 +1,33 @@
+
+### LIST
+GET /api/agents/groups HTTP/1.1
+Host: {{ host }}
+Authorization: {{token}}
+
+### CREATE
+POST /api/agents/groups HTTP/1.1
+Host: {{ host }}
+Authorization: {{token}}
+
+{
+    "name": "GroupName",
+    "description": "GroupDescription"
+}
+
+### Add Agent
+POST /api/agents/groups/1/add-agent HTTP/1.1
+Host: {{ host }}
+Authorization: {{token}}
+
+{
+    "agent_id": 3
+}
+
+### Remove Agent
+POST /api/agents/groups/1/remove-agent HTTP/1.1
+Host: {{ host }}
+Authorization: {{token}}
+
+{
+    "agent_id": 3
+}

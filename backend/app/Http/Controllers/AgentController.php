@@ -3,8 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Agent;
+use App\Models\AgentGroup;
+use App\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 
 class AgentController extends Controller
@@ -17,40 +18,34 @@ class AgentController extends Controller
     public function create(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'name' => ['required', 'string'],
-            'email' => ['required', 'email', 'unique:agents'],
-            'phone' => ['nullable', 'string'],
             'address' => ['nullable', 'string'],
             'others' => ['nullable', 'string'],
-            'user_name' => ['required', 'string'],
-            'password' => ['required', 'string'],
+            'nick' => ['required', 'string'],
+            'user_id' => ['required', 'integer'],
+            'agent_group_id' => ['required', 'integer'],
+            'position' => ['required', 'array'],
+            'position.lat' => ['required', 'numeric'],
+            'position.lng' => ['required', 'numeric'],
             'categories' => ['required', 'array'],
-            'coordinate' => ['required', 'array'],
-            'coordinate.lat' => ['required', 'numeric'],
-            'coordinate.lng' => ['required', 'numeric'],
             'categories.*' => ['required', 'integer'],
         ]);
         if ($validator->fails()) {
             return $this->sendResponse($validator->errors(), 'Verifique los datos enviados', 400);
         }
         $validator = $validator->validate();
-        $validator['user_id'] = auth()->id();
-        $validator['path'] = 'agents/' . hash('sha256', $validator['user_name'] . $validator['password']) . '.sd';
+        $user = User::find($validator['user_id']);
+        if (!$user || !AgentGroup::find($validator['agent_group_id']))
+            return $this->sendResponse(null, 'Verifique los datos enviados', 400);
+        if ($user->agent)
+            return $this->sendResponse($user->agent);
+        $model = new Agent($validator);
         $catArray = $validator['categories'];
         unset($validator['categories']);
-        $agent = new Agent($validator);
-        $agent->save();
-        $agent->categories()->attach($catArray);
-        // Create folders
-        if (
-            !Storage::makeDirectory($agent->path)
-            || !Storage::makeDirectory($agent->path . '/routes')
-            || !Storage::makeDirectory($agent->path . '/checkpoints')
-            || !Storage::makeDirectory($agent->path . '/coordinates')
-            || !Storage::makeDirectory($agent->path . '/observations')
-        )
-            return $this->sendResponse(null, 'Error creando arbol', 503);
-        return $this->sendResponse($agent);
+        if ($model->save()) {
+            $model->categories()->attach($catArray);
+            return $this->sendResponse($model);
+        }
+        return $this->sendResponse($model->errors, 'No se pudo guardar', 500);
     }
 
     /**
@@ -90,17 +85,15 @@ class AgentController extends Controller
     public function update(int $id, Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'name' => ['nullable', 'string'],
-            'phone' => ['nullable', 'string'],
             'address' => ['nullable', 'string'],
             'others' => ['nullable', 'string'],
-            'user_name' => ['nullable', 'string'],
-            'password' => ['nullable', 'string'],
+            'nick' => ['nullable', 'string'],
+            'agent_group_id' => ['nullable', 'integer'],
+            'position' => ['nullable', 'array'],
+            'position.lat' => ['sometimes', 'numeric'],
+            'position.lng' => ['sometimes', 'numeric'],
             'categories' => ['nullable', 'array'],
-            'categories.*' => ['nullable', 'integer'],
-            'coordinate' => ['nullable', 'array'],
-            'coordinate.lat' => ['nullable', 'numeric'],
-            'coordinate.lng' => ['nullable', 'numeric'],
+            'categories.*' => ['sometimes', 'integer'],
         ]);
         if ($validator->fails()) {
             return $this->sendResponse($validator->errors(), 'Verifique los datos enviados', 400);
@@ -112,11 +105,18 @@ class AgentController extends Controller
         unset($validator['categories']);
         Agent::query()->where('id', $id)->update($validator);
         $agent = Agent::find($id);
-        $agent->path =
-            'agents/' . hash('sha256', $agent->user_name . $agent->password) . '.sd';
         $agent->categories()->delete();
         $agent->categories()->attach($catArray);
-        $agent->save();
-        return $this->sendResponse($agent);
+
+        return $agent->save() ? $this->sendResponse($agent) : $this->sendResponse($agent->errors, 'No se pudo guardar', 500);
+    }
+
+    /**
+     * Whoami
+     * @return Illuminate\Http\JsonResponse
+     */
+    public function whoami()
+    {
+        return $this->sendResponse(auth()->user()->agent);
     }
 }

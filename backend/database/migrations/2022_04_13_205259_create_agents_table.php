@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\AgentGroup;
 use App\Models\User;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
@@ -16,21 +17,17 @@ class CreateAgentsTable extends Migration
     {
         Schema::create('agents', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->string('email')->unique();
-            $table->string('phone')->nullable();
-            $table->string('address')->nullable();
+            $table->string('address');
+            $table->string('nick');
             $table->text('others')->nullable();
-            $table->string('user_name');
-            $table->string('path');
-            $table->string('password');
-            $table->string('coordinate');
+            $table->json('position');
             $table->boolean('bussy')->default(false);
             $table->timestamps();
         });
 
         Schema::table('agents', function (Blueprint $table) {
             $table->foreignIdFor(User::class);
+            $table->foreignIdFor(AgentGroup::class);
         });
     }
 

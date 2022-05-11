@@ -2,7 +2,8 @@
 
 namespace Database\Seeders;
 
-use App\Models\PersonalGroup;
+use App\Models\AgentGroup;
+use App\Models\Category;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 
@@ -36,7 +37,12 @@ class DatabaseSeeder extends Seeder
         $user->save();
         $user->assignRole('manager');
 
-        // Seed default Personal Group
-        PersonalGroup::query()->insert(['name' => 'Default', 'description' => 'Grupo por defecto para agentes']);
+        // Seed default AgentGroup
+        AgentGroup::query()->insert(['name' => 'Default', 'description' => 'Grupo por defecto para agentes']);
+
+        // Seed Agent Categories
+        Category::query()->insert([[
+            'name' => 'Default'
+        ]]);
     }
 }

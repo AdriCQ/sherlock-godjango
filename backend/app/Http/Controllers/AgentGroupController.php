@@ -2,38 +2,38 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\PersonalGroup;
-use App\Models\User;
+use App\Models\Agent;
+use App\Models\AgentGroup;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
-class PersonalGroupController extends Controller
+class AgentGroupController extends Controller
 {
     /**
-     * Add user
+     * addAgent
      * @param int $id
      * @param Request request
      * @return Illuminate\Http\JsonResponse
      */
-    public function addUser(int $id, Request $request)
+    public function addAgent(int $id, Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'user_id' => ['required', 'integer']
+            'agent_id' => ['required', 'integer']
         ]);
-        $group = PersonalGroup::find($id);
+        $group = AgentGroup::find($id);
         if ($validator->fails() || !$group) {
             return response()->json($validator->errors()->toArray(), 400, [], JSON_NUMERIC_CHECK);
         }
         $validator = $validator->validate();
-        $user = User::query()->find($validator['user_id']);
-        if (!$user)
+        $agent = Agent::query()->find($validator['agent_id']);
+        if (!$agent)
             return $this->sendResponse(null, 'Verifique los datos enviados', 400);
-        $user->group_id = $id;
-        if ($user->save()) {
-            $group->users;
-            return $this->sendResponse(['user' => $user, 'group' => $group]);
+        $agent->agent_group_id = $id;
+        if ($agent->save()) {
+            $group->agents;
+            return $this->sendResponse($group);
         }
-        return $this->sendResponse($user->errors, 'No se pudo guardar', 503);
+        return $this->sendResponse($agent->errors, 'No se pudo guardar', 503);
     }
     /**
      * Create
@@ -50,7 +50,7 @@ class PersonalGroupController extends Controller
             return $this->sendResponse($validator->errors(), 'Verifique los datos enviados', 400);
         }
         $validator = $validator->validate();
-        $model = new PersonalGroup($validator);
+        $model = new AgentGroup($validator);
         return $model->save() ? $this->sendResponse($model, null) : $this->sendResponse($model->errors, 'No se pudo guardar el Grupo', 400);
     }
 
@@ -60,7 +60,7 @@ class PersonalGroupController extends Controller
      */
     public function list()
     {
-        return $this->sendResponse(PersonalGroup::query()->with('users')->get());
+        return $this->sendResponse(AgentGroup::query()->with('agents')->get());
     }
     /**
      * Remove
@@ -69,31 +69,31 @@ class PersonalGroupController extends Controller
      */
     public function remove(int $id)
     {
-        return PersonalGroup::find($id) && PersonalGroup::find($id)->delete() ? $this->sendResponse(null, 'Eliminado correctamente') : $this->sendResponse(null, null, 503);
+        return AgentGroup::find($id) && AgentGroup::find($id)->delete() ? $this->sendResponse(null, 'Eliminado correctamente') : $this->sendResponse(null, null, 503);
     }
 
     /**
-     * removeUser
+     * removeAgent
      * @param int $id
      * @param Request request
      * @return Illuminate\Http\JsonResponse
      */
-    public function removeUser(int $id, Request $request)
+    public function removeAgent(int $id, Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'user_id' => ['required', 'integer']
+            'agent_id' => ['required', 'integer']
         ]);
-        $group = PersonalGroup::find($id);
+        $group = AgentGroup::find($id);
         if ($validator->fails() || !$group) {
             return $this->sendResponse($validator->errors(), 'Verifique los datos enviados', 400);
         }
         $validator = $validator->validate();
-        $user = User::query()->find($validator['user_id']);
-        if (!$user)
+        $agent = Agent::query()->find($validator['agent_id']);
+        if (!$agent)
             return $this->sendResponse(null, 'Verifique los s enviados', 400);
-        $user->group_id = 1;
-        $user->save();
-        $group->users;
+        $agent->agent_group_id = 1;
+        $agent->save();
+        $group->agents;
         return $this->sendResponse($group);
     }
 
@@ -109,13 +109,13 @@ class PersonalGroupController extends Controller
             'name' => ['nullable', 'string'],
             'description' => ['nullable', 'string'],
         ]);
-        $model = PersonalGroup::find($id);
+        $model = AgentGroup::find($id);
         if ($validator->fails() || !$model) {
             return $this->sendResponse($validator->errors(), 'Verifique los datos enviados', 400);
         }
         $validator = $validator->validate();
         if ($model->update($validator)) {
-            $model->users;
+            $model->agents;
             return $this->sendResponse($model, null);
         }
         return $this->sendResponse($model->errors, 'No se pudo guardar el Grupo', 503);

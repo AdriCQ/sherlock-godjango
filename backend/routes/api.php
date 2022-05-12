@@ -4,6 +4,7 @@ use App\Http\Controllers\AgentController;
 use App\Http\Controllers\AssignmentController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\AgentGroupController;
+use App\Http\Controllers\EventController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -78,5 +79,22 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('{id}', [AssignmentController::class, 'find']);
         Route::delete('{id}', [AssignmentController::class, 'remove']);
         Route::patch('{id}', [AssignmentController::class, 'update']);
+    });
+
+    /**
+     * -----------------------------------------
+     *	Events
+     * -----------------------------------------
+     */
+
+    Route::prefix('events')->group(function () {
+        Route::post('', [EventController::class, 'create']);
+        Route::middleware('role:manager')->group(function () {
+            Route::get('', [EventController::class, 'list']);
+            Route::post('search', [EventController::class, 'search']);
+            Route::get('{id}', [EventController::class, 'find']);
+            Route::delete('{id}', [EventController::class, 'remove']);
+            Route::patch('{id}', [EventController::class, 'update']);
+        });
     });
 });

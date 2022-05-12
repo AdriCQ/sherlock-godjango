@@ -1,0 +1,47 @@
+### List
+GET /api/events HTTP/1.1
+Host: {{ host }}
+Authorization: {{token}}
+
+### create
+POST /api/events HTTP/1.1
+Host: {{ host }}
+Authorization: {{token}}
+
+{
+    "type": "warning",
+    "details": "Detalles del evento"
+}
+
+### find
+GET /api/events/1 HTTP/1.1
+Host: {{ host }}
+Authorization: {{token}}
+
+
+### remove
+DELETE /api/events/1 HTTP/1.1
+Host: {{ host }}
+Authorization: {{token}}
+
+
+### Update
+PATCH /api/events/2 HTTP/1.1
+Host: {{ host }}
+Authorization: {{token}}
+
+{
+    "status": "completed",
+    "details": "Detalles modificados"
+}
+
+
+### search
+POST /api/events/search HTTP/1.1
+Host: {{ host }}
+Authorization: {{token}}
+
+{
+    "status": "completed",
+    "type": "danger"
+}

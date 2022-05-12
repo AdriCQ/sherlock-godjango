@@ -4,23 +4,39 @@
       <q-btn dense flat round icon="mdi-menu" @click="toggleDrawer" />
 
       <q-toolbar-title> {{ title }} </q-toolbar-title>
+      <template v-if="!$q.platform.is.mobile">
+        <q-btn
+          flat
+          round
+          dense
+          icon="mdi-bell-outline"
+          :to="{ name: ROUTE_NAME.ADMIN_EVENTS }"
+        >
+          <q-badge
+            color="warning"
+            text-color="dark"
+            floating
+            v-if="eventCounter > 0"
+          >
+            {{ eventCounter }}
+          </q-badge>
+        </q-btn>
+      </template>
     </q-toolbar>
-
-    <!-- <q-tabs align="left" v-if="!$q.platform.is.mobile">
-      <q-route-tab :to="{ name: ROUTE_NAME.DISH_LIST }" label="Menu" />
-      <q-route-tab :to="{ name: ROUTE_NAME.EVENT_LIST }" label="Eventos" />
-      <q-route-tab :to="{ name: ROUTE_NAME.CONFIG }" label="Configuración" />
-    </q-tabs> -->
   </q-header>
 </template>
 
 <script setup lang="ts">
-import { injectStrict, _app } from 'src/injectables';
+import { injectStrict, _app, _eventInjectable } from 'src/injectables';
 import { computed } from 'vue';
-// import { ROUTE_NAME } from 'src/router';
+import { useQuasar } from 'quasar';
+import { ROUTE_NAME } from 'src/router';
 
 const $app = injectStrict(_app);
+const $event = injectStrict(_eventInjectable);
+const $q = useQuasar();
 
+const eventCounter = computed(() => $event.events.length);
 const title = computed(() =>
   $app.mode === 'manager' ? 'Sherlock Manager' : 'Sherlock Agente'
 );

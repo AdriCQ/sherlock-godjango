@@ -18,13 +18,14 @@ import MainFooter from './MainFooter.vue';
 import ManagerLeftDrawer from './ManagerLeftDrawer.vue';
 import { onBeforeMount } from 'vue';
 import { useMeta, useQuasar } from 'quasar';
-import { injectStrict, _app } from 'src/injectables';
+import { injectStrict, _app, _eventInjectable } from 'src/injectables';
 /**
  * -----------------------------------------
  *	inject
  * -----------------------------------------
  */
 const $app = injectStrict(_app);
+const $event = injectStrict(_eventInjectable);
 const $q = useQuasar();
 /**
  * -----------------------------------------
@@ -33,7 +34,9 @@ const $q = useQuasar();
  */
 
 onBeforeMount(() => {
-  if ($app.mode === 'manager') useMeta({ title: 'Sherlock Manager' });
-  else useMeta({ title: 'Sherlock Agente' });
+  if ($app.mode === 'manager') {
+    useMeta({ title: 'Sherlock Manager' });
+    void $event.listOnProgress();
+  } else useMeta({ title: 'Sherlock Agente' });
 });
 </script>

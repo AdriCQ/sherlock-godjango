@@ -106,7 +106,7 @@ class FakeSeeder extends Seeder
                     'type' => $faker->randomElement(Event::$TYPES),
                     'status' => $faker->randomElement(Event::$STATUS),
                     'details' => $faker->text,
-                    'user_id' => $faker->numberBetween(3, User::query()->count()),
+                    'agent_id' => $faker->numberBetween(3, Agent::query()->count()),
                     'created_at' => now(),
                 ]);
             }

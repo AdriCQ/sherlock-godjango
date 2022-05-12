@@ -19,13 +19,13 @@ class EventController extends Controller
         $validator = Validator::make($request->all(), [
             'type' => ['required', 'in:' . implode(',', Event::$TYPES)],
             'details' => ['required', 'string'],
+            'agent_id' => ['required', 'integer'],
         ]);
         if ($validator->fails()) {
             return $this->sendResponse($validator->errors(), 'Verifique los datos enviados', 400);
         }
         $validator = $validator->validate();
         $validator['status'] = 'onprogress';
-        $validator['user_id'] = auth()->id();
         $model = new Event($validator);
         $model->save();
         return $this->sendResponse($model, 'Evento creada', 201);
@@ -38,7 +38,7 @@ class EventController extends Controller
      */
     public function find(int $id)
     {
-        return $this->sendResponse(Event::query()->where('id', $id)->with('user')->first());
+        return $this->sendResponse(Event::query()->where('id', $id)->with('agent')->first());
     }
 
     /**
@@ -47,7 +47,7 @@ class EventController extends Controller
      */
     public function list()
     {
-        return $this->sendResponse(Event::all());
+        return $this->sendResponse(Event::query()->with('agent')->orderBy('updated_at', 'desc')->get());
     }
 
     /**
@@ -89,7 +89,7 @@ class EventController extends Controller
         ) {
             $qry = $qry->where($validator);
         }
-        return $this->sendResponse($qry->get());
+        return $this->sendResponse($qry->with('agent')->orderBy('updated_at', 'desc')->take(24)->get());
     }
 
     /**

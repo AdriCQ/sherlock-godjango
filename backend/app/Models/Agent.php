@@ -26,6 +26,13 @@ class Agent extends Model
         return $this->belongsToMany(Category::class, 'agent_categories');
     }
     /**
+     * events
+     */
+    public function events()
+    {
+        return $this->hasMany(Event::class);
+    }
+    /**
      * group
      */
     public function group()

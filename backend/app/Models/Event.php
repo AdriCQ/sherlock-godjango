@@ -12,13 +12,13 @@ class Event extends Model
     protected $table = 'events';
 
     public static $TYPES = ['info', 'warning', 'danger'];
-    public static $STATUS = ['completed', 'onprogress', 'danger'];
+    public static $STATUS = ['completed', 'onprogress'];
 
     /**
      * user
      */
-    public function user()
+    public function agent()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(Agent::class);
     }
 }

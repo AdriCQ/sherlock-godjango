@@ -28,6 +28,11 @@ const route: RouteRecordRaw = {
       name: ROUTE_NAME.ADMIN_AGENT_GROUP,
       component: () => import('src/pages/admin/AgentGroupPage.vue'),
     },
+    {
+      path: 'events',
+      name: ROUTE_NAME.ADMIN_EVENTS,
+      component: () => import('src/pages/admin/EventsPage.vue'),
+    },
   ],
 };
 

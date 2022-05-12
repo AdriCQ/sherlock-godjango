@@ -25,8 +25,14 @@
           Agente: {{ $props.event.agent?.nick }}
         </div>
         <div class="text-subtitle2">
+          <q-icon name="mdi-clock-in" class="q-mr-sm" />
           Fecha Creación:
           {{ new Date($props.event.created_at).toLocaleDateString() }}
+        </div>
+        <div class="text-subtitle2">
+          <q-icon name="mdi-clock-out" class="q-mr-sm" />
+          Fecha Actualización:
+          {{ new Date($props.event.updated_at).toLocaleDateString() }}
         </div>
       </q-card-section>
 

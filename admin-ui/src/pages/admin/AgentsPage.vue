@@ -1,67 +1,67 @@
 <template>
-  <q-pull-to-refresh @refresh="pullToRefresh">
-    <q-page padding>
-      <q-card class="no-box-shadow">
-        <q-card-section class="q-gutter-y-sm">
-          <div class="text-h6 text-center">Administrar Agentes</div>
-          <div class="text-subtitle2">
-            <q-btn
-              color="primary"
-              class="full-width"
-              icon="mdi-magnify"
-              label="Buscar Agente"
-              @click="startSearch"
-            />
-          </div>
-        </q-card-section>
-        <q-card-section>
-          <div class="row q-col-gutter-sm">
-            <template v-if="search && search.length">
-              <div
-                class="col-xs-12 col-sm-6 col-md-4 col-lg-3"
-                v-for="(agent, aKey) in search"
-                :key="`agent-${agent.id}-k${aKey}`"
-              >
-                <agent-widget
-                  :agent="agent"
-                  @request-edit="requestEdit(agent.id)"
-                />
-              </div>
-            </template>
-            <template v-else>
-              <div
-                class="col-xs-12 col-sm-6 col-md-4 col-lg-3"
-                v-for="(agent, aKey) in agents"
-                :key="`agent-${agent.id}-k${aKey}`"
-              >
-                <agent-widget
-                  :agent="agent"
-                  @request-edit="requestEdit(agent.id)"
-                />
-              </div>
-            </template>
-          </div>
-        </q-card-section>
-      </q-card>
+  <!-- <q-pull-to-refresh @refresh="pullToRefresh"> -->
+  <q-page padding>
+    <q-card class="no-box-shadow">
+      <q-card-section class="q-gutter-y-sm">
+        <div class="text-h6 text-center">Administrar Agentes</div>
+        <div class="text-subtitle2">
+          <q-btn
+            color="primary"
+            class="full-width"
+            icon="mdi-magnify"
+            label="Buscar Agente"
+            @click="startSearch"
+          />
+        </div>
+      </q-card-section>
+      <q-card-section>
+        <div class="row q-col-gutter-sm">
+          <template v-if="search && search.length">
+            <div
+              class="col-xs-12 col-sm-6 col-md-4 col-lg-3"
+              v-for="(agent, aKey) in search"
+              :key="`agent-${agent.id}-k${aKey}`"
+            >
+              <agent-widget
+                :agent="agent"
+                @request-edit="requestEdit(agent.id)"
+              />
+            </div>
+          </template>
+          <template v-else>
+            <div
+              class="col-xs-12 col-sm-6 col-md-4 col-lg-3"
+              v-for="(agent, aKey) in agents"
+              :key="`agent-${agent.id}-k${aKey}`"
+            >
+              <agent-widget
+                :agent="agent"
+                @request-edit="requestEdit(agent.id)"
+              />
+            </div>
+          </template>
+        </div>
+      </q-card-section>
+    </q-card>
 
-      <!-- Dialog Form -->
-      <q-dialog v-model="dialogForm">
-        <agent-form
-          :agent="selectedAgent"
-          @cancel="closeDialog"
-          @complete="closeDialog"
-          style="min-width: 20rem"
-        />
-      </q-dialog>
-      <!-- / Dialog Form -->
+    <!-- Dialog Form -->
+    <q-dialog v-model="dialogForm">
+      <agent-form
+        :agent="selectedAgent"
+        @cancel="closeDialog"
+        @complete="closeDialog"
+        style="min-width: 20rem"
+      />
+    </q-dialog>
+    <!-- / Dialog Form -->
 
-      <!-- Dialog Search -->
-      <q-dialog v-model="dialogSearch">
-        <agent-search-form style="min-width: 20rem" @search="onSearch" />
-      </q-dialog>
-      <!-- / Dialog Search -->
-    </q-page>
-  </q-pull-to-refresh>
+    <!-- Dialog Search -->
+    <q-dialog v-model="dialogSearch">
+      <agent-search-form style="min-width: 20rem" @search="onSearch" />
+    </q-dialog>
+    <!-- / Dialog Search -->
+  </q-page>
+  <!-- </q-pull-to-refresh> -->
 </template>
 
 <script setup lang="ts">

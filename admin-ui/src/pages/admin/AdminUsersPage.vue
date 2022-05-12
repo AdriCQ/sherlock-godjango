@@ -1,47 +1,47 @@
 <template>
-  <q-pull-to-refresh @refresh="pullToRefresh">
-    <q-page padding>
-      <q-card class="no-box-shadow">
-        <q-card-section>
-          <div class="text-h6 text-center">Administrar Usuarios</div>
-          <div class="text-subtitle2">
-            <q-btn
-              color="primary"
-              class="full-width"
-              icon="mdi-plus"
-              label="Nuevo Usuario"
-              @click="dialogUserForm = true"
+  <!-- <q-pull-to-refresh @refresh="pullToRefresh"> -->
+  <q-page padding>
+    <q-card class="no-box-shadow">
+      <q-card-section>
+        <div class="text-h6 text-center">Administrar Usuarios</div>
+        <div class="text-subtitle2">
+          <q-btn
+            color="primary"
+            class="full-width"
+            icon="mdi-plus"
+            label="Nuevo Usuario"
+            @click="dialogUserForm = true"
+          />
+        </div>
+      </q-card-section>
+      <q-card-section>
+        <div class="row q-col-gutter-sm">
+          <div
+            class="col-xs-12 col-sm-6 col-md-4"
+            v-for="user of users"
+            :key="`user-${user.id}`"
+          >
+            <user-widget
+              :user="user"
+              @remove="onUserRemoved"
+              @request-edit="reqEditUser(user)"
             />
           </div>
-        </q-card-section>
-        <q-card-section>
-          <div class="row q-col-gutter-sm">
-            <div
-              class="col-xs-12 col-sm-6 col-md-4"
-              v-for="user of users"
-              :key="`user-${user.id}`"
-            >
-              <user-widget
-                :user="user"
-                @remove="onUserRemoved"
-                @request-edit="reqEditUser(user)"
-              />
-            </div>
-          </div>
-        </q-card-section>
-      </q-card>
+        </div>
+      </q-card-section>
+    </q-card>
 
-      <!-- Form Dialog -->
-      <q-dialog v-model="dialogUserForm" maximized class="q-pa-md">
-        <user-form
-          :user="editUser"
-          @form-complete="closeDialog"
-          @cancel="closeDialog"
-        />
-      </q-dialog>
-      <!-- /Form Dialog -->
-    </q-page>
-  </q-pull-to-refresh>
+    <!-- Form Dialog -->
+    <q-dialog v-model="dialogUserForm" maximized class="q-pa-md">
+      <user-form
+        :user="editUser"
+        @form-complete="closeDialog"
+        @cancel="closeDialog"
+      />
+    </q-dialog>
+    <!-- /Form Dialog -->
+  </q-page>
+  <!-- </q-pull-to-refresh> -->
 </template>
 
 <script setup lang="ts">
@@ -126,6 +126,8 @@ async function pullToRefresh(done: CallableFunction) {
  * -----------------------------------------
  */
 onBeforeMount(() => {
-  void listUsers();
+  void pullToRefresh(() => {
+    console.log('Users Page');
+  });
 });
 </script>

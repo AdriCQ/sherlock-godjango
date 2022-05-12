@@ -2,7 +2,9 @@
   <q-page padding>
     <q-card class="no-box-shadow">
       <q-card-section>
-        <div class="text-h6 text-center">Eventos</div>
+        <div class="text-h6 text-center">
+          Eventos {{ active ? 'Pendientes' : 'Resueltos' }}
+        </div>
         <div class="text-subtitle text-center">
           <q-chip
             :class="{ glossy: active }"
@@ -27,7 +29,11 @@
             v-for="(event, eKey) in events"
             :key="`event-solved-${event.id}-${eKey}`"
           >
-            <event-widget :event="event" @click="showDetails(event)" />
+            <event-widget
+              class="cursor-pointer"
+              :event="event"
+              @click="showDetails(event)"
+            />
           </div>
         </div>
       </q-card-section>

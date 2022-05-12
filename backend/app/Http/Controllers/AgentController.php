@@ -77,6 +77,36 @@ class AgentController extends Controller
     }
 
     /**
+     * Search
+     * @param Request request
+     * @return Illuminate\Http\JsonResponse
+     */
+    public function search(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'mode' => ['required', 'in:user,nick'],
+            'search' => ['required', 'string']
+        ]);
+        if ($validator->fails()) {
+            return $this->sendResponse($validator->errors(), 'Verifique los datos enviados', 400);
+        }
+        $validator = $validator->validate();
+        $agents = [];
+        if ($validator['mode'] === 'user') {
+            $users = User::query()
+                ->whereRaw('LOWER("name") LIKE ?', ['%' . trim(strtolower($validator['search'])) . '%'])
+                ->orWhereRaw('LOWER("email") LIKE ?', ['%' . trim(strtolower($validator['search'])) . '%'])->with('agent')->get(['id']);
+            foreach ($users as $user) {
+                if ($user->agent)
+                    array_push($agents, $user->agent);
+            }
+        } else {
+            $agents = Agent::query()->whereRaw('LOWER("nick") LIKE ?', ['%' . trim(strtolower($validator['search'])) . '%'])->get();
+        }
+        return $this->sendResponse($agents);
+    }
+
+    /**
      * Update
      * @param int id
      * @param Request request

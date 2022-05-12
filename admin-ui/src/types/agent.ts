@@ -34,6 +34,13 @@ export interface IAgentCategory {
 
 export type IAgentCreateRequest = Omit<IAgent, 'id' | 'bussy'>;
 export type IAgentUpdateRequest = Partial<Omit<IAgent, 'id' | 'user_id'>>;
+/**
+ * Agent Search Request
+ */
+export interface IAgentSearchRequest {
+  mode: 'user' | 'nick';
+  search: string;
+}
 
 /**
  * Agent Create Group Request

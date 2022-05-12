@@ -8,6 +8,7 @@ import {
   IAgentGroupCreateRequest,
   IAgentGroupUpdateRequest,
   IApiResponse,
+  IAgentSearchRequest,
 } from 'src/types';
 import { InjectionKey, ref } from 'vue';
 /**
@@ -78,6 +79,14 @@ class AgentInjectable {
     await $api.delete(`${API_PATH}/${id}`);
     const index = this.agents.findIndex((a) => a.id === id);
     if (index >= 0) this.agents.splice(index, 1);
+  }
+  /**
+   * search
+   * @param params
+   * @returns
+   */
+  async search(params: IAgentSearchRequest) {
+    return $api.get<IApiResponse<IAgent[]>>(`${API_PATH}/search`, { params });
   }
   /**
    * update

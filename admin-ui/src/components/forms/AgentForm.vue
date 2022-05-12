@@ -47,8 +47,8 @@
       <q-card-actions>
         <q-btn
           color="primary"
-          icon="mdi-cancel"
-          label="Cancelar"
+          icon="mdi-close"
+          label="Cerrar"
           outline
           @click="$emit('cancel')"
         />

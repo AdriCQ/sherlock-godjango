@@ -79,10 +79,11 @@
         <q-btn
           color="primary"
           outline
-          label="Cancelar"
+          label="Cerrar"
+          icon="mdi-close"
           @click="$emit('cancel')"
         />
-        <q-btn color="primary" label="Guardar" type="submit" />
+        <q-btn color="primary" icon="mdi-check" label="Guardar" type="submit" />
       </q-card-actions>
     </q-form>
   </q-card>

@@ -49,6 +49,16 @@ Authorization: {{token}}
     "bussy": true
 }
 
+### SEARCH
+GET /api/agents/search HTTP/1.1
+Host: {{ host }}
+Authorization: {{token}}
+
+{
+    "mode": "user",
+    "search": "cas"
+}
+
 ### WHOAMI
 GET /api/agents/whoami HTTP/1.1
 Host: {{ host }}

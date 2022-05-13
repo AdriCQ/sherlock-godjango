@@ -52,6 +52,14 @@
         </q-item>
       </q-list>
     </q-card-section>
+    <q-card-actions v-if="group.id > 1">
+      <q-btn
+        color="negative"
+        icon="mdi-delete"
+        label="Eliminar Grupo"
+        @click="removeGroup"
+      />
+    </q-card-actions>
   </q-card>
 </template>
 
@@ -69,6 +77,7 @@ const $agent = injectStrict(_agentInjectable);
 const $emit = defineEmits<{
   (e: 'add-agent'): void;
   (e: 'remove-agent'): void;
+  (e: 'remove-group'): void;
   (e: 'update'): void;
   (e: 'cancel'): void;
 }>();
@@ -86,20 +95,14 @@ const selectedAgent = ref();
  * Add Agent
  */
 async function addAgent() {
-  $gui.deleteDialog({
-    title: 'Añadir Agente',
-    message: 'Va a agregar un nuevo Agente al grupo',
-    onOk: async () => {
-      notificationHelper.loading();
-      try {
-        await $agent.addAgentToGroup(selectedAgent.value, group.value.id);
-        $emit('add-agent');
-      } catch (error) {
-        notificationHelper.axiosError(error, 'No se pudo Agente el usuario');
-      }
-      notificationHelper.loading(false);
-    },
-  });
+  notificationHelper.loading();
+  try {
+    await $agent.addAgentToGroup(selectedAgent.value, group.value.id);
+    $emit('add-agent');
+  } catch (error) {
+    notificationHelper.axiosError(error, 'No se pudo Agente el usuario');
+  }
+  notificationHelper.loading(false);
 }
 /**
  * Remove Agent
@@ -115,6 +118,25 @@ async function removeAgent(id: number) {
         $emit('remove-agent');
       } catch (error) {
         notificationHelper.axiosError(error, 'No se pudo eliminar el Agente');
+      }
+      notificationHelper.loading(false);
+    },
+  });
+}
+/**
+ * removeGroup
+ */
+function removeGroup() {
+  $gui.deleteDialog({
+    title: 'Eliminar Grupo',
+    message: '¿Desea eliminar el grupo de agentes?',
+    onOk: async () => {
+      notificationHelper.loading();
+      try {
+        await $agent.removeGroup(group.value.id);
+        $emit('remove-group');
+      } catch (error) {
+        notificationHelper.axiosError(error, 'Error eliminando');
       }
       notificationHelper.loading(false);
     },

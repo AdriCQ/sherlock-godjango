@@ -1,5 +1,5 @@
 import { AxiosError } from 'axios';
-import { Notify, QSpinnerGears } from 'quasar';
+import { Notify, QSpinnerTail } from 'quasar';
 import { $router } from 'src/boot/router';
 import { $user } from 'src/injectables';
 import { ROUTE_NAME } from 'src/router';
@@ -86,13 +86,13 @@ class NotificationHelper {
    */
   loading(
     _load = true,
-    message = 'Cargando...',
+    message = '',
     timeout = 0,
     position: INotifyPosition = 'center'
   ) {
     if (_load) {
       this._loading = Notify.create({
-        spinner: QSpinnerGears,
+        spinner: QSpinnerTail,
         // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
         position,
         message,

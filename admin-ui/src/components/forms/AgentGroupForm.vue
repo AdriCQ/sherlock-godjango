@@ -2,7 +2,12 @@
   <q-card>
     <q-form @submit.prevent="onSubmit">
       <q-card-section class="q-gutter-y-sm">
-        <q-input v-model="form.name" type="text" label="Nombre del Grupo" />
+        <q-input
+          v-model="form.name"
+          required
+          type="text"
+          label="Nombre del Grupo"
+        />
         <q-input
           v-model="form.description"
           type="textarea"

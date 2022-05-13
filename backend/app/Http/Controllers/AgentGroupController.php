@@ -69,7 +69,18 @@ class AgentGroupController extends Controller
      */
     public function remove(int $id)
     {
-        return AgentGroup::find($id) && AgentGroup::find($id)->delete() ? $this->sendResponse(null, 'Eliminado correctamente') : $this->sendResponse(null, null, 503);
+        $group = AgentGroup::find($id);
+        if (!$group || $group->id === 1) return $this->sendResponse(null, 'No se puede eliminar el grupo', 400);
+        // Move agents
+        $agentIds = [];
+        foreach ($group->agents as $agent) {
+            array_push($agentIds, $agent->id);
+        }
+        // Update agents
+        Agent::query()->whereIn('id', $agentIds)->update(['agent_group_id' => 1]);
+        return $group->delete()
+            ? $this->sendResponse(null, 'Eliminado correctamente')
+            : $this->sendResponse($group->errors, 'No se puede eliminar el grupo', 500);
     }
 
     /**

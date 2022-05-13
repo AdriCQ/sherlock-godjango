@@ -45,6 +45,7 @@
         v-if="selectedGroup"
         @add-agent="updateDialogAgents"
         @remove-agent="updateDialogAgents"
+        @remove-group="closeDialogs"
         @cancel="closeDialogs"
       />
     </q-dialog>
@@ -100,7 +101,7 @@ function onGroupClick(g: IAgentGroup) {
   dialogAgents.value = true;
 }
 /**
- * updateDialogAgents
+ * Update Dialog Agents
  */
 async function updateDialogAgents() {
   await $agent.list();

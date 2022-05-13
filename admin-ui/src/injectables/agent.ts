@@ -155,7 +155,7 @@ class AgentInjectable {
   async removeGroup(id: number) {
     await $csrf();
     await $api.delete(`${API_PATH}/groups/${id}`);
-    const index = this.groups.findIndex((a) => a.id === id);
+    const index = this.groups.findIndex((g) => g.id === id);
     if (index >= 0) this.groups.splice(index, 1);
   }
 

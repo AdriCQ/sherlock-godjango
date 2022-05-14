@@ -11,14 +11,20 @@ class AssignmentCheckpoint extends Model
 
     protected $table = 'assignment_checkpoints';
     protected $guarded = ['id'];
-    public $timestamps = false;
-    protected $casts = ['coordinate' => 'json'];
+    protected $casts = ['position' => 'array'];
 
-    public static $STATUS = ['waiting', 'canceled', 'completed'];
-
-
+    /**
+     * assignment
+     */
     public function assignment()
     {
         return $this->belongsTo(Assignment::class);
+    }
+    /**
+     * agent
+     */
+    public function agent()
+    {
+        return $this->assignment->agent;
     }
 }

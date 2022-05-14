@@ -17,15 +17,14 @@ class CreateAssignmentCheckpointsTable extends Migration
         Schema::create('assignment_checkpoints', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->string('coordinate');
+            $table->string('position');
             $table->unsignedTinyInteger('status')->default(0);
             $table->string('contact')->nullable();
-            $table->timestamp('initiated_ts');
-            $table->timestamp('ended_ts')->nullable();
+            $table->timestamps();
         });
 
         Schema::table('assignment_checkpoints', function (Blueprint $table) {
-            $table->foreignIdFor(Assignment::class);
+            $table->foreignIdFor(Assignment::class)->onDelete('cascade');
         });
     }
 

@@ -1,6 +1,5 @@
 <?php
 
-use App\Models\Agent;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -18,9 +17,9 @@ class CreateAssignmentsTable extends Migration
             $table->id();
             $table->string('name');
             $table->string('description');
-            $table->string('observations');
+            $table->string('observations')->nullable();
             $table->string('event');
-            $table->string('state');
+            $table->unsignedTinyInteger('status')->default(0);
             // $table->string('coordinates');
             $table->unsignedBigInteger('agent_id')->nullable();
         });

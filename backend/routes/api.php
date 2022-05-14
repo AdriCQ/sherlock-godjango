@@ -76,9 +76,13 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::prefix('assignments')->group(function () {
         Route::get('', [AssignmentController::class, 'list']);
         Route::post('', [AssignmentController::class, 'create']);
+        Route::post('search', [AssignmentController::class, 'filter']);
+        Route::patch('checkpoints/{id}', [AssignmentController::class, 'updateCheckpoint']);
+        Route::delete('checkpoints/{id}', [AssignmentController::class, 'removeCheckpoint']);
         Route::get('{id}', [AssignmentController::class, 'find']);
         Route::delete('{id}', [AssignmentController::class, 'remove']);
         Route::patch('{id}', [AssignmentController::class, 'update']);
+        Route::post('{id}/assign-checkpoint', [AssignmentController::class, 'assignCheckpoint']);
     });
 
     /**

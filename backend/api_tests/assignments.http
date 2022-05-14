@@ -1,3 +1,9 @@
+### List
+GET /api/assignments HTTP/1.1
+Host: {{ host }}
+Authorization: {{token}}
+
+
 ### Create
 POST /api/assignments HTTP/1.1
 Host: {{ host }}
@@ -8,15 +14,13 @@ Authorization: {{token}}
     "description": "AssignmentDescription",
     "observations": "Assignment observations",
     "event": "Assignment evebt",
-    "state": "Assignment state",
     "checkpoints":[
         {
-            "coordinate":{
+            "name": "CheckpointName",
+            "position":{
                 "lat":0,
                 "lng":0
             },
-            "status": "waiting",
-            "initiated_ts": "2020-05-13",
             "contact": "55445566"
         }
     ]
@@ -33,15 +37,45 @@ Host: {{ host }}
 Authorization: {{token}}
 
 ### Update
-PATCH /api/assignments/1 HTTP/1.1
+PATCH /api/assignments/2 HTTP/1.1
 Host: {{ host }}
 Authorization: {{token}}
 
 {
-    "name": "agentName",
-    "description": "AssignmentDescription",
-    "observations": "Assignment observations",
-    "event": "Assignment evebt",
-    "state": "Assignment state",
+    "name": "Assignment Checkpoint Update",
+    "description": "AssignmentDescription Update",
+    "observations": "Assignment observations Update",
+    "event": "Assignment evebt Update",
+    "status": 2,
     "agent_id": 1
+}
+
+### Search
+POST /api/assignments/search HTTP/1.1
+Host: {{ host }}
+Authorization: {{token}}
+
+{
+    "name": "Assignment Checkpoint Update",
+    "description": "AssignmentDescription Update",
+    "observations": "Assignment observations Update",
+    "event": "Assignment evebt Update",
+    "status": 2,
+    "agent_id": 1
+}
+
+
+### Update Checkpoint
+PATCH /api/assignments/checkpoints/2 HTTP/1.1
+Host: {{ host }}
+Authorization: {{token}}
+
+{
+    "name": "Checkpoint Update",
+    "position":{
+        "lat":0,
+        "lng":0
+    },
+    "contact": "55445566",
+    "status": 2
 }

@@ -12,7 +12,7 @@ class Assignment extends Model
     protected $table = 'assignments';
     protected $guarded = ['id'];
     public $timestamps = false;
-    protected $casts = ['coordinates' => 'json'];
+    protected $with = ['checkpoints', 'agent'];
 
 
     /**

@@ -18,6 +18,7 @@ export function injectStrict<T>(key: InjectionKey<T>, fallback?: T) {
  */
 export * from './agent';
 export * from './app';
+export * from './assignment';
 export * from './event';
 export * from './map';
 export * from './user';

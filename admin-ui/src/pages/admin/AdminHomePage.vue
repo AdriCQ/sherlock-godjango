@@ -1,6 +1,9 @@
 <template>
   <q-page padding>
-    <q-card class="full-width" style="height: 85vh">
+    <q-card class="full-width" style="height: 75vh">
+      <q-card-section class="q-pa-xs">
+        <div class="text-h6 text-center">Asignaciones Pendientes</div>
+      </q-card-section>
       <l-map
         ref="map"
         id="map--page-managerleaflet"
@@ -9,20 +12,17 @@
         :center="center"
         :min-zoom="settings.zoom.min"
         :max-zoom="settings.zoom.max"
-        @click="addMarker"
         @update:center="doMoveCenter"
         @update:zoom="doMoveZoom"
         :key="`map-key-${zoom}-${center.lat}-${center.lng}`"
       >
         <l-tile-layer :url="MAP_URL" :attribution="ATTRIBUTION" />
-        <l-control>
-          <q-btn icon="mdi-magnify" color="white" text-color="dark" />
-        </l-control>
 
         <l-marker
           :key="`marker-${markerKey}`"
           v-for="(marker, markerKey) in markers"
           :lat-lng="marker"
+          @click="assignmentDetails(marker.assignment_id)"
         />
       </l-map>
     </q-card>
@@ -30,17 +30,20 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from 'vue';
+import { computed, defineComponent, onBeforeMount, ref } from 'vue';
 import 'leaflet/dist/leaflet.css';
-import { LatLng, LocationEvent, Icon } from 'leaflet';
+import { LatLng, Icon, latLng } from 'leaflet';
 import {
-  LControl,
+  // LControl,
   // LControlZoom,
   LMap,
   LMarker,
   LTileLayer,
 } from '@vue-leaflet/vue-leaflet';
 import { DEFAULT_COORDINATES } from 'src/helpers';
+import { injectStrict, _assignmentInjectable } from 'src/injectables';
+import { useRouter } from 'vue-router';
+import { ROUTE_NAME } from 'src/router';
 
 /* Fix leaflet icons */
 type D = Icon.Default & {
@@ -52,6 +55,9 @@ interface IMaPSettings {
     min: number;
     max: number;
   };
+}
+interface ILatLng extends LatLng {
+  assignment_id?: number;
 }
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
@@ -79,20 +85,40 @@ const MAP_URL = 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
 export default defineComponent({
   name: 'MapLayout',
   components: {
-    LControl,
+    // LControl,
     // LControlZoom,
     LMap,
     LMarker,
     LTileLayer,
   },
   setup() {
+    const $assignment = injectStrict(_assignmentInjectable);
+    const $router = useRouter();
+    onBeforeMount(() => {
+      void $assignment.filter({ status: 0 });
+    });
     /**
      * -----------------------------------------
      *	Data
      * -----------------------------------------
      */
+    const assignments = computed(() => $assignment.assignments);
     const center = ref<LatLng>(DEFAULT_COORDINATES);
-    const markers = ref<LatLng[]>([]);
+    const markers = computed<ILatLng[]>(() => {
+      const markers: ILatLng[] = [];
+      let object: ILatLng;
+      assignments.value.forEach((a) => {
+        if (a.checkpoints?.length) {
+          object = latLng(
+            a.checkpoints[0].position.lat,
+            a.checkpoints[0].position.lng
+          );
+          object.assignment_id = a.id;
+          markers.push(object);
+        }
+      });
+      return markers;
+    });
     const settings = ref<IMaPSettings>({
       multiple: false,
       zoom: {
@@ -100,23 +126,22 @@ export default defineComponent({
         min: 8,
       },
     });
-    const zoom = ref(14);
+    const zoom = ref(12);
     /**
      * -----------------------------------------
      *	Methods
      * -----------------------------------------
      */
     /**
-     * addMarker
+     * assignmentDetails
+     * @param id
      */
-    function addMarker(event: MouseEvent | PointerEvent | LocationEvent) {
-      if ((event as LocationEvent).latlng) {
-        if (markers.value.length && settings.value.multiple)
-          markers.value.push((event as LocationEvent).latlng);
-        else {
-          markers.value = [(event as LocationEvent).latlng];
-        }
-      }
+    function assignmentDetails(id?: number) {
+      if (!id) return;
+      void $router.push({
+        name: ROUTE_NAME.ADMIN_ASSIGNMENT,
+        params: { id: id },
+      });
     }
     /**
      * doMoveCenter
@@ -141,7 +166,7 @@ export default defineComponent({
       markers,
       zoom,
       // Methods
-      addMarker,
+      assignmentDetails,
       confirm,
       doMoveCenter,
       doMoveZoom,

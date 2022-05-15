@@ -7,6 +7,18 @@
       id="tab-buttons"
       no-caps
     >
+      <q-route-tab exact :to="{ name: ROUTE_NAME.ADMIN_HOME }">
+        <q-icon name="mdi-map-marker" size="1.6rem" />
+        <q-badge
+          color="warning"
+          text-color="dark"
+          floating
+          v-if="assignmentCounter > 0"
+        >
+          {{ assignmentCounter }}
+        </q-badge>
+      </q-route-tab>
+
       <q-route-tab exact :to="{ name: ROUTE_NAME.ADMIN_EVENTS }">
         <q-icon name="mdi-bell-outline" size="1.6rem" />
         <q-badge
@@ -18,11 +30,8 @@
           {{ eventCounter }}
         </q-badge>
       </q-route-tab>
-      <q-route-tab exact :to="{ name: ROUTE_NAME.ADMIN_HOME }">
-        <q-icon name="mdi-home" size="1.6rem" />
-      </q-route-tab>
       <q-route-tab exact>
-        <q-icon name="mdi-map-marker" size="1.6rem" />
+        <q-icon name="mdi-account-group" size="1.6rem" />
       </q-route-tab>
 
       <!-- <q-route-tab exact icon="mdi-magnify" :to="{name: 'main.home'}">
@@ -39,7 +48,12 @@
   </q-footer>
 </template>
 <script lang="ts" setup>
-import { injectStrict, _app, _eventInjectable } from 'src/injectables';
+import {
+  injectStrict,
+  _app,
+  _assignmentInjectable,
+  _eventInjectable,
+} from 'src/injectables';
 import { ROUTE_NAME } from 'src/router';
 import { computed } from 'vue';
 /**
@@ -48,12 +62,14 @@ import { computed } from 'vue';
  * -----------------------------------------
  */
 const $app = injectStrict(_app);
+const $ass = injectStrict(_assignmentInjectable);
 const $event = injectStrict(_eventInjectable);
 /**
  * -----------------------------------------
  *	data
  * -----------------------------------------
  */
+const assignmentCounter = computed(() => $ass.assignments.length);
 const eventCounter = computed(() => $event.events.length);
 </script>
 

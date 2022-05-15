@@ -24,6 +24,7 @@ import { useQuasar } from 'quasar';
 import {
   injectStrict,
   _agentInjectable,
+  _assignmentInjectable,
   _eventInjectable,
   _user,
 } from 'src/injectables';
@@ -36,15 +37,24 @@ import { ROUTE_NAME } from 'src/router';
  * -----------------------------------------
  */
 const $agent = injectStrict(_agentInjectable);
+const $assignment = injectStrict(_assignmentInjectable);
 const $event = injectStrict(_eventInjectable);
 const $user = injectStrict(_user);
 const $q = useQuasar();
 const $route = useRoute();
 
-const enableRefresh = computed(() => $route.name !== ROUTE_NAME.ADMIN_HOME);
-
+const enableRefresh = computed(
+  () =>
+    $route.name !== ROUTE_NAME.ADMIN_HOME &&
+    $route.name !== ROUTE_NAME.ADMIN_ASSIGNMENT
+);
+/**
+ * pullToRefresh
+ * @param done
+ */
 async function pullToRefresh(done: CallableFunction) {
   Promise.all([
+    $assignment.filter({ status: 0 }),
     $user.list(),
     $agent.list(),
     $agent.listGroup(),

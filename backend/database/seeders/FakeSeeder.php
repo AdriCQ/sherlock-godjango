@@ -152,8 +152,8 @@ class FakeSeeder extends Seeder
                 array_push($models, [
                     'name' => $faker->name,
                     'position' => json_encode([
-                        'lat' => 22.4056,
-                        'lng' => -79.9539
+                        'lat' => '22.4' . $faker->numerify(),
+                        'lng' => '-79.9' . $faker->numerify()
                     ]),
                     'status' => $faker->numberBetween(0, 2),
                     'contact' => $faker->phoneNumber(),

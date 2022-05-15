@@ -14,10 +14,13 @@ import {
   $agentInjectable,
   _eventInjectable,
   $event,
+  _assignmentInjectable,
+  $assignmentInjectable,
 } from './injectables';
 import { provide } from 'vue';
 
 provide(_agentInjectable, $agentInjectable);
+provide(_assignmentInjectable, $assignmentInjectable);
 provide(_app, $app);
 provide(_eventInjectable, $event);
 provide(_map, $mapInjectable);

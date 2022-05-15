@@ -9,6 +9,23 @@
           flat
           round
           dense
+          icon="mdi-map-marker"
+          :to="{ name: ROUTE_NAME.ADMIN_HOME }"
+        >
+          <q-badge
+            color="warning"
+            text-color="dark"
+            floating
+            v-if="assignmentCounter > 0"
+          >
+            {{ assignmentCounter }}
+          </q-badge>
+        </q-btn>
+
+        <q-btn
+          flat
+          round
+          dense
           icon="mdi-bell-outline"
           :to="{ name: ROUTE_NAME.ADMIN_EVENTS }"
         >
@@ -27,19 +44,36 @@
 </template>
 
 <script setup lang="ts">
-import { injectStrict, _app, _eventInjectable } from 'src/injectables';
+import {
+  injectStrict,
+  _app,
+  _assignmentInjectable,
+  _eventInjectable,
+} from 'src/injectables';
 import { computed } from 'vue';
 import { useQuasar } from 'quasar';
 import { ROUTE_NAME } from 'src/router';
 
 const $app = injectStrict(_app);
+const $ass = injectStrict(_assignmentInjectable);
 const $event = injectStrict(_eventInjectable);
 const $q = useQuasar();
-
+/**
+ * -----------------------------------------
+ *	data
+ * -----------------------------------------
+ */
+const assignmentCounter = computed(() => $ass.assignments.length);
 const eventCounter = computed(() => $event.events.length);
 const title = computed(() =>
   $app.mode === 'manager' ? 'Sherlock Manager' : 'Sherlock Agente'
 );
+/**
+ * -----------------------------------------
+ *	methods
+ * -----------------------------------------
+ */
+
 function toggleDrawer() {
   $app.toggleLeftDrawer();
 }

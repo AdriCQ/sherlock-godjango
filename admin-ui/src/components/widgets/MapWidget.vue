@@ -7,28 +7,12 @@
     :center="center"
     :min-zoom="settings.zoom.min"
     :max-zoom="settings.zoom.max"
-    @click="addMarker"
-    @update:center="doMoveCenter"
-    @update:zoom="doMoveZoom"
+    @click="eventOnClick"
+    @update:center="(center) => $emit('update-center', center)"
+    @update:zoom="(zoom) => $emit('update-zoom', zoom)"
     :key="`map-key-${zoom}-${center.lat}-${center.lng}`"
   >
     <l-tile-layer :url="MAP_URL" :attribution="ATTRIBUTION" />
-    <l-control>
-      <q-btn
-        color="primary"
-        :icon="`${readonly ? 'mdi-arrow-left' : 'mdi-check'}`"
-        :label="`${readonly ? 'Regresar' : 'Confirmar'}`"
-        @click="confirm"
-        v-if="markers.length && button"
-      />
-      <q-btn
-        v-if="!readonly"
-        color="white"
-        :text-color="`${gpsPosition ? 'info' : 'black'}`"
-        :icon="`${gpsPosition ? 'mdi-crosshairs-gps' : 'mdi-crosshairs'}`"
-        @click="markCurrentGPSPosition"
-      />
-    </l-control>
 
     <l-marker
       :key="`marker-${markerKey}`"
@@ -38,18 +22,18 @@
   </l-map>
 </template>
 
-<script lang="ts">
-import { computed, defineComponent, PropType, onBeforeMount } from 'vue';
+<script setup lang="ts">
 import 'leaflet/dist/leaflet.css';
-import { LatLng, LocationEvent, Icon } from 'leaflet';
+import { LatLng, LocationEvent, Icon, latLng } from 'leaflet';
 import {
-  LControl,
+  // LControl,
   // LControlZoom,
   LMap,
   LMarker,
   LTileLayer,
 } from '@vue-leaflet/vue-leaflet';
-import { injectStrict, _map } from 'src/injectables';
+import { IMaPSettings } from 'src/types';
+import { toRefs } from 'vue';
 
 /* Fix leaflet icons */
 type D = Icon.Default & {
@@ -76,110 +60,62 @@ const ATTRIBUTION =
  */
 const MAP_URL = 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
 /**
- * COMPONENT
+ * -----------------------------------------
+ *	Injectables
+ * -----------------------------------------
  */
-export default defineComponent({
-  name: 'MapLayout',
-  components: {
-    LControl,
-    // LControlZoom,
-    LMap,
-    LMarker,
-    LTileLayer,
-  },
-  emits: ['add-position', 'current-gps', 'confirm'],
-  props: {
-    initialMarkers: {
-      type: Array as PropType<LatLng[]>,
-      required: false,
-    },
-    readonly: {
-      type: Boolean,
-      default: false,
-    },
-    button: {
-      type: Boolean,
-      default: true,
-    },
-  },
-  setup($props, { emit }) {
-    const $mapStore = injectStrict(_map);
+const $props = withDefaults(
+  defineProps<{
+    markers?: LatLng[];
+    settings?: IMaPSettings;
+    mapClickFn?: (payload: MouseEvent | LocationEvent) => void;
+    readonly?: boolean;
+    center?: LatLng;
+    zoom?: number;
+  }>(),
+  {
+    markers: () => [],
+    settings: () => ({
+      multiple: false,
+      zoom: {
+        max: 18,
+        min: 10,
+      },
+    }),
+    center: () => latLng(0, 0),
+    readonly: false,
+    zoom: 16,
+  }
+);
 
-    onBeforeMount(() => {
-      if ($props.initialMarkers && $props.initialMarkers.length) {
-        $mapStore.markers = $props.initialMarkers;
-        $mapStore.center = $props.initialMarkers[0];
-      }
-    });
-    /**
-     * -----------------------------------------
-     *	Data
-     * -----------------------------------------
-     */
-    const center = computed(() => $mapStore.center);
-    const gpsPosition = computed(() => $mapStore.gpsPosition);
-    const markers = computed(() => $mapStore.markers);
-    const settings = computed(() => $mapStore.settings);
-    const zoom = computed(() => $mapStore.zoom);
-    /**
-     * -----------------------------------------
-     *	Methods
-     * -----------------------------------------
-     */
-    /**
-     * addMarker
-     */
-    function addMarker(event: MouseEvent | PointerEvent | LocationEvent) {
-      if ($props.readonly) return;
-      if ((event as LocationEvent).latlng) {
-        if (markers.value.length && settings.value.multiple)
-          $mapStore.markers.push((event as LocationEvent).latlng);
-        else {
-          $mapStore.markers = [(event as LocationEvent).latlng];
-        }
-        emit('add-position', (event as LocationEvent).latlng);
-      }
-    }
-    function confirm() {
-      emit('confirm', markers.value);
-    }
-    /**
-     * doMoveCenter
-     * @param _center
-     */
-    function doMoveCenter(_center: LatLng) {
-      $mapStore.center = _center;
-    }
-    /**
-     * doMoveZoom
-     * @param _zoom
-     */
-    function doMoveZoom(_zoom: number) {
-      $mapStore.zoom = _zoom;
-    }
-    /**
-     * getCurrentGPSPosition
-     */
-    async function markCurrentGPSPosition() {
-      await $mapStore.markGpsPosition();
-      emit('current-gps', gpsPosition.value);
-    }
+const $emit = defineEmits<{
+  (e: 'add-marker', p: LatLng): void;
+  (e: 'update-center', p: LatLng): void;
+  (e: 'update-zoom', p: number): void;
+}>();
+/**
+ * -----------------------------------------
+ *	Data
+ * -----------------------------------------
+ */
+const { markers, settings } = toRefs($props);
+/**
+ * -----------------------------------------
+ *	Methods
+ * -----------------------------------------
+ */
 
-    return {
-      ATTRIBUTION,
-      MAP_URL,
-      center,
-      gpsPosition,
-      settings,
-      markers,
-      zoom,
-      // Methods
-      addMarker,
-      confirm,
-      doMoveCenter,
-      doMoveZoom,
-      markCurrentGPSPosition,
-    };
-  },
-});
+/**
+ * eventOnClick
+ * @param event
+ */
+function eventOnClick(event: MouseEvent | LocationEvent) {
+  if ($props.mapClickFn) $props.mapClickFn(event);
+  else {
+    if ($props.readonly) return;
+    if ((event as LocationEvent).latlng) {
+      $emit('add-marker', (event as LocationEvent).latlng);
+    }
+  }
+}
 </script>

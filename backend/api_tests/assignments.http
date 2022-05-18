@@ -50,6 +50,20 @@ Authorization: {{token}}
     "agent_id": 1
 }
 
+### Assign Checkpoint
+POST /api/assignments/1/assign-checkpoint HTTP/1.1
+Host: {{ host }}
+Authorization: {{token}}
+
+{
+    "name": "Assign Chekpoint",
+    "position":{
+        "lat":0,
+        "lng":0
+    },
+    "contact": "55445566"
+}
+
 ### Search
 POST /api/assignments/search HTTP/1.1
 Host: {{ host }}

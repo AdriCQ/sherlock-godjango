@@ -25,6 +25,7 @@ export interface IAssignmentCheckpoint {
   contact?: string;
   created_at: string;
   updated_at?: string;
+  assignment_id: number;
 }
 /**
  * Assignment Create Request

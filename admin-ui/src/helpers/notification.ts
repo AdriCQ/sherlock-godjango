@@ -12,7 +12,7 @@ class NotificationHelper {
    * axiosError
    * @param _error
    */
-  axiosError<T = unknown>(_error: unknown, _default: string) {
+  axiosError<T = unknown>(_error: unknown, _default = 'No se pudo guardar') {
     console.log({ AxiosError: _error as T });
     const error = _error as AxiosError<IApiResponse<T>>;
     if (error.response) {

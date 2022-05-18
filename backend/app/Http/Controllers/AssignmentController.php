@@ -21,7 +21,6 @@ class AssignmentController extends Controller
             'position' => ['required', 'array'],
             'position.lat' => ['required', 'numeric'],
             'position.lng' => ['required', 'numeric'],
-            'initiated_ts' => ['required', 'string'],
             'contact' => ['nullable', 'string'],
         ]);
         $ass = Assignment::find($id);

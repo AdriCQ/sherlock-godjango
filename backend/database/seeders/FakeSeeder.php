@@ -133,7 +133,7 @@ class FakeSeeder extends Seeder
                     'description' => $faker->text,
                     'observations' => $faker->text,
                     'event' => $faker->word,
-                    'status' => $faker->numberBetween(0, 2),
+                    'status' => 0,
                     'agent_id' => $faker->numberBetween(1, Agent::count()),
                 ]);
             }

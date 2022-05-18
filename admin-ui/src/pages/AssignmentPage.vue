@@ -2,9 +2,18 @@
   <q-page padding>
     <q-card class="no-box-shadow" v-if="assignment">
       <div class="row q-col-gutter-sm">
-        <div class="col-xs-12 col-sm-6">
-          <q-card-section>
+        <div class="col-xs-12 col-sm-6 col-lg-4">
+          <q-card-section class="q-gutter-y-sm">
             <div class="text-h6">{{ assignment.name }}</div>
+            <div class="text-body1" v-if="isManager">
+              <q-btn
+                color="primary"
+                icon="mdi-pencil"
+                label="Administrar"
+                class="full-width"
+                @click="dialogForm = true"
+              />
+            </div>
             <div class="text-subtitle1">
               <q-chip
                 class="glossy"
@@ -23,7 +32,9 @@
             <!-- / Agent -->
 
             <!-- description -->
-            <p class="text-subtitle2">{{ assignment.description }}</p>
+            <p class="text-subtitle2">
+              Descripción: {{ assignment.description }}
+            </p>
             <!-- / description -->
 
             <!-- observations -->
@@ -44,20 +55,67 @@
               <q-item
                 clickable
                 v-for="(cp, cpIndex) in assignment.checkpoints"
-                :key="`checkpoint-${cp.id}-${cpIndex}`"
-                @click="displayCheckpoint = cp"
+                :key="`checkpoint-${cp.id}-index-${cpIndex}`"
               >
-                <q-item-section avatar>
+                <q-item-section avatar @click="displayCheckpoint = cp">
                   <q-icon name="mdi-map-marker" />
                 </q-item-section>
-                <q-item-section>{{ cp.name }}</q-item-section>
+                <q-item-section>
+                  <q-item-label>
+                    {{ cp.name }}
+                  </q-item-label>
+                  <q-item-label caption lines="2">
+                    <q-chip
+                      class="glossy"
+                      size="sm"
+                      icon="mdi-clock"
+                      label="Pendiente"
+                      v-if="cp.status === 0"
+                    />
+                    <q-chip
+                      class="glossy"
+                      size="sm"
+                      icon="mdi-check"
+                      label="Completado"
+                      v-else
+                    />
+                  </q-item-label>
+                </q-item-section>
+
+                <q-item-section
+                  avatar
+                  v-if="isManager"
+                  @click="removeCheckpoint(cp)"
+                >
+                  <q-icon name="mdi-delete" color="negative" />
+                </q-item-section>
               </q-item>
+
+              <!-- Add Checkpoint -->
+              <q-item
+                v-if="isManager"
+                clickable
+                @click="dialogCheckpoint = true"
+              >
+                <q-item-section top avatar>
+                  <q-avatar
+                    color="positive"
+                    text-color="white"
+                    icon="mdi-plus"
+                    size="sm"
+                  />
+                </q-item-section>
+                <q-item-section>
+                  <q-item-label>Nuevo Checkpoint</q-item-label>
+                </q-item-section>
+              </q-item>
+              <!-- / Add Checkpoint -->
             </q-list>
           </q-card-section>
         </div>
 
         <!-- Map Column -->
-        <div class="col-sm-6">
+        <div class="col-sm-6 col-lg-8" v-if="!isMobile">
           <map-widget
             readonly
             :markers="checkpointMarkers"
@@ -69,6 +127,29 @@
         <!-- / Map Column -->
       </div>
     </q-card>
+
+    <!-- Form Dialog -->
+    <q-dialog v-model="dialogForm">
+      <assignment-form
+        style="min-width: 20rem"
+        :assignment="assignment"
+        @cancel="closeDialogs"
+        @complete="closeDialogs"
+      />
+    </q-dialog>
+    <!-- / Form Dialog -->
+
+    <!-- Checkpoint Dialog -->
+    <q-dialog v-model="dialogCheckpoint">
+      <checkpoint-form
+        style="min-width: 20rem"
+        v-if="assignment"
+        :assignment="assignment"
+        @cancel="closeDialogs"
+        @complete="closeDialogs"
+      />
+    </q-dialog>
+    <!-- / Checkpoint Dialog -->
   </q-page>
 </template>
 
@@ -77,14 +158,20 @@ import { injectStrict, _assignmentInjectable } from 'src/injectables';
 import { computed, onBeforeMount, ref } from 'vue';
 import { useRoute } from 'vue-router';
 import MapWidget from 'src/components/widgets/MapWidget.vue';
+import AssignmentForm from 'src/components/forms/AssignmentForm.vue';
+import CheckpointForm from 'src/components/forms/CheckpointForm.vue';
 import { latLng, LatLng } from 'leaflet';
 import { IAssignmentCheckpoint } from 'src/types';
+import { ROUTE_NAME } from 'src/router';
+import { Platform } from 'quasar';
+import { notificationHelper, useGuiHelper } from 'src/helpers';
 /**
  * -----------------------------------------
  *	Injectable
  * -----------------------------------------
  */
 const $assignment = injectStrict(_assignmentInjectable);
+const $gui = useGuiHelper();
 const $route = useRoute();
 /**
  * -----------------------------------------
@@ -109,8 +196,41 @@ const checkpointMarkers = computed<LatLng[]>(() => {
   });
   return markers;
 });
-
+const dialogCheckpoint = ref(false);
+const dialogForm = ref(false);
+const isManager = computed(() => $route.name === ROUTE_NAME.ADMIN_ASSIGNMENT);
+const isMobile = computed(() => Platform.is.mobile);
 const mapZoom = ref(15);
+/**
+ * -----------------------------------------
+ *	Methods
+ * -----------------------------------------
+ */
+/**
+ * Close Dialogs
+ */
+function closeDialogs() {
+  dialogCheckpoint.value = false;
+  dialogForm.value = false;
+}
+/**
+ * Remove Checkpoint
+ */
+function removeCheckpoint(cp: IAssignmentCheckpoint) {
+  $gui.deleteDialog({
+    message: 'Desea eliminar el checkpoint?',
+    onOk: async () => {
+      notificationHelper.loading();
+      try {
+        await $assignment.removeCheckpoint(cp.assignment_id, cp.id);
+      } catch (error) {
+        notificationHelper.axiosError(error, 'No se pudo eliminar');
+      }
+      notificationHelper.loading(false);
+    },
+    title: 'Eliminar Checkpoint',
+  });
+}
 /**
  * -----------------------------------------
  *	Lifecycle

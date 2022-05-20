@@ -34,12 +34,12 @@
           </template>
         </q-input>
       </q-card-section>
-      <q-card-section
+      <!-- <q-card-section
         class="text-primary cursor-pointer"
         @click="$emit('toggle')"
       >
         No tengo cuenta
-      </q-card-section>
+      </q-card-section> -->
       <q-card-actions>
         <q-btn
           class="full-width"

@@ -1,4 +1,4 @@
-import MainLayoutVue from 'src/layouts/MainLayout.vue';
+import ManagerLayout from 'src/layouts/manager/ManagerLayout.vue';
 import { RouteRecordRaw } from 'vue-router';
 import { authGuard } from './guards';
 import { ROUTE_NAME } from './names';
@@ -6,7 +6,7 @@ import { ROUTE_NAME } from './names';
 const route: RouteRecordRaw = {
   path: '/manager',
   beforeEnter: authGuard,
-  component: MainLayoutVue,
+  component: ManagerLayout,
   children: [
     {
       path: '',

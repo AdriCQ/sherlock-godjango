@@ -19,6 +19,17 @@
           label="Observación"
         />
         <!-- / Observations -->
+        <!-- Agente -->
+        <q-select
+          v-model="form.agent_id"
+          :options="allAgents"
+          label="Agente"
+          map-options
+          emit-value
+          option-label="nick"
+          option-value="id"
+        />
+        <!-- / Agente -->
       </q-card-section>
       <q-card-actions>
         <q-btn
@@ -33,8 +44,13 @@
 </template>
 
 <script setup lang="ts">
+import { computed } from '@vue/reactivity';
 import { notificationHelper } from 'src/helpers';
-import { injectStrict, _assignmentInjectable } from 'src/injectables';
+import {
+  injectStrict,
+  _agentInjectable,
+  _assignmentInjectable,
+} from 'src/injectables';
 import {
   IAssignment,
   IAssignmentCreateRequest,
@@ -46,6 +62,7 @@ import { onBeforeMount, ref } from 'vue';
  *	Injection
  * -----------------------------------------
  */
+const $agent = injectStrict(_agentInjectable);
 const $assignment = injectStrict(_assignmentInjectable);
 const $emit = defineEmits<{ (e: 'complete'): void; (e: 'cancel'): void }>();
 const $props = defineProps<{ assignment?: IAssignment }>();
@@ -54,6 +71,7 @@ const $props = defineProps<{ assignment?: IAssignment }>();
  *	Data
  * -----------------------------------------
  */
+const allAgents = computed(() => $agent.agents);
 const form = ref<IAssignmentCreateRequest | IAssignmentUpdateRequest>();
 /**
  * onSubmit

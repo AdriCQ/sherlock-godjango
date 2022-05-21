@@ -1,11 +1,11 @@
 import ManagerLayout from 'src/layouts/manager/ManagerLayout.vue';
 import { RouteRecordRaw } from 'vue-router';
-import { authGuard } from './guards';
+import { managerGuard } from './guards';
 import { ROUTE_NAME } from './names';
 
 const route: RouteRecordRaw = {
   path: '/manager',
-  beforeEnter: authGuard,
+  beforeEnter: managerGuard,
   component: ManagerLayout,
   children: [
     {

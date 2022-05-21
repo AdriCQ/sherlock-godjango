@@ -11,6 +11,7 @@ import {
   IAgentSearchRequest,
 } from 'src/types';
 import { InjectionKey, ref } from 'vue';
+import { $user } from './user';
 /**
  * @var API_PATH
  */
@@ -19,6 +20,7 @@ const API_PATH = 'agents';
  * @class Agent Injectable
  */
 class AgentInjectable {
+  private _agent = ref<IAgent>();
   private _agents = ref<IAgent[]>([]);
   private _categories = ref<IAgentCategory[]>([]);
   private _groups = ref<IAgentGroup[]>([]);
@@ -27,6 +29,16 @@ class AgentInjectable {
    *	Getters & Setters
    * -----------------------------------------
    */
+  get agent() {
+    return $user.profile && $user.profile.role.name === 'user'
+      ? this._agent.value
+      : undefined;
+  }
+  set agent(a: IAgent | undefined) {
+    if ($user.profile && $user.profile.role.name === 'user')
+      this._agent.value = a;
+    else this._agent.value = undefined;
+  }
   get agents() {
     return this._agents.value;
   }
@@ -79,6 +91,16 @@ class AgentInjectable {
     await $api.delete(`${API_PATH}/${id}`);
     const index = this.agents.findIndex((a) => a.id === id);
     if (index >= 0) this.agents.splice(index, 1);
+  }
+  /**
+   * whoami
+   * @returns
+   */
+  async whoami() {
+    this.agent = (
+      await $api.get<IApiResponse<IAgent>>(`${API_PATH}/whoami`)
+    ).data.data;
+    return this.agent;
   }
   /**
    * search

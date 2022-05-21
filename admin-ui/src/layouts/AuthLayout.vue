@@ -10,8 +10,9 @@
 
 <script lang="ts" setup>
 import LoginForm from 'src/components/forms/LoginForm.vue';
-import { injectStrict, _app } from 'src/injectables';
+import { injectStrict, _app, _user } from 'src/injectables';
 import { ROUTE_NAME } from 'src/router';
+import { onBeforeMount } from 'vue';
 import { useRouter } from 'vue-router';
 
 /**
@@ -20,6 +21,7 @@ import { useRouter } from 'vue-router';
  * -----------------------------------------
  */
 const $app = injectStrict(_app);
+const $user = injectStrict(_user);
 const $router = useRouter();
 /**
  * onAuth
@@ -29,4 +31,13 @@ function onAuth() {
     void $router.push({ name: ROUTE_NAME.ADMIN_HOME });
   else void $router.push({ name: ROUTE_NAME.AGENT_HOME });
 }
+/**
+ * -----------------------------------------
+ *	Lifecycle
+ * -----------------------------------------
+ */
+onBeforeMount(() => {
+  $user.load();
+  if ($user.api_token) onAuth();
+});
 </script>

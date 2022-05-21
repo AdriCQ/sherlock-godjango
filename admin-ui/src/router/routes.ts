@@ -10,8 +10,7 @@ const routes: RouteRecordRaw[] = [
   {
     path: '/',
     beforeEnter: authGuard,
-    component: () => import('src/layouts/manager/ManagerLayout.vue'),
-    children: [{ path: '', component: () => import('pages/IndexPage.vue') }],
+    component: () => import('src/layouts/AuthLayout.vue'),
   },
   authRoutes,
   adminRoutes,

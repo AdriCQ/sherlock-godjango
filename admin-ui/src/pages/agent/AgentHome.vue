@@ -1,6 +1,6 @@
 <template>
   <q-page padding>
-    <q-card class="full-width" style="height: 75vh">
+    <q-card class="full-width" style="height: 80vh">
       <q-card-section class="q-pa-xs">
         <div class="text-h6 text-center">Tarea Actual</div>
       </q-card-section>
@@ -18,32 +18,78 @@
       >
         <l-tile-layer :url="MAP_URL" :attribution="ATTRIBUTION" />
 
-        <l-marker
+        <!-- Controls -->
+        <l-control v-if="markers.length">
+          <q-btn
+            color="white"
+            text-color="dark"
+            icon="mdi-eye"
+            @click="dialogMarkerSelector = true"
+          />
+        </l-control>
+        <!-- / Controls -->
+        <template
           :key="`marker-${markerKey}`"
           v-for="(marker, markerKey) in markers"
-          :lat-lng="marker"
-          @click="assignmentDetails(marker.assignment_id)"
-        />
+        >
+          <l-marker
+            v-if="marker.visible"
+            :lat-lng="marker"
+            @click="checkpointDetails(marker.checkpoint?.id)"
+          />
+        </template>
       </l-map>
     </q-card>
+
+    <!-- Dialog Position Selector -->
+    <q-dialog v-model="dialogMarkerSelector">
+      <q-card>
+        <q-card-section>
+          <q-list bordered>
+            <q-item
+              v-for="(marker, mKey) in markers"
+              :key="`mlistas-${marker.checkpoint?.id}-key-${mKey}`"
+            >
+              <q-item-section>
+                <q-item-label>{{ marker.checkpoint?.name }}</q-item-label>
+                <q-item-label caption lines="2">{{
+                  marker.checkpoint?.status === 0 ? 'Pendiente' : 'Completado'
+                }}</q-item-label></q-item-section
+              >
+              <q-item-section avatar @click="toggleMarkerVisible(marker)">
+                <q-icon
+                  color="primary"
+                  :name="marker.visible ? 'mdi-eye' : 'mdi-eye-off'"
+                />
+              </q-item-section>
+            </q-item>
+          </q-list>
+        </q-card-section>
+        <q-card-actions align="right">
+          <q-btn flat label="Aceptar" color="primary" v-close-popup />
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
+    <!-- / Dialog Position Selector -->
   </q-page>
 </template>
 
-<script lang="ts">
-import { computed, defineComponent, onBeforeMount, ref } from 'vue';
+<script setup lang="ts">
+import { computed, onBeforeMount, ref } from 'vue';
 import 'leaflet/dist/leaflet.css';
 import { LatLng, Icon, latLng } from 'leaflet';
 import {
-  // LControl,
+  LControl,
   // LControlZoom,
   LMap,
   LMarker,
   LTileLayer,
 } from '@vue-leaflet/vue-leaflet';
 import { DEFAULT_COORDINATES } from 'src/helpers';
-import { injectStrict, _assignmentInjectable } from 'src/injectables';
+import { injectStrict, _agentInjectable } from 'src/injectables';
 import { useRouter } from 'vue-router';
 import { ROUTE_NAME } from 'src/router';
+import { IAssignmentCheckpoint } from 'src/types';
 
 /* Fix leaflet icons */
 type D = Icon.Default & {
@@ -57,7 +103,8 @@ interface IMaPSettings {
   };
 }
 interface ILatLng extends LatLng {
-  assignment_id?: number;
+  checkpoint?: IAssignmentCheckpoint;
+  visible?: boolean;
 }
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
@@ -79,98 +126,84 @@ const ATTRIBUTION =
  * MAP_URL
  */
 const MAP_URL = 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
-/**
- * COMPONENT
- */
-export default defineComponent({
-  name: 'MapLayout',
-  components: {
-    // LControl,
-    // LControlZoom,
-    LMap,
-    LMarker,
-    LTileLayer,
-  },
-  setup() {
-    const $assignment = injectStrict(_assignmentInjectable);
-    const $router = useRouter();
-    onBeforeMount(() => {
-      void $assignment.filter({ status: 0 });
-    });
-    /**
-     * -----------------------------------------
-     *	Data
-     * -----------------------------------------
-     */
-    const assignments = computed(() => $assignment.assignments);
-    const center = ref<LatLng>(DEFAULT_COORDINATES);
-    const markers = computed<ILatLng[]>(() => {
-      const markers: ILatLng[] = [];
-      let object: ILatLng;
-      assignments.value.forEach((a) => {
-        if (a.checkpoints?.length) {
-          object = latLng(
-            a.checkpoints[0].position.lat,
-            a.checkpoints[0].position.lng
-          );
-          object.assignment_id = a.id;
-          markers.push(object);
-        }
-      });
-      return markers;
-    });
-    const settings = ref<IMaPSettings>({
-      multiple: false,
-      zoom: {
-        max: 18,
-        min: 8,
-      },
-    });
-    const zoom = ref(12);
-    /**
-     * -----------------------------------------
-     *	Methods
-     * -----------------------------------------
-     */
-    /**
-     * assignmentDetails
-     * @param id
-     */
-    function assignmentDetails(id?: number) {
-      if (!id) return;
-      void $router.push({
-        name: ROUTE_NAME.ADMIN_ASSIGNMENT,
-        params: { id: id },
-      });
-    }
-    /**
-     * doMoveCenter
-     * @param _center
-     */
-    function doMoveCenter(_center: LatLng) {
-      center.value = _center;
-    }
-    /**
-     * doMoveZoom
-     * @param _zoom
-     */
-    function doMoveZoom(_zoom: number) {
-      zoom.value = _zoom;
-    }
 
-    return {
-      ATTRIBUTION,
-      MAP_URL,
-      center,
-      settings,
-      markers,
-      zoom,
-      // Methods
-      assignmentDetails,
-      confirm,
-      doMoveCenter,
-      doMoveZoom,
-    };
+const $agent = injectStrict(_agentInjectable);
+const $router = useRouter();
+/**
+ * -----------------------------------------
+ *	Data
+ * -----------------------------------------
+ */
+const assignments = computed(() => $agent.assignments);
+const center = ref<LatLng>(DEFAULT_COORDINATES);
+const dialogMarkerSelector = ref(false);
+const markers = ref<ILatLng[]>([]);
+const settings = ref<IMaPSettings>({
+  multiple: false,
+  zoom: {
+    max: 18,
+    min: 8,
   },
+});
+const zoom = ref(12);
+/**
+ * -----------------------------------------
+ *	Methods
+ * -----------------------------------------
+ */
+/**
+ * checkpointDetails
+ * @param id
+ */
+function checkpointDetails(id?: number) {
+  if (!id) return;
+  void $router.push({
+    name: ROUTE_NAME.AGENT_ASSIGNMENT,
+    params: { id: id },
+  });
+}
+/**
+ * doMoveCenter
+ * @param _center
+ */
+function doMoveCenter(_center: LatLng) {
+  center.value = _center;
+}
+/**
+ * doMoveZoom
+ * @param _zoom
+ */
+function doMoveZoom(_zoom: number) {
+  zoom.value = _zoom;
+}
+/**
+ * Toggle Marker Visible
+ * @param marker
+ */
+function toggleMarkerVisible(marker: ILatLng) {
+  const index = markers.value.findIndex(
+    (m) => m.checkpoint?.id === marker.checkpoint?.id
+  );
+  if (index >= 0) markers.value[index].visible = !markers.value[index].visible;
+}
+/**
+ * -----------------------------------------
+ *	Lifecycle
+ * -----------------------------------------
+ */
+
+onBeforeMount(async () => {
+  await $agent.listAssignments();
+  let object: ILatLng;
+  assignments.value.forEach((a) => {
+    if (a.checkpoints?.length) {
+      a.checkpoints.forEach((ch) => {
+        object = latLng(ch.position.lat, ch.position.lng);
+        object.checkpoint = ch;
+        object.visible = true;
+        markers.value.push(object);
+      });
+    }
+  });
 });
 </script>

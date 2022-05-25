@@ -9,6 +9,7 @@ import {
   IAgentGroupUpdateRequest,
   IApiResponse,
   IAgentSearchRequest,
+  IAssignment,
 } from 'src/types';
 import { InjectionKey, ref } from 'vue';
 import { $user } from './user';
@@ -22,6 +23,7 @@ const API_PATH = 'agents';
 class AgentInjectable {
   private _agent = ref<IAgent>();
   private _agents = ref<IAgent[]>([]);
+  private _assignments = ref<IAssignment[]>([]);
   private _categories = ref<IAgentCategory[]>([]);
   private _groups = ref<IAgentGroup[]>([]);
   /**
@@ -44,6 +46,12 @@ class AgentInjectable {
   }
   set agents(a: IAgent[]) {
     this._agents.value = a;
+  }
+  get assignments() {
+    return this._assignments.value;
+  }
+  set assignments(a: IAssignment[]) {
+    this._assignments.value = a;
   }
   get categories() {
     return this._categories.value;
@@ -81,6 +89,21 @@ class AgentInjectable {
   async list() {
     this.agents = (await $api.get<IApiResponse<IAgent[]>>(API_PATH)).data.data;
     return this.agents;
+  }
+  /**
+   * List Assignments
+   * @param status
+   * @returns
+   */
+  async listAssignments(status = 0) {
+    const resp = await $api.get<IApiResponse<IAssignment[]>>(
+      API_PATH + '/assignments',
+      {
+        params: { status },
+      }
+    );
+    this.assignments = resp.data.data ? resp.data.data : [];
+    return this.assignments;
   }
   /**
    * remove

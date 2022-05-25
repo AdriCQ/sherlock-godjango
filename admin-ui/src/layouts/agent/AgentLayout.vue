@@ -25,7 +25,7 @@
 import AgentFooter from './AgentFooter.vue';
 import AgentHeader from './AgentHeader.vue';
 import AgentLeftDrawer from './AgentLeftDrawer.vue';
-import { useQuasar } from 'quasar';
+import { useMeta, useQuasar } from 'quasar';
 import { computed, onBeforeMount } from 'vue';
 import { injectStrict, _agentInjectable } from 'src/injectables';
 import { notificationHelper } from 'src/helpers';
@@ -59,8 +59,12 @@ async function pullToRefresh(done: CallableFunction) {
  * -----------------------------------------
  */
 onBeforeMount(async () => {
+  useMeta({
+    title: 'Sherlock Agente',
+  });
   try {
     await $agent.whoami();
+    await $agent.listAssignments();
   } catch (error) {
     notificationHelper.axiosError(error);
   }

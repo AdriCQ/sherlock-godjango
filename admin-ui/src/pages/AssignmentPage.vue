@@ -154,7 +154,11 @@
 </template>
 
 <script setup lang="ts">
-import { injectStrict, _assignmentInjectable } from 'src/injectables';
+import {
+  injectStrict,
+  _agentInjectable,
+  _assignmentInjectable,
+} from 'src/injectables';
 import { computed, onBeforeMount, ref } from 'vue';
 import { useRoute } from 'vue-router';
 import MapWidget from 'src/components/widgets/MapWidget.vue';
@@ -171,6 +175,7 @@ import { notificationHelper, useGuiHelper } from 'src/helpers';
  * -----------------------------------------
  */
 const $assignment = injectStrict(_assignmentInjectable);
+const $agent = injectStrict(_agentInjectable);
 const $gui = useGuiHelper();
 const $route = useRoute();
 /**
@@ -179,7 +184,13 @@ const $route = useRoute();
  * -----------------------------------------
  */
 const assignmentId = ref(0);
-const assignment = computed(() => $assignment.getById(assignmentId.value));
+const assignment = computed(() => {
+  if (isManager.value) return $assignment.getById(assignmentId.value);
+  const index = $agent.assignments.findIndex(
+    (as) => as.id === assignmentId.value
+  );
+  return $agent.assignments[index];
+});
 const displayCheckpoint = ref<IAssignmentCheckpoint>();
 const checkpointMarkers = computed<LatLng[]>(() => {
   const markers: LatLng[] = [];

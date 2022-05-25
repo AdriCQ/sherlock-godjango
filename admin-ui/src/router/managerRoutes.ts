@@ -19,6 +19,11 @@ const route: RouteRecordRaw = {
       component: () => import('src/pages/admin/AdminUsersPage.vue'),
     },
     {
+      path: 'assignments',
+      name: ROUTE_NAME.ADMIN_ASSIGNMENTS,
+      component: () => import('src/pages/admin/AssignmentsPage.vue'),
+    },
+    {
       path: 'assignments/:id',
       name: ROUTE_NAME.ADMIN_ASSIGNMENT,
       component: () => import('src/pages/AssignmentPage.vue'),

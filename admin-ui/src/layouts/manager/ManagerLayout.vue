@@ -16,8 +16,8 @@
 </template>
 
 <script setup lang="ts">
-import AppHeader from './Header.vue';
-import MainFooter from './MainFooter.vue';
+import AppHeader from './ManagerHeader.vue';
+import MainFooter from './ManagerFooter.vue';
 import ManagerLeftDrawer from './ManagerLeftDrawer.vue';
 import { computed, onBeforeMount } from 'vue';
 import { useQuasar } from 'quasar';

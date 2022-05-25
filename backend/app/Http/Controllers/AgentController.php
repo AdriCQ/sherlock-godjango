@@ -6,6 +6,7 @@ use App\Models\Agent;
 use App\Models\AgentGroup;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 
 class AgentController extends Controller
@@ -56,6 +57,13 @@ class AgentController extends Controller
     public function find(int $id)
     {
         return $this->sendResponse(Agent::where('id', $id)->with('categories')->first());
+    }
+    /**
+     * assignments
+     */
+    public function assignments(int $status = 0)
+    {
+        return $this->sendResponse(auth()->user()->agent->assignments()->where('status', $status)->get());
     }
 
     /**

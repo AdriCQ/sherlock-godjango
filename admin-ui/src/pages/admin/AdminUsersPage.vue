@@ -32,8 +32,9 @@
     </q-card>
 
     <!-- Form Dialog -->
-    <q-dialog v-model="dialogUserForm" maximized class="q-pa-md">
+    <q-dialog v-model="dialogUserForm" class="q-pa-md">
       <user-form
+        style="min-width: 20rem"
         :user="editUser"
         @form-complete="closeDialog"
         @cancel="closeDialog"

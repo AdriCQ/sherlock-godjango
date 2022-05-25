@@ -18,6 +18,10 @@ class Agent extends Model
      *	Relations
      * -----------------------------------------
      */
+    public function assignments()
+    {
+        return $this->hasMany(Assignment::class);
+    }
     /**
      * category
      */

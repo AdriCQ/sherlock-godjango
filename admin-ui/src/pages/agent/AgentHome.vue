@@ -43,7 +43,7 @@
 
     <!-- Dialog Position Selector -->
     <q-dialog v-model="dialogMarkerSelector">
-      <q-card>
+      <q-card class="no-box-shadow" style="min-width: 20rem">
         <q-card-section>
           <q-list bordered>
             <q-item

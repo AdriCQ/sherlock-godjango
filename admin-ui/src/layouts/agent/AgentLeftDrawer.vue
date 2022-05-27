@@ -9,6 +9,9 @@
     <!-- profile -->
     <div class="text-center q-mt-md">
       <div class="text-grey-9 text-body1">Hola, {{ userName }}</div>
+      <div class="text-grey-9 text-caption">
+        {{ agentBussy ? 'Ocupado' : 'Disponible' }}
+      </div>
     </div>
     <!-- / profile -->
 
@@ -30,7 +33,7 @@
         <!-- Tasks -->
         <q-item clickable exact :to="{ name: ROUTE_NAME.ADMIN_HOME }">
           <q-item-section avatar top>
-            <q-avatar size="md" icon="mdi-map-marker-multiple" />
+            <q-avatar size="md" icon="mdi-format-list-checks" />
           </q-item-section>
 
           <q-item-section class="text-grey-9">
@@ -84,6 +87,7 @@ const $router = useRouter();
 const $user = injectStrict(_user);
 
 const userName = computed(() => $agent.agent?.nick);
+const agentBussy = computed(() => $agent.agent?.bussy);
 const sidebarOpen = computed(() => $app.leftDrawer);
 
 /**

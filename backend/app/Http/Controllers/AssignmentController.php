@@ -48,11 +48,11 @@ class AssignmentController extends Controller
             'event' => ['required', 'string'],
             'agent_id' => ['nullable', 'integer'],
 
-            'checkpoints' => ['required', 'array'],
-            'checkpoints.*.name' => ['required', 'string'],
-            'checkpoints.*.position' => ['required', 'array'],
-            'checkpoints.*.position.lat' => ['required', 'numeric'],
-            'checkpoints.*.position.lng' => ['required', 'numeric'],
+            'checkpoints' => ['nullable', 'array'],
+            'checkpoints.*.name' => ['sometimes', 'string'],
+            'checkpoints.*.position' => ['sometimes', 'array'],
+            'checkpoints.*.position.lat' => ['sometimes', 'numeric'],
+            'checkpoints.*.position.lng' => ['sometimes', 'numeric'],
             'checkpoints.*.contact' => ['nullable', 'string'],
         ]);
         if ($validator->fails()) {
@@ -66,7 +66,8 @@ class AssignmentController extends Controller
             $validator['agent_id'] = 2;
         $ass = new Assignment($validator);
         $ass->save();
-        $ass->checkpoints()->createMany($checkpoints);
+        if (isset($validator['checkpoints']))
+            $ass->checkpoints()->createMany($checkpoints);
         return $this->sendResponse(Assignment::query()->where('id', $ass->id)->with('checkpoints')->first(), 'Asignacion Creada', 201);
     }
 
@@ -89,7 +90,7 @@ class AssignmentController extends Controller
             return $this->sendResponse($validator->errors(), 'Verifique los datos enviados', 400);
         }
         $validator = $validator->validate();
-        return $this->sendResponse(Assignment::query()->where($validator)->get());
+        return $this->sendResponse(Assignment::query()->where($validator)->orderByDesc('id')->get());
     }
 
     /**
@@ -108,7 +109,7 @@ class AssignmentController extends Controller
      */
     public function list()
     {
-        return $this->sendResponse(Assignment::all());
+        return $this->sendResponse(Assignment::query()->orderByDesc('id')->get());
     }
 
     /**

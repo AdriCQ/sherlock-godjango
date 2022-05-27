@@ -8,7 +8,7 @@
       no-caps
     >
       <q-route-tab exact :to="{ name: ROUTE_NAME.ADMIN_HOME }">
-        <q-icon name="mdi-map-marker" size="1.6rem" />
+        <q-icon name="mdi-format-list-checks" size="1.6rem" />
         <q-badge
           color="warning"
           text-color="dark"

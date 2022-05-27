@@ -27,6 +27,18 @@
         </q-item>
         <!-- /Home -->
 
+        <!-- ADMIN_ASSIGNMENTS -->
+        <q-item clickable exact :to="{ name: ROUTE_NAME.ADMIN_ASSIGNMENTS }">
+          <q-item-section avatar top>
+            <q-avatar size="md" icon="mdi-format-list-checks" />
+          </q-item-section>
+
+          <q-item-section class="text-grey-9">
+            <q-item-label lines="1">Asignaciones</q-item-label>
+          </q-item-section>
+        </q-item>
+        <!-- /ADMIN_ASSIGNMENTS -->
+
         <!-- Personal -->
         <q-expansion-item :content-inset-level="0.25">
           <template v-slot:header>

@@ -53,6 +53,9 @@ class AgentInjectable {
   set assignments(a: IAssignment[]) {
     this._assignments.value = a;
   }
+  get availableAgents() {
+    return this.agents.filter((a) => Boolean(a.bussy) === false);
+  }
   get categories() {
     return this._categories.value;
   }

@@ -43,7 +43,7 @@
             </p>
             <!-- / observations -->
           </q-card-section>
-          <q-card-section v-if="assignment.checkpoints?.length">
+          <q-card-section>
             <div class="text-body1 text-center">Checkpoints</div>
             <q-list bordered class="q-mt-sm">
               <q-item clickable @click="displayCheckpoint = undefined">

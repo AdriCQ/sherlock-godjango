@@ -5,6 +5,9 @@
         <!-- Name -->
         <q-input v-model="form.name" type="text" label="Nombre" />
         <!-- / Name -->
+        <!-- Event -->
+        <q-input v-model="form.event" type="text" label="Evento" />
+        <!-- / Event -->
         <!-- Descripción -->
         <q-input
           v-model="form.description"
@@ -22,7 +25,7 @@
         <!-- Agente -->
         <q-select
           v-model="form.agent_id"
-          :options="allAgents"
+          :options="availableAgents"
           label="Agente"
           map-options
           emit-value
@@ -71,7 +74,7 @@ const $props = defineProps<{ assignment?: IAssignment }>();
  *	Data
  * -----------------------------------------
  */
-const allAgents = computed(() => $agent.agents);
+const availableAgents = computed(() => $agent.availableAgents);
 const form = ref<IAssignmentCreateRequest | IAssignmentUpdateRequest>();
 /**
  * onSubmit
@@ -120,5 +123,6 @@ onBeforeMount(() => {
       checkpoints: [],
     } as IAssignmentCreateRequest;
   }
+  console.log(availableAgents.value);
 });
 </script>

@@ -10,15 +10,15 @@
           round
           dense
           icon="mdi-map-marker"
-          :to="{ name: ROUTE_NAME.ADMIN_HOME }"
+          :to="{ name: ROUTE_NAME.AGENT_HOME }"
         >
           <q-badge
             color="warning"
             text-color="dark"
             floating
-            v-if="assignmentCounter > 0"
+            v-if="checkpointCounter > 0"
           >
-            {{ assignmentCounter }}
+            {{ checkpointCounter }}
           </q-badge>
         </q-btn>
 
@@ -27,44 +27,34 @@
           round
           dense
           icon="mdi-bell-outline"
-          :to="{ name: ROUTE_NAME.ADMIN_EVENTS }"
-        >
-          <q-badge
-            color="warning"
-            text-color="dark"
-            floating
-            v-if="eventCounter > 0"
-          >
-            {{ eventCounter }}
-          </q-badge>
-        </q-btn>
+          :to="{ name: ROUTE_NAME.AGENT_REPORTS }"
+        />
       </template>
     </q-toolbar>
   </q-header>
 </template>
 
 <script setup lang="ts">
-import {
-  injectStrict,
-  _app,
-  _assignmentInjectable,
-  _eventInjectable,
-} from 'src/injectables';
+import { injectStrict, _app, _agentInjectable } from 'src/injectables';
 import { computed } from 'vue';
 import { useQuasar } from 'quasar';
 import { ROUTE_NAME } from 'src/router';
 
+const $agent = injectStrict(_agentInjectable);
 const $app = injectStrict(_app);
-const $ass = injectStrict(_assignmentInjectable);
-const $event = injectStrict(_eventInjectable);
 const $q = useQuasar();
 /**
  * -----------------------------------------
  *	data
  * -----------------------------------------
  */
-const assignmentCounter = computed(() => $ass.assignments.length);
-const eventCounter = computed(() => $event.events.length);
+const checkpointCounter = computed(() => {
+  let counter = 0;
+  $agent.assignments.forEach((as) => {
+    if (as.checkpoints) counter += as.checkpoints.length;
+  });
+  return counter;
+});
 const title = computed(() =>
   $app.mode === 'manager' ? 'Sherlock Manager' : 'Sherlock Agente'
 );

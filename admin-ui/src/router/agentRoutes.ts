@@ -20,6 +20,11 @@ const agentsRoutes: RouteRecordRaw = {
       path: 'assignments',
       component: () => import('pages/AssignmentPage.vue'),
     },
+    {
+      name: ROUTE_NAME.AGENT_REPORTS,
+      path: 'reports',
+      component: () => import('pages/agent/AgentReport.vue'),
+    },
   ],
 };
 

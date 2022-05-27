@@ -94,6 +94,8 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::prefix('events')->group(function () {
         Route::post('', [EventController::class, 'create']);
+        Route::get('mine', [EventController::class, 'mine']);
+
         Route::middleware('role:manager')->group(function () {
             Route::get('', [EventController::class, 'list']);
             Route::post('search', [EventController::class, 'search']);

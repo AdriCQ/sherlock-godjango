@@ -49,7 +49,33 @@ class EventController extends Controller
     {
         return $this->sendResponse(Event::query()->with('agent')->orderBy('updated_at', 'desc')->get());
     }
-
+    /**
+     * MyEvents
+     * @return Illuminate\Http\JsonResponse
+     */
+    public function mine(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'status' => ['nullable', 'in:' . implode(',', Event::$STATUS)],
+            'type' => ['nullable', 'in:' . implode(',', Event::$TYPES)],
+            'created_at' => ['nullable', 'string']
+        ]);
+        if ($validator->fails()) {
+            return $this->sendResponse($validator->errors(), 'Verifique los datos enviados', 400);
+        }
+        $validator = $validator->validate();
+        $qry = Event::query()->where('agent_id', auth()->user()->agent->id);
+        if (isset($validator['created_at'])) {
+            $qry = $qry->whereDate('created_at', '>', $validator['created_at']);
+            unset($validator['created_at']);
+        }
+        if (
+            isset($validator['status']) || isset($validator['type'])
+        ) {
+            $qry = $qry->where($validator);
+        }
+        return $this->sendResponse($qry->with('agent')->orderBy('updated_at', 'desc')->take(24)->get());
+    }
     /**
      * remove
      * @param int $id

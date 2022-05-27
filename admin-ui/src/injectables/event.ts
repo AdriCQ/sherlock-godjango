@@ -39,7 +39,9 @@ class EventInjectable {
    */
   async create(params: IEventCreateRequest) {
     await $csrf();
-    return $api.post<IApiResponse<IEvent>>(API_PATH, params);
+    const resp = await $api.post<IApiResponse<IEvent>>(API_PATH, params);
+    this.events.unshift(resp.data.data);
+    return resp.data.data;
   }
   /**
    * find
@@ -47,6 +49,7 @@ class EventInjectable {
    * @returns
    */
   async find(eventId: number) {
+    await $csrf();
     return $api.get<IApiResponse<IEvent>>(`${API_PATH}/${eventId}`);
   }
   /**
@@ -69,6 +72,16 @@ class EventInjectable {
    */
   async listOnProgress() {
     this.events = (await this.search('onprogress')).data.data;
+    return this.events;
+  }
+  /**
+   * mine
+   * @returns
+   */
+  async mine() {
+    this.events = (
+      await $api.get<IApiResponse<IEvent[]>>(API_PATH + '/mine')
+    ).data.data;
     return this.events;
   }
   /**

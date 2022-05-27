@@ -18,18 +18,6 @@
     <!-- list -->
     <div class="q-gutter-sm q-mt-md">
       <q-list class="rounded-borders" style="max-width: 350px">
-        <!-- Home -->
-        <q-item clickable exact :to="{ name: ROUTE_NAME.ADMIN_HOME }">
-          <q-item-section avatar top>
-            <q-avatar size="md" icon="mdi-home" />
-          </q-item-section>
-
-          <q-item-section class="text-grey-9">
-            <q-item-label lines="1">Inicio</q-item-label>
-          </q-item-section>
-        </q-item>
-        <!-- /Home -->
-
         <!-- Tasks -->
         <q-item clickable exact :to="{ name: ROUTE_NAME.ADMIN_HOME }">
           <q-item-section avatar top>
@@ -43,7 +31,7 @@
         <!-- /Tasks -->
 
         <!-- Report -->
-        <q-item clickable exact :to="{ name: ROUTE_NAME.ADMIN_HOME }">
+        <q-item clickable exact :to="{ name: ROUTE_NAME.AGENT_REPORTS }">
           <q-item-section avatar top>
             <q-avatar size="md" icon="mdi-alert-circle-outline" />
           </q-item-section>

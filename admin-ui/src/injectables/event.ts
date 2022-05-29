@@ -105,7 +105,13 @@ class EventInjectable {
    */
   async update(eventId: number, params: IEventUpdateRequest) {
     await $csrf();
-    return $api.patch<IApiResponse<IEvent>>(`${API_PATH}/${eventId}`, params);
+    const resp = await $api.patch<IApiResponse<IEvent>>(
+      `${API_PATH}/${eventId}`,
+      params
+    );
+    const index = this.events.findIndex((e) => e.id === resp.data.data.id);
+    if (index >= 0) this.events[index] = resp.data.data;
+    return resp.data.data;
   }
 }
 

@@ -3,6 +3,8 @@
     <q-card-section :class="`${type.bg} q-pa-sm`">
       <div class="text-subtitle2 absolute-top-right">
         <q-chip
+          clickable
+          @click="onStatusClick"
           class="glossy"
           :color="$props.event.status === 'completed' ? 'positive' : ''"
           :text-color="$props.event.status === 'completed' ? 'white' : ''"
@@ -56,9 +58,16 @@
 <script setup lang="ts">
 import { IEvent } from 'src/types';
 import { computed } from 'vue';
+import { notificationHelper, useGuiHelper } from 'src/helpers';
+import { $event } from 'src/injectables';
 
 const $emit = defineEmits<{ (e: 'request-complete'): void }>();
-const $props = defineProps<{ event: IEvent; advanced?: boolean }>();
+const $gui = useGuiHelper();
+const $props = defineProps<{
+  event: IEvent;
+  advanced?: boolean;
+  editable?: boolean;
+}>();
 const type = computed<{ bg: string; icon: string }>(() => {
   switch ($props.event.type) {
     case 'danger':
@@ -69,4 +78,26 @@ const type = computed<{ bg: string; icon: string }>(() => {
       return { bg: 'bg-info', icon: 'mdi-information-outline' };
   }
 });
+/**
+ * On Status Click
+ */
+function onStatusClick() {
+  if ($props.editable) {
+    if ($props.event.status === 'onprogress') {
+      $gui.deleteDialog({
+        message: 'Cambiar a Completeado',
+        title: 'Cambiar estado',
+        onOk: async () => {
+          try {
+            await $event.update($props.event.id, {
+              status: 'completed',
+            });
+          } catch (error) {
+            notificationHelper.axiosError(error);
+          }
+        },
+      });
+    }
+  }
+}
 </script>

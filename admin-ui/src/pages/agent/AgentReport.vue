@@ -20,7 +20,7 @@
             v-for="(ev, eKey) in events"
             :key="`event-widget-${ev.id}-${eKey}`"
           >
-            <event-widget :event="ev" />
+            <event-widget :event="ev" editable />
           </div>
         </div>
       </q-card-section>

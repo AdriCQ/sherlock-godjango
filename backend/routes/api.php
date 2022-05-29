@@ -101,7 +101,7 @@ Route::middleware('auth:sanctum')->group(function () {
             Route::post('search', [EventController::class, 'search']);
             Route::get('{id}', [EventController::class, 'find']);
             Route::delete('{id}', [EventController::class, 'remove']);
-            Route::patch('{id}', [EventController::class, 'update']);
         });
+        Route::patch('{id}', [EventController::class, 'update']);
     });
 });

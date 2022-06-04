@@ -8,7 +8,7 @@ declare module '@vue/runtime-core' {
     $axios: AxiosInstance;
   }
 }
-const baseURL = 'https://godjango.nairda.net';
+const baseURL = 'https://godjango-test.servimav.com';
 // const baseURL = 'http://localhost:8000';
 // if (!process.env.DEV) {
 //   const location = window.location;

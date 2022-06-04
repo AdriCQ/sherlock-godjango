@@ -27,7 +27,7 @@ import AgentHeader from './AgentHeader.vue';
 import AgentLeftDrawer from './AgentLeftDrawer.vue';
 import { useMeta, useQuasar } from 'quasar';
 import { computed, onBeforeMount } from 'vue';
-import { injectStrict, _agentInjectable } from 'src/injectables';
+import { $app, injectStrict, _agentInjectable } from 'src/injectables';
 import { notificationHelper } from 'src/helpers';
 import { useRoute } from 'vue-router';
 import { ROUTE_NAME } from 'src/router';
@@ -45,28 +45,38 @@ const $route = useRoute();
  * -----------------------------------------
  */
 
-const enableRefresh = computed(() => $route.name !== ROUTE_NAME.AGENT_HOME);
+const enableRefresh = computed(
+  () =>
+    $route.name !== ROUTE_NAME.AGENT_HOME &&
+    $route.name !== ROUTE_NAME.AGENT_CHECKPOINT
+);
 /**
  * pullToRefresh
  * @param done
  */
 async function pullToRefresh(done: CallableFunction) {
+  await loadData();
   done();
+}
+
+async function loadData() {
+  try {
+    await $agent.whoami();
+    await $agent.listAssignments();
+    await $app.getGpsPosition();
+  } catch (error) {
+    notificationHelper.axiosError(error);
+  }
 }
 /**
  * -----------------------------------------
  *	Lifecycle
  * -----------------------------------------
  */
-onBeforeMount(async () => {
+onBeforeMount(() => {
   useMeta({
     title: 'Sherlock Agente',
   });
-  try {
-    await $agent.whoami();
-    await $agent.listAssignments();
-  } catch (error) {
-    notificationHelper.axiosError(error);
-  }
+  loadData();
 });
 </script>

@@ -9,7 +9,7 @@
           flat
           round
           dense
-          icon="mdi-map-marker"
+          icon="mdi-format-list-checks"
           :to="{ name: ROUTE_NAME.AGENT_HOME }"
         >
           <q-badge

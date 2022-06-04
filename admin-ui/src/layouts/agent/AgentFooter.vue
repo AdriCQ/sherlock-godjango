@@ -8,6 +8,9 @@
       no-caps
     >
       <q-route-tab exact :to="{ name: ROUTE_NAME.AGENT_HOME }">
+        <q-icon name="mdi-checkbox-marked-circle-outline" size="1.6rem" />
+      </q-route-tab>
+      <q-route-tab exact :to="{ name: ROUTE_NAME.AGENT_ASSIGNMENTS }">
         <q-icon name="mdi-format-list-checks" size="1.6rem" />
         <q-badge
           color="warning"
@@ -21,9 +24,6 @@
 
       <q-route-tab exact :to="{ name: ROUTE_NAME.AGENT_REPORTS }">
         <q-icon name="mdi-bell-outline" size="1.6rem" />
-      </q-route-tab>
-      <q-route-tab exact>
-        <q-icon name="mdi-account-group" size="1.6rem" />
       </q-route-tab>
 
       <!-- <q-route-tab exact icon="mdi-magnify" :to="{name: 'main.home'}">

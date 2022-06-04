@@ -10,6 +10,7 @@ import {
   IApiResponse,
   IAgentSearchRequest,
   IAssignment,
+  IAssignmentCheckpoint,
 } from 'src/types';
 import { InjectionKey, ref } from 'vue';
 import { $user } from './user';
@@ -238,6 +239,20 @@ class AgentInjectable {
     const index = this.groups.findIndex((a) => a.id === id);
     if (index >= 0) this.groups[index] = group;
     return group;
+  }
+
+  /**
+   * findCheckpointById
+   * @param checkpointId
+   * @returns
+   */
+  findCheckpointById(checkpointId: number) {
+    let checkpoint: IAssignmentCheckpoint | undefined;
+    this.assignments.forEach((ass) => {
+      checkpoint = ass.checkpoints?.find((ch) => ch.id === checkpointId);
+      if (checkpoint) return;
+    });
+    return checkpoint;
   }
 }
 

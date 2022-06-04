@@ -158,7 +158,7 @@ const zoom = ref(12);
 function checkpointDetails(id?: number) {
   if (!id) return;
   void $router.push({
-    name: ROUTE_NAME.AGENT_ASSIGNMENT,
+    name: ROUTE_NAME.AGENT_CHECKPOINT,
     params: { id: id },
   });
 }
@@ -198,10 +198,12 @@ onBeforeMount(async () => {
   assignments.value.forEach((a) => {
     if (a.checkpoints?.length) {
       a.checkpoints.forEach((ch) => {
-        object = latLng(ch.position.lat, ch.position.lng);
-        object.checkpoint = ch;
-        object.visible = true;
-        markers.value.push(object);
+        if (!ch.status) {
+          object = latLng(ch.position.lat, ch.position.lng);
+          object.checkpoint = ch;
+          object.visible = true;
+          markers.value.push(object);
+        }
       });
     }
   });

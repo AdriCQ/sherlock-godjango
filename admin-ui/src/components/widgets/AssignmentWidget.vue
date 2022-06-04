@@ -27,7 +27,7 @@ import { useRouter } from 'vue-router';
  *	Inject
  * -----------------------------------------
  */
-const $props = defineProps<{ assignment: IAssignment }>();
+const $props = defineProps<{ assignment: IAssignment; asAgent?: boolean }>();
 const $router = useRouter();
 /**
  * -----------------------------------------
@@ -40,7 +40,9 @@ const $router = useRouter();
  */
 function goToAssignment(id: number) {
   void $router.push({
-    name: ROUTE_NAME.ADMIN_ASSIGNMENT,
+    name: $props.asAgent
+      ? ROUTE_NAME.AGENT_ASSIGNMENT
+      : ROUTE_NAME.ADMIN_ASSIGNMENT,
     params: { id },
   });
 }

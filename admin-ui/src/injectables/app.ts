@@ -1,3 +1,6 @@
+import { LatLng } from 'leaflet';
+import { Dialog, Platform } from 'quasar';
+import { $capacitor } from 'src/helpers';
 import { IUserRoleName } from 'src/types';
 import { ref, InjectionKey } from 'vue';
 import { $user } from './user';
@@ -9,7 +12,17 @@ import { $user } from './user';
  * AppStore
  */
 export class AppStore {
+  private _currentPosition = ref<LatLng>();
   private _leftDrawer = ref(false);
+  /**
+   * CurrentPosition
+   */
+  get currentPosition() {
+    return this._currentPosition.value;
+  }
+  set currentPosition(p: LatLng | undefined) {
+    this._currentPosition.value = p;
+  }
   /**
    * Left drawer setter & getter
    */
@@ -32,6 +45,26 @@ export class AppStore {
    *	Methods
    * -----------------------------------------
    */
+  /**
+   * Get Gps Position
+   * @returns
+   */
+  async getGpsPosition() {
+    if (!Platform.is.capacitor) return;
+    try {
+      const coords = await $capacitor.Geolocation_currentPosition();
+      this.currentPosition = coords;
+    } catch (error) {
+      Dialog.create({
+        title: 'Activación de GPS',
+        message: 'Necesitamos que active su conexión de GPS',
+        ok: true,
+        persistent: true,
+      }).onOk(async () => {
+        await this.getGpsPosition();
+      });
+    }
+  }
   /**
    * toggleLeftDrawer
    */

@@ -18,14 +18,26 @@
     <!-- list -->
     <div class="q-gutter-sm q-mt-md">
       <q-list class="rounded-borders" style="max-width: 350px">
+        <!-- Current Tasks -->
+        <q-item clickable exact :to="{ name: ROUTE_NAME.AGENT_HOME }">
+          <q-item-section avatar top>
+            <q-avatar size="md" icon="mdi-checkbox-marked-circle-outline" />
+          </q-item-section>
+
+          <q-item-section class="text-grey-9">
+            <q-item-label lines="1">Tarea Actual</q-item-label>
+          </q-item-section>
+        </q-item>
+        <!-- /Current Tasks -->
+
         <!-- Tasks -->
-        <q-item clickable exact :to="{ name: ROUTE_NAME.ADMIN_HOME }">
+        <q-item clickable exact :to="{ name: ROUTE_NAME.AGENT_ASSIGNMENTS }">
           <q-item-section avatar top>
             <q-avatar size="md" icon="mdi-format-list-checks" />
           </q-item-section>
 
           <q-item-section class="text-grey-9">
-            <q-item-label lines="1">Tareas</q-item-label>
+            <q-item-label lines="1">Mis Tareas</q-item-label>
           </q-item-section>
         </q-item>
         <!-- /Tasks -->

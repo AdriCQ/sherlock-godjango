@@ -57,7 +57,14 @@
                 v-for="(cp, cpIndex) in assignment.checkpoints"
                 :key="`checkpoint-${cp.id}-index-${cpIndex}`"
               >
-                <q-item-section avatar @click="displayCheckpoint = cp">
+                <q-item-section
+                  avatar
+                  @click="goToCheckpoint(cp.id)"
+                  v-if="isMobile"
+                >
+                  <q-icon name="mdi-eye" />
+                </q-item-section>
+                <q-item-section avatar @click="displayCheckpoint = cp" v-else>
                   <q-icon name="mdi-map-marker" />
                 </q-item-section>
                 <q-item-section>
@@ -169,6 +176,7 @@ import { IAssignmentCheckpoint } from 'src/types';
 import { ROUTE_NAME } from 'src/router';
 import { Platform } from 'quasar';
 import { notificationHelper, useGuiHelper } from 'src/helpers';
+import { $router } from 'src/boot/router';
 /**
  * -----------------------------------------
  *	Injectable
@@ -223,6 +231,18 @@ const mapZoom = ref(15);
 function closeDialogs() {
   dialogCheckpoint.value = false;
   dialogForm.value = false;
+}
+/**
+ * Go To Checkpoint
+ * @param id
+ */
+function goToCheckpoint(id: number) {
+  if (!isManager.value) {
+    $router.push({
+      name: ROUTE_NAME.AGENT_CHECKPOINT,
+      params: { id },
+    });
+  }
 }
 /**
  * Remove Checkpoint

@@ -62,6 +62,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('', [AgentController::class, 'list']);
         Route::post('', [AgentController::class, 'create']);
         Route::get('assignments', [AgentController::class, 'assignments']);
+        Route::get('assignments/checkpoints/{id}', [AssignmentController::class, 'findByCheckpoint']);
         Route::get('whoami', [AgentController::class, 'whoami']);
         Route::get('search', [AgentController::class, 'search']);
         Route::get('{id}', [AgentController::class, 'find']);

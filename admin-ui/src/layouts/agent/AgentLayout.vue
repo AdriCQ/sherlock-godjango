@@ -58,7 +58,9 @@ async function pullToRefresh(done: CallableFunction) {
   await loadData();
   done();
 }
-
+/**
+ * Load Data
+ */
 async function loadData() {
   try {
     await $agent.whoami();

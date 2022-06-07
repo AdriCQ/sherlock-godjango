@@ -6,7 +6,6 @@ use App\Models\Agent;
 use App\Models\AgentGroup;
 use App\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 
 class AgentController extends Controller
@@ -126,6 +125,7 @@ class AgentController extends Controller
             'address' => ['nullable', 'string'],
             'others' => ['nullable', 'string'],
             'nick' => ['nullable', 'string'],
+            'bussy' => ['nullable', 'boolean'],
             'agent_group_id' => ['nullable', 'integer'],
             'position' => ['nullable', 'array'],
             'position.lat' => ['sometimes', 'numeric'],

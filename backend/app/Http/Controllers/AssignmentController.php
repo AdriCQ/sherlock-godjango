@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Agent;
 use App\Models\Assignment;
 use App\Models\AssignmentCheckpoint;
 use Illuminate\Http\Request;
@@ -104,6 +105,17 @@ class AssignmentController extends Controller
     }
 
     /**
+     * Find
+     * @param int $id
+     * @return Illuminate\Http\JsonResponse
+     */
+    public function findByCheckpoint(int $id)
+    {
+        $checkpoint = AssignmentCheckpoint::find($id);
+        return $this->sendResponse(Assignment::find($checkpoint->assignment_id));
+    }
+
+    /**
      * List
      * @return Illuminate\Http\JsonResponse
      */
@@ -153,6 +165,12 @@ class AssignmentController extends Controller
         $validator = $validator->validate();
         $model = Assignment::find($id);
         if (!$model || $model->status > 0) return $this->sendResponse(null, 'No encontrado', 400);
+        if (isset($validator['agent_id'])) {
+            $agent = Agent::find($validator['agent_id']);
+            if (!$agent) return $this->sendResponse(null, 'Agente no encontrado', 400);
+            if ($agent->bussy) return $this->sendResponse(null, 'Agente ocupado', 400);
+            $agent->update(['bussy' => true]);
+        }
         $model->update($validator);
         return $this->sendResponse(Assignment::query()->where('id', $id)->with('checkpoints')->first());
     }
@@ -177,8 +195,9 @@ class AssignmentController extends Controller
             return response()->json($validator->errors()->toArray(), 400, [], JSON_NUMERIC_CHECK);
         }
         $validator = $validator->validate();
+
         return $checkpoint->update($validator)
-            ? $this->sendResponse(Assignment::find($checkpoint->assignment_id))
+            ? $this->sendResponse(Assignment::updateStatus($checkpoint->assignment_id))
             : $this->sendResponse($checkpoint->errors, 'No se pudo guardar', 500);
     }
 }

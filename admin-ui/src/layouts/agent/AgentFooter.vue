@@ -12,14 +12,6 @@
       </q-route-tab>
       <q-route-tab exact :to="{ name: ROUTE_NAME.AGENT_ASSIGNMENTS }">
         <q-icon name="mdi-format-list-checks" size="1.6rem" />
-        <q-badge
-          color="warning"
-          text-color="dark"
-          floating
-          v-if="checkpointCounter > 0"
-        >
-          {{ checkpointCounter }}
-        </q-badge>
       </q-route-tab>
 
       <q-route-tab exact :to="{ name: ROUTE_NAME.AGENT_REPORTS }">
@@ -40,28 +32,14 @@
   </q-footer>
 </template>
 <script lang="ts" setup>
-import { injectStrict, _agentInjectable, _app } from 'src/injectables';
+import { injectStrict, _app } from 'src/injectables';
 import { ROUTE_NAME } from 'src/router';
-import { computed } from 'vue';
 /**
  * -----------------------------------------
  *	Setup
  * -----------------------------------------
  */
 const $app = injectStrict(_app);
-const $agent = injectStrict(_agentInjectable);
-/**
- * -----------------------------------------
- *	data
- * -----------------------------------------
- */
-const checkpointCounter = computed(() => {
-  let counter = 0;
-  $agent.assignments.forEach((as) => {
-    if (as.checkpoints) counter += as.checkpoints.length;
-  });
-  return counter;
-});
 </script>
 
 <style>

@@ -57,8 +57,8 @@ export class AppStore {
     } catch (error) {
       Dialog.create({
         title: 'Activación de GPS',
-        message: 'Necesitamos que active su conexión de GPS',
-        ok: true,
+        message: 'Para continuar active su conexión de GPS',
+        ok: 'Ya tengo GPS activo',
         persistent: true,
       }).onOk(async () => {
         await this.getGpsPosition();

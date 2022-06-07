@@ -9,9 +9,14 @@
     <!-- profile -->
     <div class="text-center q-mt-md">
       <div class="text-grey-9 text-body1">Hola, {{ userName }}</div>
-      <div class="text-grey-9 text-caption">
-        {{ agentBussy ? 'Ocupado' : 'Disponible' }}
-      </div>
+      <q-chip
+        class="glossy"
+        clickable
+        :icon="agent?.bussy ? 'mdi-cancel' : 'mdi-check'"
+        :color="agent?.bussy ? '' : 'positive'"
+        :label="agent?.bussy ? 'Ocupado' : 'Disponible'"
+        @click="changeAgentStatus"
+      />
     </div>
     <!-- / profile -->
 
@@ -71,7 +76,7 @@
 
 <script setup lang="ts">
 import { computed } from '@vue/reactivity';
-import { useGuiHelper } from 'src/helpers';
+import { notificationHelper, useGuiHelper } from 'src/helpers';
 import { injectStrict, _agentInjectable, _app, _user } from 'src/injectables';
 import { ROUTE_NAME } from 'src/router';
 import { useRouter } from 'vue-router';
@@ -87,9 +92,29 @@ const $router = useRouter();
 const $user = injectStrict(_user);
 
 const userName = computed(() => $agent.agent?.nick);
-const agentBussy = computed(() => $agent.agent?.bussy);
+const agent = computed(() => $agent.agent);
 const sidebarOpen = computed(() => $app.leftDrawer);
-
+/**
+ * Change Agent Status
+ */
+async function changeAgentStatus() {
+  $gui.deleteDialog({
+    message: 'Desea modificar su estado?',
+    title: 'Cambiar estado',
+    onOk: async () => {
+      if (agent.value) {
+        try {
+          const resp = await $agent.update(agent.value.id, {
+            bussy: !agent.value.bussy,
+          });
+          $agent.agent = resp;
+        } catch (error) {
+          notificationHelper.axiosError(error);
+        }
+      }
+    },
+  });
+}
 /**
  * logout
  */

@@ -14,6 +14,23 @@ class Assignment extends Model
     public $timestamps = false;
     protected $with = ['checkpoints', 'agent'];
 
+    /**
+     * updateStatus
+     */
+    static public function updateStatus(int $id)
+    {
+        $ass = self::find($id);
+        foreach ($ass->checkpoints as $checkpoint) {
+            if ($checkpoint->status == 0) {
+                $ass->agent()->update(['bussy' => true]);
+                return $ass;
+            }
+        }
+        $ass->update(['status' => 1]);
+        $ass->agent()->update(['bussy' => false]);
+        return $ass = self::find($id);
+    }
+
 
     /**
      * -----------------------------------------

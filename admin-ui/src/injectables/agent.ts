@@ -87,6 +87,50 @@ class AgentInjectable {
     return agent;
   }
   /**
+   * Get Assignment
+   * @param assignmeId
+   * @returns
+   */
+  async getAssignment(assignmeId: number) {
+    const assignment = (
+      await $api.get<IApiResponse<IAssignment>>(
+        API_PATH + `assignments/${assignmeId}`
+      )
+    ).data.data;
+    const assignmentIndex = this.assignments.findIndex(
+      (as) => as.id === assignmeId
+    );
+
+    if (assignmentIndex >= 0) {
+      this.assignments[assignmentIndex] = assignment;
+    } else {
+      this.assignments.push(assignment);
+    }
+    return assignment;
+  }
+  /**
+   * Get Assignment Checkpoint
+   * @param checkpointId
+   * @returns
+   */
+  async getAssignmentByCheckpoint(checkpointId: number) {
+    const assignment = (
+      await $api.get<IApiResponse<IAssignment>>(
+        API_PATH + `/assignments/checkpoints/${checkpointId}`
+      )
+    ).data.data;
+    const assignmentIndex = this.assignments.findIndex(
+      (as) => as.id === assignment.id
+    );
+
+    if (assignmentIndex >= 0) {
+      this.assignments[assignmentIndex] = assignment;
+    } else {
+      this.assignments.push(assignment);
+    }
+    return assignment;
+  }
+  /**
    * list
    * @returns
    */
@@ -118,6 +162,39 @@ class AgentInjectable {
     await $api.delete(`${API_PATH}/${id}`);
     const index = this.agents.findIndex((a) => a.id === id);
     if (index >= 0) this.agents.splice(index, 1);
+  }
+  /**
+   * Update Assignment Checkpoint
+   * @param update
+   * @returns
+   */
+  async updateAssignmentCheckpoint(
+    checkpointId: number,
+    update: Partial<IAssignmentCheckpoint>
+  ) {
+    await $csrf();
+    const checkpoint = (
+      await $api.patch<IApiResponse<IAssignmentCheckpoint>>(
+        `assignments/checkpoints/${checkpointId}`,
+        update
+      )
+    ).data.data;
+    // Update Checkpoint
+    let chIndex;
+    let assIndex = -1;
+    this.assignments.forEach((ass, index) => {
+      assIndex = index;
+      chIndex = ass.checkpoints?.findIndex((ch) => ch.id === checkpoint.id);
+      if (chIndex && chIndex >= 0) {
+        return;
+      }
+    });
+    if (chIndex) {
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      this.assignments[assIndex].checkpoints[chIndex] = checkpoint;
+    }
+    return checkpoint;
   }
   /**
    * whoami

@@ -155,7 +155,7 @@ class FakeSeeder extends Seeder
                         'lat' => '22.4' . $faker->numerify(),
                         'lng' => '-79.9' . $faker->numerify()
                     ]),
-                    'status' => $faker->numberBetween(0, 2),
+                    'status' => 0,
                     'contact' => $faker->phoneNumber(),
                     'assignment_id' => $ass->id,
                     'created_at' => now()

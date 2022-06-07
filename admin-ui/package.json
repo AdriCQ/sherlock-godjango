@@ -2,7 +2,7 @@
   "name": "sherlock-godjango-admin-ui",
   "version": "0.0.1",
   "description": "Sherlock Admin UI",
-  "productName": "Sherlock Admin",
+  "productName": "Sherlock",
   "author": "AdriCQ <adrian.capote95@zoho.com>",
   "private": true,
   "scripts": {

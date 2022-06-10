@@ -87,7 +87,10 @@ class FakeSeeder extends Seeder
                 "address" => $faker->address,
                 "others" => $faker->text,
                 "nick" => $faker->name,
-                "position" => json_encode(['lat' => 0, 'lng' => 0]),
+                'position' => json_encode([
+                    'lat' => '22.4' . $faker->numerify(),
+                    'lng' => '-79.9' . $faker->numerify()
+                ]),
                 "bussy" => $faker->boolean,
                 'agent_group_id' => $faker->numberBetween(1, AgentGroup::query()->count()),
                 'user_id' => $user->id,

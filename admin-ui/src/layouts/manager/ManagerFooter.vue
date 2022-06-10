@@ -30,7 +30,7 @@
           {{ eventCounter }}
         </q-badge>
       </q-route-tab>
-      <q-route-tab exact>
+      <q-route-tab exact :to="{ name: ROUTE_NAME.ADMIN_AGENTS_MAP }">
         <q-icon name="mdi-account-group" size="1.6rem" />
       </q-route-tab>
 

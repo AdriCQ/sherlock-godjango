@@ -117,6 +117,29 @@
             </template>
           </q-expansion-item>
           <!-- / Gripos -->
+
+          <!-- MAP -->
+          <q-expansion-item
+            expand-icon-class="text-transparent"
+            :expand-separator="false"
+            exact
+            :to="{ name: ROUTE_NAME.ADMIN_AGENTS_MAP }"
+          >
+            <template v-slot:header>
+              <q-item-section avatar top>
+                <q-avatar
+                  size="md"
+                  icon="mdi-map-marker"
+                  text-color="primary"
+                />
+              </q-item-section>
+
+              <q-item-section>
+                <q-item-label lines="1">Distribución</q-item-label>
+              </q-item-section>
+            </template>
+          </q-expansion-item>
+          <!-- / MAP -->
         </q-expansion-item>
         <!-- / Personal -->
 

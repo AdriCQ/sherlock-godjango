@@ -18,6 +18,7 @@
       :key="`marker-${markerKey}`"
       v-for="(marker, markerKey) in markers"
       :lat-lng="marker"
+      @click="eventOnMarkerClick(marker, markerKey)"
     />
   </l-map>
 </template>
@@ -72,6 +73,7 @@ const $props = withDefaults(
     readonly?: boolean;
     center?: LatLng;
     zoom?: number;
+    markerClickFn?: (marker: LatLng, key: number) => void;
   }>(),
   {
     markers: () => [],
@@ -117,5 +119,12 @@ function eventOnClick(event: MouseEvent | LocationEvent) {
       $emit('add-marker', (event as LocationEvent).latlng);
     }
   }
+}
+/**
+ * eventOnMarkerClick
+ * @param marker
+ */
+function eventOnMarkerClick(marker: LatLng, key: number) {
+  if ($props.markerClickFn) $props.markerClickFn(marker, key);
 }
 </script>

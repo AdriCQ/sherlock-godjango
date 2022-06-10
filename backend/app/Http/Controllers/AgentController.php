@@ -102,7 +102,7 @@ class AgentController extends Controller
         if ($validator['mode'] === 'user') {
             $users = User::query()
                 ->whereRaw('LOWER("name") LIKE ?', ['%' . trim(strtolower($validator['search'])) . '%'])
-                ->orWhereRaw('LOWER("email") LIKE ?', ['%' . trim(strtolower($validator['search'])) . '%'])->with('agent')->get(['id']);
+                ->orWhereRaw('LOWER("email") LIKE ?', ['%' . trim(strtolower($validator['search'])) . '%'])->with('agent')->get();
             foreach ($users as $user) {
                 if ($user->agent)
                     array_push($agents, $user->agent);

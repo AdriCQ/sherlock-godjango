@@ -50,7 +50,7 @@ export class AppStore {
    * @returns
    */
   async getGpsPosition() {
-    if (!Platform.is.capacitor) return;
+    if (!Platform.is.mobile) return;
     try {
       const coords = await $capacitor.Geolocation_currentPosition();
       this.currentPosition = coords;

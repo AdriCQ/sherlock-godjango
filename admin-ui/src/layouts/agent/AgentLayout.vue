@@ -44,12 +44,30 @@ const $route = useRoute();
  *	Data
  * -----------------------------------------
  */
-
+const agent = computed(() => $agent.agent);
+const currentGpsPosition = computed(() => $app.currentPosition);
 const enableRefresh = computed(
   () =>
     $route.name !== ROUTE_NAME.AGENT_HOME &&
     $route.name !== ROUTE_NAME.AGENT_CHECKPOINT
 );
+
+/**
+ * -----------------------------------------
+ *	Methods
+ * -----------------------------------------
+ */
+/**
+ * Emit Position
+ */
+async function emitPosition() {
+  if (agent.value && currentGpsPosition.value) {
+    const resp = await $agent.update(agent.value.id, {
+      position: currentGpsPosition.value,
+    });
+    $agent.agent = resp;
+  }
+}
 /**
  * pullToRefresh
  * @param done
@@ -63,9 +81,10 @@ async function pullToRefresh(done: CallableFunction) {
  */
 async function loadData() {
   try {
-    await $agent.whoami();
-    await $agent.listAssignments();
     await $app.getGpsPosition();
+    await $agent.whoami();
+    void $agent.listAssignments();
+    void emitPosition();
   } catch (error) {
     notificationHelper.axiosError(error);
   }

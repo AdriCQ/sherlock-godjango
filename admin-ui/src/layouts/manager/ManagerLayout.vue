@@ -46,7 +46,8 @@ const $route = useRoute();
 const enableRefresh = computed(
   () =>
     $route.name !== ROUTE_NAME.ADMIN_HOME &&
-    $route.name !== ROUTE_NAME.ADMIN_ASSIGNMENT
+    $route.name !== ROUTE_NAME.ADMIN_ASSIGNMENT &&
+    $route.name !== ROUTE_NAME.ADMIN_AGENTS_MAP
 );
 /**
  * pullToRefresh

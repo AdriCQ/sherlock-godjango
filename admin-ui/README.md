@@ -1,41 +1,74 @@
-# Sherlock Admin (sherlock-godjango-admin-ui)
+# Godjango Sherlock GUI
 
-Sherlock Admin UI
+Interfaz de Usuario para los servicios de Godjango Sherlock.
 
-## Install the dependencies
+Contiene la GUI de los Managers en una Vista web y permite compilar mediante PWA Quasar + Capacitor una app movil para los Agentes
+
+## Requisitos
+
+Necesario tener instalado Node, Yarn (opcional) y Quasar
+
+Instalar Node
+
 ```bash
-yarn
-# or
-npm install
+  npm install my-project
+  cd my-project
 ```
 
-### Start the app in development mode (hot-code reloading, error reporting, etc.)
+Instalar Yarn
+
 ```bash
-quasar dev
+    npm i -g yarn
 ```
 
+Instalar Quasar
 
-### Lint the files
 ```bash
-yarn lint
-# or
-npm run lint
+    npm i -g @quasar/cli
 ```
 
+## Complilar
 
-### Format the files
+Para el Deployment del proyecto en VPS-Unix
+
+Instalar las dependencias de Node
+
 ```bash
-yarn format
-# or
-npm run format
+    # Usando yarn (recomendado)
+    yarn
+
+    # Usando npm
+    npm install
 ```
 
+Instalar Quasar
 
-
-### Build the app for production
 ```bash
-quasar build
+    npm i -g @quasar/cli
 ```
 
-### Customize the configuration
-See [Configuring quasar.config.js](https://v2.quasar.dev/quasar-cli-webpack/quasar-config-js).
+Complilar GUI Web
+
+```bash
+    quasar build
+```
+
+Complilar APK Android
+
+```bash
+    quasar build --mode capacitor --target android --ide
+```
+
+Complilar APK iOS
+
+```bash
+    quasar build --mode capacitor --target ios --ide
+```
+
+## License
+
+[MIT](https://choosealicense.com/licenses/mit/)
+
+## Authors
+
+- [@AdriCQ](https://www.github.com/adricq)

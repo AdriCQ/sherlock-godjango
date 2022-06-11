@@ -10,9 +10,9 @@ Es compatible con Web, Android e iOS
 
 ## Documentation
 
-[Backend](./backend/Readme.md)
+[Backend](./backend/README.md)
 
-[GUI](./admin-ui/Readme.md)
+[GUI](./admin-ui/README.md)
 
 
 ## Scripts de Compilación Rápida

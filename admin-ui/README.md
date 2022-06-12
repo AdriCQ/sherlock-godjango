@@ -8,12 +8,8 @@ Contiene la GUI de los Managers en una Vista web y permite compilar mediante PWA
 
 Necesario tener instalado Node, Yarn (opcional) y Quasar
 
-Instalar Node
+[Instalar Node](https://www.digitalocean.com/community/tutorials/how-to-install-node-js-on-ubuntu-20-04-es)
 
-```bash
-  npm install my-project
-  cd my-project
-```
 
 Instalar Yarn
 
@@ -71,4 +67,4 @@ Complilar APK iOS
 
 ## Authors
 
-- [@AdriCQ](https://www.github.com/adricq)
+- [AdriCQ](https://www.github.com/adricq)

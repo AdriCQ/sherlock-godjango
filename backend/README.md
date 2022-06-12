@@ -35,14 +35,15 @@ Para el Deployment de la API llenar las variables de entorno en el fichero .env 
 
 Garantizar permisos de escritura 
 ```bash
-    sudo chmod -R 775 storage
-    sudo chown -R $USER:www-data storage
-```
-Ejecutar script de despliegue
-```bash
-    ./deploy.sh
-```
+cd /project-root/backend
 
+sudo chmod -R 775 storage
+sudo chown -R $USER:www-data storage
+
+php artisan storage:link
+php artisan key:generate
+php artisan migrate:fresh --seed
+```
 
 ## API Reference
 
@@ -174,4 +175,4 @@ Authorization: API_TOKEN
 
 ## Autores
 
-- [@AdriCQ](https://www.github.com/adricq)
+- [AdriCQ](https://www.github.com/adricq)

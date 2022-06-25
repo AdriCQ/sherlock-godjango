@@ -53,18 +53,23 @@
                 <q-item-section>Todos</q-item-section>
               </q-item>
               <q-item
-                clickable
                 v-for="(cp, cpIndex) in assignment.checkpoints"
                 :key="`checkpoint-${cp.id}-index-${cpIndex}`"
               >
                 <q-item-section
+                  class="cursor-pointer"
                   avatar
                   @click="goToCheckpoint(cp.id)"
                   v-if="isMobile"
                 >
                   <q-icon name="mdi-eye" />
                 </q-item-section>
-                <q-item-section avatar @click="displayCheckpoint = cp" v-else>
+                <q-item-section
+                  class="cursor-pointer"
+                  avatar
+                  @click="displayCheckpoint = cp"
+                  v-else
+                >
                   <q-icon name="mdi-map-marker" />
                 </q-item-section>
                 <q-item-section>

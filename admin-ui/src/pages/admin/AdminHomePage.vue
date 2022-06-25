@@ -1,6 +1,6 @@
 <template>
   <q-page padding>
-    <q-card class="full-width" style="height: 75vh">
+    <q-card class="full-width" style="height: 80vh">
       <q-card-section class="q-pa-xs">
         <div class="text-h6 text-center">Asignaciones Pendientes</div>
       </q-card-section>

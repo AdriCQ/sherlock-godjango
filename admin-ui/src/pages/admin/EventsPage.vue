@@ -81,21 +81,15 @@ const events = computed(() => (active.value ? $event.events : solved.value));
  * onPullToRefresh
  * @param done
  */
-function onPullToRefresh(done: CallableFunction) {
-  notificationHelper.loading();
-  Promise.all([
-    void $event.listOnProgress(),
-    $event.listCompleted().then((r) => {
-      solved.value = r;
-    }),
-  ])
-    .catch((e) => {
-      notificationHelper.axiosError(e, 'Error ');
-    })
-    .finally(() => {
-      notificationHelper.loading(false);
-      done();
-    });
+async function onPullToRefresh(done: CallableFunction) {
+  try {
+    void $event.listOnProgress();
+    const r = await $event.listCompleted();
+    solved.value = r;
+  } catch (error) {
+    notificationHelper.axiosError(error);
+  }
+  done();
 }
 /**
  * onRequestComplete

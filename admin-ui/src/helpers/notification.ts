@@ -21,8 +21,7 @@ class NotificationHelper {
         void $router.push({ name: ROUTE_NAME.LOGIN });
         this.error(['No podemos verificar sus credenciales']);
         return;
-      }
-      if (error.response.data.message) {
+      } else if (error.response.status >= 400 && error.response.data.message) {
         this.error([error.response.data.message]);
       } else this.error([_default]);
     } else this.error([_default]);

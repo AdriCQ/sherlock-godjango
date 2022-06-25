@@ -103,9 +103,11 @@ class AgentGroupController extends Controller
         if (!$agent)
             return $this->sendResponse(null, 'Verifique los s enviados', 400);
         $agent->agent_group_id = 1;
-        $agent->save();
-        $group->agents;
-        return $this->sendResponse($group);
+        if ($agent->save()) {
+            $group->agents;
+            return $this->sendResponse($group);
+        }
+        return $this->sendResponse($agent->errors, 'No se pudo guardar el agente', 502);
     }
 
     /**

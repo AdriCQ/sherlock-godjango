@@ -23,8 +23,9 @@ class CategoryController extends Controller
         }
         $validator = $validator->validate();
         $model = new Category($validator);
-        $model->save();
-        return $this->sendResponse($model, 'Categoria creada', 201);
+        return $model->save()
+            ? $this->sendResponse($model, 'Categoria creada', 201)
+            : $this->sendResponse($model->errors, 'Error al crear categoria', 502);
     }
 
     /**

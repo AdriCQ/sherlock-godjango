@@ -27,8 +27,9 @@ class EventController extends Controller
         $validator = $validator->validate();
         $validator['status'] = 'onprogress';
         $model = new Event($validator);
-        $model->save();
-        return $this->sendResponse($model, 'Evento creada', 201);
+        return $model->save()
+            ? $this->sendResponse($model, 'Evento creada', 201)
+            : $this->sendResponse($model->errors, 'Error en el Evento', 502);
     }
 
     /**

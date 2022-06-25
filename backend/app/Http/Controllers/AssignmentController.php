@@ -66,10 +66,12 @@ class AssignmentController extends Controller
         if (!isset($validator['agent_id']))
             $validator['agent_id'] = 2;
         $ass = new Assignment($validator);
-        $ass->save();
-        if (isset($validator['checkpoints']))
-            $ass->checkpoints()->createMany($checkpoints);
-        return $this->sendResponse(Assignment::query()->where('id', $ass->id)->with('checkpoints')->first(), 'Asignacion Creada', 201);
+        if ($ass->save()) {
+            if (isset($validator['checkpoints']))
+                $ass->checkpoints()->createMany($checkpoints);
+            return $this->sendResponse(Assignment::query()->where('id', $ass->id)->with('checkpoints')->first(), 'Asignacion Creada', 201);
+        }
+        return $this->sendResponse($ass->errors, 'No se pudo guardar la asignacion', 502);
     }
 
     /**

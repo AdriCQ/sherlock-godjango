@@ -6,6 +6,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use TCG\Voyager\Models\Role;
 
@@ -34,10 +35,12 @@ class UserController extends Controller
         unset($validator['role_id']);
         $validator['password'] = bcrypt($validator['password']);
         $user = new User($validator);
-        $user->save();
-        $user->assignRole($role->name);
-        $user->role;
-        return $this->sendResponse($user, 'Usuario creado', 201);
+        if ($user->save()) {
+            $user->assignRole($role->name);
+            $user->role;
+            return $this->sendResponse($user, 'Usuario creado', 201);
+        }
+        return $this->sendResponse($user->errors, 'No se pudo crear el usuario', 502);
     }
 
     /**
@@ -110,6 +113,7 @@ class UserController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'name' => ['nullable', 'string'],
+            'email' => ['nullable', 'email', 'unique:users'],
             'phone' => ['nullable', 'string'],
             'password' => ['nullable', 'string'],
             'role_id' => ['nullable', 'integer']
@@ -155,10 +159,11 @@ class UserController extends Controller
             return $this->sendAuthError();
         $user->password = bcrypt($validator['password']);
         $user->tokens()->delete();
-        $user->save();
-        return $this->sendResponse([
-            'profile' => $user,
-            'api_token' => $user->createToken('auth-token')->plainTextToken
-        ]);
+        return $user->save()
+            ? $this->sendResponse([
+                'profile' => $user,
+                'api_token' => $user->createToken('auth-token')->plainTextToken
+            ])
+            : $this->sendResponse($user->errors, 'Error guardando usuario', 502);
     }
 }

@@ -6,7 +6,6 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use TCG\Voyager\Models\Role;
 
@@ -113,10 +112,39 @@ class UserController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'name' => ['nullable', 'string'],
-            'email' => ['nullable', 'email', 'unique:users'],
+            // 'email' => ['nullable', 'email', 'unique:users'],
             'phone' => ['nullable', 'string'],
             'password' => ['nullable', 'string'],
             'role_id' => ['nullable', 'integer']
+        ]);
+        if ($validator->fails()) {
+            return response()->json($validator->errors()->toArray(), 400, [], JSON_NUMERIC_CHECK);
+        }
+        $validator = $validator->validate();
+        $user = User::find($id);
+        if (!$user) return $this->sendResponse(null, 'No existe el usuario', 400);
+        if (isset($validator['password'])) $validator['password'] = bcrypt($validator['password']);
+        $user->update($validator);
+        // Update Role
+        if (isset($validator['role_id'])) {
+            $role = Role::find($validator['role_id']);
+            if (!$role) return $this->sendResponse(null, 'No existe el rol', 400);
+            unset($validator['role_id']);
+            $user->assignRole($role->name);
+        }
+        $user->role;
+        return $this->sendResponse($user, 'Usuario actualizado');
+    }
+
+    /**
+     * Update
+     * @param Request request
+     * @return Illuminate\Http\JsonResponse
+     */
+    public function updateEmail(int $id, Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'email' => ['required', 'email', 'unique:users'],
         ]);
         if ($validator->fails()) {
             return response()->json($validator->errors()->toArray(), 400, [], JSON_NUMERIC_CHECK);

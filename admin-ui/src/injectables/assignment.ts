@@ -112,7 +112,8 @@ class AssignmetnInjectable {
       const checkpointIndex = this.assignments[
         assignmentIndex
       ].checkpoints?.findIndex((ch) => ch.id === checkpointId);
-      if (checkpointIndex && checkpointIndex >= 0) {
+      console.log(checkpointIndex);
+      if (checkpointIndex !== undefined && checkpointIndex >= 0) {
         this.assignments[assignmentIndex].checkpoints?.splice(
           checkpointIndex,
           1

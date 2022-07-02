@@ -23,6 +23,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('list', [UserController::class, 'list'])->middleware('role:manager');
         Route::get('roles', [UserController::class, 'listRoles'])->middleware('role:manager');
         Route::patch('{id}', [UserController::class, 'update']);
+        Route::patch('{id}/email', [UserController::class, 'updateEmail']);
         Route::delete('{id}', [UserController::class, 'remove'])->middleware('role:manager');
     });
 
@@ -50,10 +51,10 @@ Route::middleware('auth:sanctum')->group(function () {
          *	Agent Groups
          * -------------------------------------
          */
+        Route::patch('{id}', [AgentGroupController::class, 'update']);
         Route::middleware('role:manager')->prefix('groups')->group(function () {
             Route::get('', [AgentGroupController::class, 'list']);
             Route::post('', [AgentGroupController::class, 'create']);
-            Route::patch('{id}', [AgentGroupController::class, 'update']);
             Route::delete('{id}', [AgentGroupController::class, 'remove']);
             Route::post('{id}/add-agent', [AgentGroupController::class, 'addAgent']);
             Route::post('{id}/remove-agent', [AgentGroupController::class, 'removeAgent']);

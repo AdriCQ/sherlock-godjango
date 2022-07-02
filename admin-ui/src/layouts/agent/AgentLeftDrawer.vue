@@ -59,6 +59,18 @@
         </q-item>
         <!-- /Report -->
 
+        <!-- Profile -->
+        <q-item clickable exact :to="{ name: ROUTE_NAME.AGENT_PROFILE }">
+          <q-item-section avatar top>
+            <q-avatar size="md" icon="mdi-account" />
+          </q-item-section>
+
+          <q-item-section class="text-grey-9">
+            <q-item-label lines="1">Perfil</q-item-label>
+          </q-item-section>
+        </q-item>
+        <!-- /Profile -->
+
         <q-item clickable @click="logout">
           <q-item-section avatar top>
             <q-avatar size="md" icon="mdi-exit-to-app" />

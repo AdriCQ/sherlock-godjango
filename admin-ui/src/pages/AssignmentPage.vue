@@ -96,6 +96,7 @@
 
                 <q-item-section
                   avatar
+                  class="cursor-pointer"
                   v-if="isManager"
                   @click="removeCheckpoint(cp)"
                 >

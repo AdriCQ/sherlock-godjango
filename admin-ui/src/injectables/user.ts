@@ -125,11 +125,27 @@ class UserInjectable {
    * @param user
    * @returns
    */
-  async update(id: number, user: IUserCreateRequest) {
+  async update(id: number, user: Partial<IUserCreateRequest>) {
     await $csrf();
     const resp = await $api.patch<IApiResponse<IUserProfile>>(
       `users/${id}`,
       user
+    );
+    const index = this.allUsers.findIndex((u) => u.id == id);
+    if (index >= 0) this.allUsers[index] = resp.data.data;
+    return resp.data.data;
+  }
+  /**
+   * updateEmail
+   * @param id
+   * @param email
+   * @returns
+   */
+  async updateEmail(id: number, email: string) {
+    await $csrf();
+    const resp = await $api.patch<IApiResponse<IUserProfile>>(
+      `users/${id}/email`,
+      { email }
     );
     const index = this.allUsers.findIndex((u) => u.id == id);
     if (index >= 0) this.allUsers[index] = resp.data.data;

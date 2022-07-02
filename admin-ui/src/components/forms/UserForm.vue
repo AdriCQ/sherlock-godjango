@@ -39,7 +39,6 @@
           type="tel"
           label="Teléfono"
           bottom-slots
-          :readonly="isUpdate"
           :error="$v.phone.$error"
         >
           <template v-slot:error>
@@ -161,7 +160,6 @@ const $v = useVuelidate(
 async function onSubmit() {
   if (await $v.value.$validate()) {
     try {
-      console.log(form.value);
       if ($props.user) {
         await $user.update($props.user?.id, form.value);
       } else {

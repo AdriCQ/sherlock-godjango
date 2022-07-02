@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Agent;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -37,7 +38,15 @@ class UserController extends Controller
         if ($user->save()) {
             $user->assignRole($role->name);
             $user->role;
-            return $this->sendResponse($user, 'Usuario creado', 201);
+            $agent = new Agent([
+                'user_id'=> $user->id,
+                'nick'=> $user->name,
+                'address'=> '',
+                'agent_group_id'=> 1
+            ]);
+            return $agent->save() ?
+                $this->sendResponse($user, 'Usuario creado', 201)
+                : $this->sendResponse($user->errors, 'No se pudo crear el usuario', 502);
         }
         return $this->sendResponse($user->errors, 'No se pudo crear el usuario', 502);
     }
@@ -100,7 +109,9 @@ class UserController extends Controller
      */
     public function remove(int $id)
     {
-        return  User::find($id) && User::find($id)->delete() ? $this->sendResponse() : $this->sendResponse(null, 'Usuario no encontrado', 400);
+        $user = User::find($id);
+        if($user->agent) $user->agent()->delete();
+        return $user && $user->delete() ? $this->sendResponse() : $this->sendResponse(null, 'Usuario no encontrado', 400);
     }
 
     /**
@@ -113,7 +124,7 @@ class UserController extends Controller
         $validator = Validator::make($request->all(), [
             'name' => ['nullable', 'string'],
             // 'email' => ['nullable', 'email', 'unique:users'],
-            'phone' => ['nullable', 'string'],
+            'phone' => ['nullable'],
             'password' => ['nullable', 'string'],
             'role_id' => ['nullable', 'integer']
         ]);

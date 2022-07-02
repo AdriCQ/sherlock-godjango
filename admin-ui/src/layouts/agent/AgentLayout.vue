@@ -80,6 +80,7 @@ async function pullToRefresh(done: CallableFunction) {
  * Load Data
  */
 async function loadData() {
+  $agent.load();
   try {
     await $app.getGpsPosition();
     await $agent.whoami();

@@ -30,6 +30,12 @@
           @change="onUserChange('phone')"
         />
         <q-input
+          v-model="form.address"
+          type="text"
+          label="Direccion"
+          @change="onAgentChange"
+        />
+        <q-input
           v-model="form.password"
           type="password"
           label="Contraseña"
@@ -65,6 +71,7 @@ const agent = computed(() => $agent.agent);
 const form = ref({
   email: '',
   name: '',
+  address: '',
   nick: '',
   phone: '',
   password: '',
@@ -81,10 +88,14 @@ const profile = computed(() => $user.profile);
  */
 async function onAgentChange() {
   try {
-    if (agent.value)
+    if (agent.value) {
       await $agent.update(agent.value.id, {
         nick: form.value.nick,
+        address: form.value.address,
       });
+      $agent.save();
+      notificationHelper.success(['Perfil Actualizado']);
+    }
   } catch (error) {
     notificationHelper.axiosError(error);
   }
@@ -151,6 +162,7 @@ onBeforeMount(() => {
       phone: profile.value.phone,
       nick: agent.value.nick,
       password: '',
+      address: agent.value.address,
     };
   }
 });

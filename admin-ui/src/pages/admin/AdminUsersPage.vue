@@ -109,10 +109,8 @@ async function listUsers() {
  * onUserRemoved
  * @param id
  */
-function onUserRemoved(id: number) {
-  const index = users.value?.findIndex((u) => u.id === id);
-  if (!index) return;
-  users.value?.splice(index, 1);
+async function onUserRemoved() {
+  await listUsers();
 }
 /**
  * pullToRefresh

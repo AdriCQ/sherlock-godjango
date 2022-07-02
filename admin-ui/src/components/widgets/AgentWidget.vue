@@ -2,9 +2,9 @@
   <q-card>
     <q-card-section>
       <div class="absolute-top-right q-pa-xs cursor-pointer">
-        <div @click="onRemove">
+        <!-- <div @click="onRemove">
           <q-icon name="mdi-delete" color="negative" />
-        </div>
+        </div> -->
         <div @click="$emit('request-edit')">
           <q-icon name="mdi-pencil" color="primary" />
         </div>
@@ -31,28 +31,28 @@
 </template>
 
 <script setup lang="ts">
-import { notificationHelper, useGuiHelper } from 'src/helpers';
-import { injectStrict, _agentInjectable } from 'src/injectables';
+// import { notificationHelper } from 'src/helpers';
+// import { injectStrict, _agentInjectable } from 'src/injectables';
 import { IAgent } from 'src/types';
 
-const $agent = injectStrict(_agentInjectable);
+// const $agent = injectStrict(_agentInjectable);
 const $emit = defineEmits<{ (e: 'request-edit'): void }>();
-const $gui = useGuiHelper();
+// const $gui = useGuiHelper();
 const $props = defineProps<{ agent: IAgent }>();
 /**
  * onRemove
  */
-async function onRemove() {
-  $gui.deleteDialog({
-    title: 'Eliminar Agente',
-    message: '¿Desea eliminar el Agente?',
-    onOk: async () => {
-      try {
-        await $agent.remove($props.agent.id);
-      } catch (error) {
-        notificationHelper.axiosError(error, 'No se pudo eliminar el agente');
-      }
-    },
-  });
-}
+// async function onRemove() {
+//   $gui.deleteDialog({
+//     title: 'Eliminar Agente',
+//     message: '¿Desea eliminar el Agente?',
+//     onOk: async () => {
+//       try {
+//         await $agent.remove($props.agent.id);
+//       } catch (error) {
+//         notificationHelper.axiosError(error, 'No se pudo eliminar el agente');
+//       }
+//     },
+//   });
+// }
 </script>

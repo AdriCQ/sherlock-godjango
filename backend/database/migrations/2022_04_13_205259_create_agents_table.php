@@ -26,7 +26,7 @@ class CreateAgentsTable extends Migration
         });
 
         Schema::table('agents', function (Blueprint $table) {
-            $table->foreignIdFor(User::class);
+            $table->foreignIdFor(User::class)->onDelete('cascade');
             $table->foreignIdFor(AgentGroup::class);
         });
     }

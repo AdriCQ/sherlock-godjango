@@ -122,7 +122,9 @@ onBeforeMount(() => {
       status: 0,
       checkpoints: [],
     } as IAssignmentCreateRequest;
+
+    if (availableAgents.value.length)
+      form.value.agent_id = availableAgents.value[0].id;
   }
-  console.log(availableAgents.value);
 });
 </script>

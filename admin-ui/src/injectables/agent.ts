@@ -1,3 +1,4 @@
+import { LocalStorage } from 'quasar';
 import { $api, $csrf } from 'src/boot/axios';
 import {
   IAgent,
@@ -18,6 +19,7 @@ import { $user } from './user';
  * @var API_PATH
  */
 const API_PATH = 'agents';
+const STORAGE_KEY = 'storage/agents';
 /**
  * @class Agent Injectable
  */
@@ -204,6 +206,7 @@ class AgentInjectable {
     this.agent = (
       await $api.get<IApiResponse<IAgent>>(`${API_PATH}/whoami`)
     ).data.data;
+    this.save();
     return this.agent;
   }
   /**
@@ -330,6 +333,26 @@ class AgentInjectable {
       if (checkpoint) return;
     });
     return checkpoint;
+  }
+
+  /**
+   * load
+   */
+  load() {
+    if (LocalStorage.has(STORAGE_KEY)) {
+      const resp = LocalStorage.getItem(STORAGE_KEY)?.toString();
+      if (resp) {
+        const json = JSON.parse(resp) as unknown as IAgent;
+        this.agent = json;
+      }
+    }
+  }
+
+  /**
+   * save
+   */
+  save() {
+    LocalStorage.set(STORAGE_KEY, JSON.stringify(this.agent));
   }
 }
 

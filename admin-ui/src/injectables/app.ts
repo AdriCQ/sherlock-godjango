@@ -3,6 +3,7 @@ import { Dialog, Platform } from 'quasar';
 import { $capacitor } from 'src/helpers';
 import { IUserRoleName } from 'src/types';
 import { ref, InjectionKey } from 'vue';
+import { $agentInjectable } from './agent';
 import { $user } from './user';
 /**
  * STORAGE_KEY
@@ -54,6 +55,11 @@ export class AppStore {
     try {
       const coords = await $capacitor.Geolocation_currentPosition();
       this.currentPosition = coords;
+      if ($agentInjectable.agent) {
+        await $agentInjectable.update($agentInjectable.agent.id, {
+          position: this.currentPosition,
+        });
+      }
     } catch (error) {
       Dialog.create({
         title: 'Activación de GPS',

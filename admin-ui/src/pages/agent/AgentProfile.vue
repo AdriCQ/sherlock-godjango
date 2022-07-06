@@ -145,8 +145,10 @@ async function onUserChange(type: 'email' | 'name' | 'phone' | 'password') {
       default:
         break;
     }
-    $user.save();
-    notificationHelper.success(['Perfil Actualizado']);
+    if (type !== 'password') {
+      $user.save();
+      notificationHelper.success(['Perfil Actualizado']);
+    }
   } catch (error) {
     notificationHelper.axiosError(error);
   }

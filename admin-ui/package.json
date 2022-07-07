@@ -10,7 +10,9 @@
     "format": "prettier --write \"**/*.{js,ts,vue,scss,html,md,json}\" --ignore-path .gitignore",
     "test": "echo \"No test specified\" && exit 0",
     "dev": "quasar dev",
-    "build": "quasar build"
+    "icons": "icongenie g -i ./public/logo.png -b ./public/bg.png --skip-trim",
+    "build": "quasar build",
+    "build:android": "quasar build --mode capacitor --target android --ide"
   },
   "dependencies": {
     "@capacitor/core": "^2.0.0",
@@ -32,6 +34,7 @@
     "@types/node": "^12.20.21",
     "@typescript-eslint/eslint-plugin": "^5.10.0",
     "@typescript-eslint/parser": "^5.10.0",
+    "dotenv": "^16.0.1",
     "eslint": "^8.10.0",
     "eslint-config-prettier": "^8.1.0",
     "eslint-plugin-vue": "^8.5.0",

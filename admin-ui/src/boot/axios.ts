@@ -11,15 +11,17 @@ declare module '@vue/runtime-core' {
 /**
  * @const baseURL URl de la API
  */
-let _baseURL = 'http://localhost:8000';
-if (!process.env.DEV) {
+let baseURL = '';
+
+if (process.env.API_SERVER) {
+  baseURL = process.env.API_SERVER;
+} else {
   const location = window.location;
   if (location.hostname !== 'localhost') {
-    _baseURL = location.origin;
+    baseURL = location.origin;
   }
 }
-const baseURL = _baseURL;
-console.log(baseURL);
+
 const $api = axios.create({
   baseURL: `${baseURL}/api`,
   timeout: 30000,
@@ -63,6 +65,6 @@ export default boot(({ app }) => {
  */
 const $csrf = async () => {
   if (!getCookie('XSRF-TOKEN'))
-    return axios.get<void>(`${baseURL}/sanctum/csrf-cookie`);
+    return axios.get<void>(`${baseURL}/api/sanctum/csrf-cookie`);
 };
 export { $api, $csrf, baseURL };

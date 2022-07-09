@@ -6,6 +6,7 @@ use App\Models\Agent;
 use App\Models\AgentGroup;
 use App\Models\Assignment;
 use App\Models\AssignmentCheckpoint;
+use App\Models\Client;
 use App\Models\Event;
 use App\Models\User;
 use Faker\Factory;
@@ -22,12 +23,32 @@ class FakeSeeder extends Seeder
     {
         $this->call([DatabaseSeeder::class]);
 
+        $this->seedClients();
         $this->seedUsers();
         $this->seedAgentGroups(2);
         $this->seedAgents();
         $this->seedEvents(15, 2);
         $this->seedAssignments();
         $this->seedAssignmentCheckpoints();
+    }
+    /**
+     * Seed Clients
+     * @param int $limit
+     * @param int $repeat
+     */
+    private function seedClients(int $limit = 10, int $repeat = 1)
+    {
+        $faker = Factory::create();
+        for ($r = 0; $r < $repeat; $r++) {
+            $models = [];
+            for ($l = 0; $l < $limit; $l++) {
+                array_push($models, [
+                    'name' => $faker->name,
+                    'description'=>$faker->text()
+                ]);
+            }
+            Client::query()->insert($models);
+        }
     }
 
     /**
@@ -47,6 +68,7 @@ class FakeSeeder extends Seeder
                     'phone' => $faker->phoneNumber,
                     'password' => bcrypt('password'),
                     'role_id' => 2,
+                    'client_id'=>$faker->numberBetween(2, Client::query()->count())
                 ]);
             }
             User::query()->insert($models);
@@ -66,6 +88,7 @@ class FakeSeeder extends Seeder
                 array_push($models, [
                     'name' => $faker->words(3, true),
                     'description' => $faker->text(),
+                    'client_id'=>$faker->numberBetween(2, Client::query()->count())
                 ]);
             }
             AgentGroup::query()->insert($models);
@@ -115,6 +138,7 @@ class FakeSeeder extends Seeder
                     'details' => $faker->text,
                     'agent_id' => $faker->numberBetween(3, Agent::query()->count()),
                     'created_at' => now(),
+                    'client_id'=>$faker->numberBetween(2, Client::query()->count())
                 ]);
             }
             Event::query()->insert($models);

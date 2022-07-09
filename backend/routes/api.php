@@ -4,6 +4,7 @@ use App\Http\Controllers\AgentController;
 use App\Http\Controllers\AssignmentController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\AgentGroupController;
+use App\Http\Controllers\ClientController;
 use App\Http\Controllers\EventController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
@@ -106,4 +107,11 @@ Route::middleware('auth:sanctum')->group(function () {
         });
         Route::patch('{id}', [EventController::class, 'update']);
     });
+
+    /**
+     * -----------------------------------------
+     *	Clients
+     * -----------------------------------------
+     */
+    Route::middleware('role:admin')->apiResource('clients', ClientController::class);
 });

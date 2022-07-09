@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use App\Models\AgentGroup;
 use App\Models\Category;
+use App\Models\Client;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 
@@ -19,26 +20,22 @@ class DatabaseSeeder extends Seeder
         // \App\Models\User::factory(10)->create();
         $this->call([VoyagerDatabaseSeeder::class]);
 
-        $developer = new User([
-            'name' => 'Developer',
-            'email' => 'dev@godjango.dev',
-            'phone' => '500000',
-            'password' => bcrypt('dev@godjango.dev')
-        ]);
-        $developer->save();
-        $developer->assignRole('admin');
+        // Create Admin Client
+        $sherlockClient = new Client(['name'=>'Sherlock', 'description'=>'Sherlock Admin']);
+        $sherlockClient->save();
 
         $user = new User([
-            'name' => 'Manager Principal',
+            'name' => 'Admin',
             'email' => 'admin@godjango.dev',
             'phone' => '500001',
+            'client_id'=>$sherlockClient->id,
             'password' => bcrypt('admin@godjango.dev')
         ]);
         $user->save();
-        $user->assignRole('manager');
+        $user->assignRole('admin');
 
         // Seed default AgentGroup
-        AgentGroup::query()->insert(['name' => 'Default', 'description' => 'Grupo por defecto para agentes']);
+        // AgentGroup::query()->insert(['name' => 'Default', 'description' => 'Grupo por defecto para agentes']);
 
         // Seed Agent Categories
         Category::query()->insert([[

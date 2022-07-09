@@ -55,4 +55,11 @@ class User extends \TCG\Voyager\Models\User
     {
         return $this->hasOne(Agent::class);
     }
+
+    /**
+     * client
+     */
+    public function client(){
+        return $this->belongsTo(Client::class);
+    }
 }

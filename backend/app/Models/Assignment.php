@@ -47,4 +47,11 @@ class Assignment extends Model
     {
         return $this->hasMany(AssignmentCheckpoint::class);
     }
+
+    /**
+     * client
+     */
+    public function client(){
+        return $this->belongsTo(Client::class);
+    }
 }

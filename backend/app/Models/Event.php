@@ -21,4 +21,11 @@ class Event extends Model
     {
         return $this->belongsTo(Agent::class);
     }
+
+    /**
+     * client
+     */
+    public function client(){
+        return $this->belongsTo(Client::class);
+    }
 }

@@ -1,0 +1,36 @@
+### index
+GET /api/clients HTTP/1.1
+Host: {{ host }}
+Authorization: {{token}}
+
+### create
+POST /api/clients HTTP/1.1
+Host: {{ host }}
+Authorization: {{token}}
+
+{
+    "name": "Client Name",
+    "description": "Detalles del evento"
+}
+
+### show
+GET /api/clients/1 HTTP/1.1
+Host: {{ host }}
+Authorization: {{token}}
+
+
+### destroy
+DELETE /api/clients/1 HTTP/1.1
+Host: {{ host }}
+Authorization: {{token}}
+
+
+### Update
+PATCH /api/clients/2 HTTP/1.1
+Host: {{ host }}
+Authorization: {{token}}
+
+{
+    "status": "completed",
+    "details": "Detalles modificados"
+}

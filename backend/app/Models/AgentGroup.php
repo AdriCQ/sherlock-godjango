@@ -19,4 +19,8 @@ class AgentGroup extends Model
     {
         return $this->hasMany(Agent::class);
     }
+
+    public function client(){
+        return $this->belongsTo(Client::class);
+    }
 }

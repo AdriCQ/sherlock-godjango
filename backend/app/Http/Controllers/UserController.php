@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Agent;
+use App\Models\AgentGroup;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -31,22 +32,27 @@ class UserController extends Controller
         }
         $validator = $validator->validate();
         $role = Role::find($validator['role_id']);
-        if (!$role) return $this->sendResponse(null, 'No existe el rol', 400);
+        if (!$role || $role->name === 'admin') return $this->sendResponse(null, 'No existe el rol', 400);
         unset($validator['role_id']);
         $validator['password'] = bcrypt($validator['password']);
+        $validator['client_id'] = auth()->user()->client->id;
         $user = new User($validator);
         if ($user->save()) {
             $user->assignRole($role->name);
             $user->role;
-            $agent = new Agent([
-                'user_id'=> $user->id,
-                'nick'=> $user->name,
-                'address'=> '',
-                'agent_group_id'=> 1
-            ]);
-            return $agent->save() ?
-                $this->sendResponse($user, 'Usuario creado', 201)
-                : $this->sendResponse($user->errors, 'No se pudo crear el usuario', 502);
+            if($user->role->name === 'user'){
+                $agentGroup = AgentGroup::query()->where('client_id', $validator['client_id'])->first();
+                $agent = new Agent([
+                    'user_id'=> $user->id,
+                    'nick'=> $user->name,
+                    'address'=> '',
+                    'agent_group_id'=> $agentGroup->id
+                ]);
+                return $agent->save() ?
+                    $this->sendResponse($user, 'Usuario creado', 201)
+                    : $this->sendAuthErrorndResponse($user->errors, 'No se pudo crear el usuario', 502);
+            }
+            return $this->sendResponse($user, 'Usuario creado', 201);
         }
         return $this->sendResponse($user->errors, 'No se pudo crear el usuario', 502);
     }

@@ -1,4 +1,5 @@
 import { LatLng } from 'leaflet';
+import { IClient } from './client';
 import { IUserProfile } from './user';
 /**
  * Agent
@@ -23,6 +24,8 @@ export interface IAgentGroup {
   name: string;
   description?: string;
   agents?: IAgent[];
+  client_id?: number;
+  client?: IClient;
 }
 /**
  * Agent Category

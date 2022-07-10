@@ -19,13 +19,13 @@
         :icon="$props.agent.bussy ? 'mdi-cancel' : 'mdi-check'"
         :label="$props.agent.bussy ? 'Ocupado' : 'Disponible'"
       />
-      <q-chip
+      <!-- <q-chip
         size="sm"
         clickable
         class="glossy"
         icon="mdi-map-marker"
         label="Mapa"
-      />
+      /> -->
     </q-card-actions>
   </q-card>
 </template>

@@ -10,7 +10,14 @@ Authorization: {{token}}
 
 {
     "name": "Client Name",
-    "description": "Detalles del evento"
+    "description": "Detalles del evento",
+    "user": {
+        "name": "user",
+        "email": "user@email.com",
+        "phone": "5555550",
+        "password": "password",
+        "password_confirmation": "password"
+    }
 }
 
 ### show

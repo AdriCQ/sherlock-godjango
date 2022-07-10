@@ -20,6 +20,7 @@ export interface IUserProfile {
   email: string;
   phone: string;
   role: IUserRole;
+  client_id?: number;
 }
 /**
  * User Create Request

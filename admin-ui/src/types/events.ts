@@ -1,4 +1,5 @@
 import { IAgent } from './agent';
+import { IClient } from './client';
 
 export type IEventType = 'info' | 'warning' | 'danger';
 export type IEventStatus = 'completed' | 'onprogress';
@@ -14,6 +15,8 @@ export interface IEvent {
   updated_at: string;
   agent_id: number;
   agent?: IAgent;
+  client_id?: number;
+  client?: IClient;
 }
 /**
  * Event Create Request

@@ -8,6 +8,14 @@ use Illuminate\Support\Facades\Validator;
 
 class EventController extends Controller
 {
+    private $CLIENT_ID;
+
+    /**
+     * Constructor
+     */
+    public function __constructor(){
+        $this->CLIENT_ID = auth()->user()->client->id;
+    }
 
     /**
      * Create
@@ -25,6 +33,8 @@ class EventController extends Controller
             return $this->sendResponse($validator->errors(), 'Verifique los datos enviados', 400);
         }
         $validator = $validator->validate();
+        // Check Client
+        $validator['client_id'] = $this->CLIENT_ID;
         $validator['status'] = 'onprogress';
         $model = new Event($validator);
         return $model->save()
@@ -39,7 +49,10 @@ class EventController extends Controller
      */
     public function find(int $id)
     {
-        return $this->sendResponse(Event::query()->where('id', $id)->with('agent')->first());
+        return $this->sendResponse(Event::query()->where([
+                ['id', $id],
+                ['client_id', $this->CLIENT_ID]
+            ])->with('agent')->first());
     }
 
     /**
@@ -48,7 +61,12 @@ class EventController extends Controller
      */
     public function list()
     {
-        return $this->sendResponse(Event::query()->with('agent')->orderBy('updated_at', 'desc')->get());
+        return $this->sendResponse(Event::query()
+            ->where(['client_id', $this->CLIENT_ID])
+            ->with('agent')
+            ->orderBy('updated_at', 'desc')
+            ->get()
+        );
     }
     /**
      * MyEvents
@@ -85,6 +103,7 @@ class EventController extends Controller
     public function remove(int $id)
     {
         $model = Event::find($id);
+        // TODO: Check if belongs to same Client
         return $model && $model->delete()
             ? $this->sendResponse()
             : $this->sendResponse(null, 'No se pudo eliminar', 400);
@@ -106,7 +125,7 @@ class EventController extends Controller
             return $this->sendResponse($validator->errors(), 'Verifique los datos enviados', 400);
         }
         $validator = $validator->validate();
-        $qry = Event::query();
+        $qry = Event::query()->where('client_id', $this->CLIENT_ID);
         if (isset($validator['created_at'])) {
             $qry = $qry->whereDate('created_at', '>', $validator['created_at']);
             unset($validator['created_at']);
@@ -135,7 +154,7 @@ class EventController extends Controller
             return $this->sendResponse($validator->errors(), 'Verifique los datos enviados', 400);
         }
         $validator = $validator->validate();
-        return Event::find($id)->update($validator)
+        return Event::query()->where([['id', $id], ['client_id', $this->CLIENT_ID]])->update($validator)
             ? $this->sendResponse(Event::query()->find($id))
             : $this->sendResponse(null, 'No se pudo actualizar', 400);
     }

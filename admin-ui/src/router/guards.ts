@@ -3,6 +3,21 @@ import { NavigationGuard } from 'vue-router';
 import { ROUTE_NAME } from './names';
 
 /**
+ * Admin Guard
+ * @param to
+ * @param from
+ * @param next
+ */
+export const adminGuard: NavigationGuard = (to, from, next) => {
+  if (
+    $user.api_token &&
+    $user.profile.id &&
+    $user.profile.role.name === 'admin'
+  )
+    next();
+  else next({ name: ROUTE_NAME.LOGIN });
+};
+/**
  * Agent Guard
  * @param to
  * @param from

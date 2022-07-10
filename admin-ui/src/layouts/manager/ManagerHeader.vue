@@ -1,7 +1,13 @@
 <template>
   <q-header elevated class="bg-primary" height-hint="98">
     <q-toolbar>
-      <q-btn dense flat round icon="mdi-menu" @click="toggleDrawer" />
+      <q-btn
+        dense
+        flat
+        round
+        :icon="$app.mode === 'admin' ? 'mdi-logout' : 'mdi-menu'"
+        @click="toggleDrawer"
+      />
 
       <q-toolbar-title> {{ title }} </q-toolbar-title>
       <template v-if="!$q.platform.is.mobile">
@@ -45,6 +51,7 @@
 
 <script setup lang="ts">
 import {
+  $user,
   injectStrict,
   _app,
   _assignmentInjectable,
@@ -53,6 +60,7 @@ import {
 import { computed } from 'vue';
 import { useQuasar } from 'quasar';
 import { ROUTE_NAME } from 'src/router';
+import { $router } from 'src/boot/router';
 
 const $app = injectStrict(_app);
 const $ass = injectStrict(_assignmentInjectable);
@@ -75,6 +83,9 @@ const title = computed(() =>
  */
 
 function toggleDrawer() {
-  $app.toggleLeftDrawer();
+  if ($app.mode === 'admin') {
+    $user.logout();
+    void $router.push({ name: ROUTE_NAME.LOGIN });
+  } else $app.toggleLeftDrawer();
 }
 </script>

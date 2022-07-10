@@ -24,12 +24,15 @@ class CreateClientsTable extends Migration
         Schema::table('users', function(Blueprint $table){
             $table->foreignIdFor(Client::class);
         });
-        Schema::table('assignments', function(Blueprint $table){
-            $table->foreignIdFor(Client::class);
-        });
+        // Schema::table('assignments', function(Blueprint $table){
+        //     $table->foreignIdFor(Client::class);
+        // });
         // Schema::table('agent_categories', function(Blueprint $table){
         //     $table->foreignIdFor(Client::class);
         // });
+        Schema::table('agent_groups', function(Blueprint $table){
+            $table->foreignIdFor(Client::class);
+        });
         Schema::table('events', function(Blueprint $table){
             $table->foreignIdFor(Client::class);
         });
@@ -47,9 +50,12 @@ class CreateClientsTable extends Migration
         Schema::table('users', function (Blueprint $table) {
             $table->dropColumn('client_id');
         });
-        Schema::table('assignments', function (Blueprint $table) {
+        Schema::table('agent_groups', function (Blueprint $table) {
             $table->dropColumn('client_id');
         });
+        // Schema::table('assignments', function (Blueprint $table) {
+        //     $table->dropColumn('client_id');
+        // });
         // Schema::table('agent_categories', function (Blueprint $table) {
         //     $table->dropColumn('client_id');
         // });

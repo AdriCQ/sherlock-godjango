@@ -8,7 +8,8 @@ Authorization: {{token}}
     "email": "admin@admin.com",
     "phone": "55115511",
     "password": "admin",
-    "password_confirmation": "admin"
+    "password_confirmation": "admin",
+    "role_id": 2
 }
 
 ### list users

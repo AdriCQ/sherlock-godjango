@@ -8,10 +8,12 @@
       <router-view v-else />
     </q-page-container>
 
-    <!-- leftDrawer -->
-    <manager-left-drawer />
-    <!-- / leftDrawer -->
-    <main-footer v-if="$q.platform.is.mobile" />
+    <template v-if="appMode !== 'admin'">
+      <!-- leftDrawer -->
+      <manager-left-drawer />
+      <!-- / leftDrawer -->
+      <main-footer v-if="$q.platform.is.mobile" />
+    </template>
   </q-layout>
 </template>
 
@@ -42,6 +44,8 @@ const $event = injectStrict(_eventInjectable);
 const $user = injectStrict(_user);
 const $q = useQuasar();
 const $route = useRoute();
+
+const appMode = computed(() => $user.profile.role.name);
 
 const enableRefresh = computed(
   () =>

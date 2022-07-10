@@ -5,11 +5,18 @@ namespace App\Http\Controllers;
 use App\Models\Agent;
 use App\Models\AgentGroup;
 use App\Models\User;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
 class AgentController extends Controller
 {
+
+    private $CLIENT_ID;
+
+    public function __constructor(){
+        $this->CLIENT_ID = auth()->user()->client->id;
+    }
     /**
      * Create
      * @param Request request
@@ -22,7 +29,7 @@ class AgentController extends Controller
             'others' => ['nullable', 'string'],
             'nick' => ['required', 'string'],
             'user_id' => ['required', 'integer'],
-            'agent_group_id' => ['required', 'integer'],
+            // 'agent_group_id' => ['required', 'integer'],
             'position' => ['nullable', 'array'],
             'position.lat' => ['sometimes', 'numeric'],
             'position.lng' => ['sometimes', 'numeric'],
@@ -33,8 +40,12 @@ class AgentController extends Controller
             return $this->sendResponse($validator->errors(), 'Verifique los datos enviados', 400);
         }
         $validator = $validator->validate();
+
+        $agentGroup = AgentGroup::query()->where('client_id', $this->CLIENT_ID)->first();
+        $validator['agent_group_id'] = $agentGroup->id;
+
         $user = User::find($validator['user_id']);
-        if (!$user || !AgentGroup::find($validator['agent_group_id']))
+        if (!$user)
             return $this->sendResponse(null, 'Verifique los datos enviados', 400);
         if ($user->agent)
             return $this->sendResponse($user->agent);
@@ -71,7 +82,9 @@ class AgentController extends Controller
      */
     public function list()
     {
-        return $this->sendResponse(Agent::all());
+        return $this->sendResponse(Agent::whereHas('user', function (Builder $query) {
+            $query->where('client_id', $this->CLIENT_ID);
+        })->get());
     }
 
     /**
@@ -80,7 +93,8 @@ class AgentController extends Controller
      */
     public function remove(int $id)
     {
-        return $this->sendResponse(Agent::query()->where('id', $id)->delete());
+        // TODO: Any manager can delete any agent error
+        return $this->sendResponse(Agent::query()->where(['id', $id])->delete());
     }
 
     /**
@@ -99,8 +113,10 @@ class AgentController extends Controller
         }
         $validator = $validator->validate();
         $agents = [];
+        $clientId = auth()->user()->client->id;
         if ($validator['mode'] === 'user') {
             $users = User::query()
+                ->where('client_id', $this->CLIENT_ID)
                 ->whereRaw('LOWER("name") LIKE ?', ['%' . trim(strtolower($validator['search'])) . '%'])
                 ->orWhereRaw('LOWER("email") LIKE ?', ['%' . trim(strtolower($validator['search'])) . '%'])->with('agent')->get();
             foreach ($users as $user) {
@@ -139,6 +155,9 @@ class AgentController extends Controller
         $validator = $validator->validate();
         $agent = Agent::find($id);
         if (!$agent) return $this->sendResponse(null, 'No encontrado', 400);
+        // Check if belongs to same client
+        if($agent->user->client->id !== $this->CLIENT_ID)
+            return $this->sendResponse(null, 'No tiene permisos', 401);
         // Update categories
         if (isset($validator['categories'])) {
             $catArray = $validator['categories'];

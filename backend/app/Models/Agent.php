@@ -14,6 +14,12 @@ class Agent extends Model
     protected $casts = ['position' => 'array', 'bussy' => 'boolean'];
 
     /**
+     * belongsToClient
+     */
+    public function belongsToClient(int $clientId){
+        return $this->user->client->id === $clientId;
+    }
+    /**
      * -----------------------------------------
      *	Relations
      * -----------------------------------------

@@ -27,7 +27,9 @@ const $router = useRouter();
  * onAuth
  */
 function onAuth() {
-  if ($app.mode === 'manager')
+  if ($app.mode === 'admin')
+    void $router.push({ name: ROUTE_NAME.ADMIN_CLIENTS });
+  else if ($app.mode === 'manager')
     void $router.push({ name: ROUTE_NAME.ADMIN_HOME });
   else void $router.push({ name: ROUTE_NAME.AGENT_HOME });
 }

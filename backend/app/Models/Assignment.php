@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -52,6 +53,6 @@ class Assignment extends Model
      * client
      */
     public function client(){
-        return $this->belongsTo(Client::class);
+        return $this->agent->user->client;
     }
 }

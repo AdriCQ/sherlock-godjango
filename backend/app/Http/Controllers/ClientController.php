@@ -30,7 +30,7 @@ class ClientController extends Controller
      * @return Illuminate\Http\JsonResponse
      */
     public function index(){
-        return $this->sendResponse(Client::query()->with('users')->get());
+        return $this->sendResponse(Client::query()->with('users')->orderBy('id')->get());
     }
     /**
      * show

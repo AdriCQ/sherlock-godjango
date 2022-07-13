@@ -65,20 +65,17 @@ function edit(c: IClient) {
   client.value = c;
   dialog.value = true;
 }
-function onComplete(p: IClient) {
-  const index = clients.value.findIndex((c) => c.id === p.id);
-  if (index >= 0) {
-    clients.value[index] = p;
-  } else {
-    clients.value.unshift(p);
-  }
+async function onComplete() {
   closeDialog();
+  await loadData();
 }
-
-onBeforeMount(async () => {
+async function loadData() {
   try {
     const resp = await $api.get<IApiResponse<IClient[]>>('clients');
     clients.value = resp.data.data;
   } catch (error) {}
+}
+onBeforeMount(async () => {
+  await loadData();
 });
 </script>

@@ -93,7 +93,12 @@ class AssignmentController extends Controller
             return $this->sendResponse($validator->errors(), 'Verifique los datos enviados', 400);
         }
         $validator = $validator->validate();
-        return $this->sendResponse(Assignment::query()->where($validator)->orderByDesc('id')->get());
+        $assArray = [];
+        foreach(Assignment::query()->where($validator)->orderByDesc('id')->get() as $assignment){
+            if($assignment->client()->id === auth()->user()->client->id)
+                array_push($assArray, $assignment);
+        }
+        return $this->sendResponse($assArray);
     }
 
     /**
@@ -123,7 +128,12 @@ class AssignmentController extends Controller
      */
     public function list()
     {
-        return $this->sendResponse(Assignment::query()->orderByDesc('id')->get());
+        $assArray = [];
+        foreach(Assignment::all() as $assignment){
+            if($assignment->client()->id === auth()->user()->client->id)
+                array_push($assArray, $assignment);
+        }
+        return $this->sendResponse($assArray);
     }
 
     /**

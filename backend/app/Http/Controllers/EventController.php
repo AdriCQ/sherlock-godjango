@@ -8,14 +8,6 @@ use Illuminate\Support\Facades\Validator;
 
 class EventController extends Controller
 {
-    private $CLIENT_ID;
-
-    /**
-     * Constructor
-     */
-    public function __constructor(){
-        $this->CLIENT_ID = auth()->user()->client->id;
-    }
 
     /**
      * Create
@@ -34,7 +26,7 @@ class EventController extends Controller
         }
         $validator = $validator->validate();
         // Check Client
-        $validator['client_id'] = $this->CLIENT_ID;
+        $validator['client_id'] = auth()->user()->client->id;
         $validator['status'] = 'onprogress';
         $model = new Event($validator);
         return $model->save()
@@ -51,7 +43,7 @@ class EventController extends Controller
     {
         return $this->sendResponse(Event::query()->where([
                 ['id', $id],
-                ['client_id', $this->CLIENT_ID]
+                ['client_id', auth()->user()->client->id]
             ])->with('agent')->first());
     }
 
@@ -62,7 +54,7 @@ class EventController extends Controller
     public function list()
     {
         return $this->sendResponse(Event::query()
-            ->where(['client_id', $this->CLIENT_ID])
+            ->where(['client_id', auth()->user()->client->id])
             ->with('agent')
             ->orderBy('updated_at', 'desc')
             ->get()
@@ -125,7 +117,7 @@ class EventController extends Controller
             return $this->sendResponse($validator->errors(), 'Verifique los datos enviados', 400);
         }
         $validator = $validator->validate();
-        $qry = Event::query()->where('client_id', $this->CLIENT_ID);
+        $qry = Event::query()->where('client_id', auth()->user()->client->id);
         if (isset($validator['created_at'])) {
             $qry = $qry->whereDate('created_at', '>', $validator['created_at']);
             unset($validator['created_at']);
@@ -154,7 +146,7 @@ class EventController extends Controller
             return $this->sendResponse($validator->errors(), 'Verifique los datos enviados', 400);
         }
         $validator = $validator->validate();
-        return Event::query()->where([['id', $id], ['client_id', $this->CLIENT_ID]])->update($validator)
+        return Event::query()->where([['id', $id], ['client_id', auth()->user()->client->id]])->update($validator)
             ? $this->sendResponse(Event::query()->find($id))
             : $this->sendResponse(null, 'No se pudo actualizar', 400);
     }

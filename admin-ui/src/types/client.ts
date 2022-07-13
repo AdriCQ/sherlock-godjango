@@ -1,9 +1,10 @@
-import { IUserCreateRequest } from './user';
+import { IUserCreateRequest, IUserProfile } from './user';
 
 export interface IClient {
   id: number;
   name: string;
   description: string;
+  users?: IUserProfile[];
   created_at: string;
   updated_at: string;
 }

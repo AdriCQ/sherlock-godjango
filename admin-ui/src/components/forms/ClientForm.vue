@@ -2,7 +2,7 @@
   <q-card>
     <q-form @submit.prevent="onSubmit">
       <q-card-section class="q-gutter-y-sm">
-        <div class="text-body1">Cliente</div>
+        <div class="text-body1">Datos del Cliente</div>
         <q-input v-model="form.name" required type="text" label="Nombre" />
         <q-input
           v-model="form.description"

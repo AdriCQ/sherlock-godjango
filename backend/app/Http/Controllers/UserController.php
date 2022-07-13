@@ -64,7 +64,10 @@ class UserController extends Controller
     public function list()
     {
         // $roleId = Role::query()->where('name', 'user')->first();
-        return $this->sendResponse(User::query()->where('id', '>', 2)->with(['role'])->get());
+        return $this->sendResponse(User::query()->where([
+            ['id', '>', 2],
+            ['client_id', auth()->user()->client->id]
+        ])->with(['role'])->get());
     }
 
     /**

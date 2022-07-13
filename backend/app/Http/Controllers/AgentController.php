@@ -7,16 +7,12 @@ use App\Models\AgentGroup;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 
 class AgentController extends Controller
 {
 
-    private $CLIENT_ID;
-
-    public function __constructor(){
-        $this->CLIENT_ID = auth()->user()->client->id;
-    }
     /**
      * Create
      * @param Request request
@@ -41,7 +37,7 @@ class AgentController extends Controller
         }
         $validator = $validator->validate();
 
-        $agentGroup = AgentGroup::query()->where('client_id', $this->CLIENT_ID)->first();
+        $agentGroup = AgentGroup::query()->where('client_id', auth()->user()->client->id)->first();
         $validator['agent_group_id'] = $agentGroup->id;
 
         $user = User::find($validator['user_id']);
@@ -83,7 +79,7 @@ class AgentController extends Controller
     public function list()
     {
         return $this->sendResponse(Agent::whereHas('user', function (Builder $query) {
-            $query->where('client_id', $this->CLIENT_ID);
+            $query->where('client_id', auth()->user()->client->id);
         })->get());
     }
 
@@ -116,7 +112,7 @@ class AgentController extends Controller
         $clientId = auth()->user()->client->id;
         if ($validator['mode'] === 'user') {
             $users = User::query()
-                ->where('client_id', $this->CLIENT_ID)
+                ->where('client_id', auth()->user()->client->id)
                 ->whereRaw('LOWER("name") LIKE ?', ['%' . trim(strtolower($validator['search'])) . '%'])
                 ->orWhereRaw('LOWER("email") LIKE ?', ['%' . trim(strtolower($validator['search'])) . '%'])->with('agent')->get();
             foreach ($users as $user) {
@@ -156,7 +152,7 @@ class AgentController extends Controller
         $agent = Agent::find($id);
         if (!$agent) return $this->sendResponse(null, 'No encontrado', 400);
         // Check if belongs to same client
-        if($agent->user->client->id !== $this->CLIENT_ID)
+        if($agent->user->client->id !== auth()->user()->client->id)
             return $this->sendResponse(null, 'No tiene permisos', 401);
         // Update categories
         if (isset($validator['categories'])) {

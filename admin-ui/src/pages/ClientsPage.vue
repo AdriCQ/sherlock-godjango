@@ -2,13 +2,13 @@
   <q-page padding>
     <q-card class="no-box-shadow">
       <q-card-section>
-        <div class="text-h6">Our Changing Planet</div>
+        <div class="text-h6">Administración de Clientes</div>
         <div class="text-subtitle2">
           <q-btn
             color="primary"
             icon="mdi-plus"
-            label="OK"
-            @click="dialog = true"
+            label="Nuevo"
+            @click="addClient"
           />
         </div>
       </q-card-section>
@@ -16,10 +16,14 @@
         <div class="row q-col-gutter-sm">
           <div
             class="col-xs-12 col-sm-6 col-md-4 col-lg-3"
-            v-for="client in clients"
+            v-for="client in clients.slice(1, clients.length)"
             :key="`client-w-${client.id}`"
           >
-            <client-widget :client="client" @click="edit(client)" />
+            <client-widget
+              class="cursor-pointer"
+              :client="client"
+              @click="edit(client)"
+            />
           </div>
         </div>
       </q-card-section>
@@ -28,7 +32,7 @@
     <q-dialog v-model="dialog">
       <client-form
         :client="client"
-        style="width: 20rem"
+        style="width: 25rem"
         @cancel="closeDialog"
         @completed="onComplete"
       />
@@ -46,6 +50,11 @@ import ClientForm from 'src/components/forms/ClientForm.vue';
 const client = ref<IClient>();
 const clients = ref<IClient[]>([]);
 const dialog = ref(false);
+
+function addClient() {
+  closeDialog();
+  dialog.value = true;
+}
 
 function closeDialog() {
   client.value = undefined;

@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
 <resources>
-    <string name="app_name">Sherlock Admin</string>
-    <string name="title_activity_main">Sherlock Admin</string>
+    <string name="app_name">Sherlock</string>
+    <string name="title_activity_main">Sherlock</string>
     <string name="package_name">dev.godjango.sherlock.app</string>
     <string name="custom_url_scheme">dev.godjango.sherlock.app</string>
 </resources>

@@ -23,7 +23,7 @@ if (process.env.API_SERVER) {
 }
 
 const $api = axios.create({
-  baseURL: `${baseURL}/srv/api`,
+  baseURL: `${baseURL}/api`,
   timeout: 30000,
   timeoutErrorMessage: 'Error en la red',
 });
@@ -65,6 +65,6 @@ export default boot(({ app }) => {
  */
 const $csrf = async () => {
   if (!getCookie('XSRF-TOKEN'))
-    return axios.get<void>(`${baseURL}/srv/api/sanctum/csrf-cookie`);
+    return axios.get<void>(`${baseURL}/sanctum/csrf-cookie`);
 };
 export { $api, $csrf, baseURL };

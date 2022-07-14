@@ -15,7 +15,7 @@ Es compatible con Web, Android e iOS
     - [Librerias de PHP](#instalar-las-dependencias-de-php)
     - [Composer](#instalar-composer)
     - [Dependencias de composer](#instalar-dependencias-de-composer)
-  - [Instalacion GUI](#instalacion-gui)
+  - [Editar GUI](#editar-gui)
     - [NodeJS](#instalar-nodejs)
     - [Yarn & Quasar](#instalar-yarn-quasar)
     - [Dependencias de Node](#instalar-dependencias-de-node)
@@ -38,7 +38,7 @@ Es compatible con Web, Android e iOS
   - php >= 7.4
   - composer
   - Laravel 8
-  - Postgres SQL
+  - Postgres SQL | SQLite | MariaDB
 - GUI
 
   - Nodejs
@@ -49,8 +49,7 @@ Es compatible con Web, Android e iOS
 - Deployment
   - php >= 7.4
   - composer
-  - Laravel 8
-  - Postgres SQL
+  - Postgres SQL | SQLite | MariaDB
 
 ## Instalacion
 
@@ -90,7 +89,7 @@ cd /project-root/backend
 composer install
 ```
 
-### Instalacion GUI
+### Editar GUI
 
 #### Instalar NodeJS
 
@@ -138,7 +137,7 @@ APP_KEY=(php artisan key:generate)
 
 APP_DEBUG=true
 
-APP_URL="https://URL-TO-PROJECT"
+APP_URL="https://app.domain.com"
 
 DB_CONNECTION=pgsql
 
@@ -165,43 +164,38 @@ Usa la configuracion de NGINX siguiente reemplazando el `/project-root/` del pro
 
 ```nginx
   server {
-    listen 80;
-    server_name www.example.com; # fake domain
-
-    root /project-root/backend/public/admin; #path to static directory
+    server_name app.domain.com;
+    root /project-root/backend/public;
 
     add_header X-Frame-Options "SAMEORIGIN";
-    add_header X-XSS-Protection "1; mode=block";
     add_header X-Content-Type-Options "nosniff";
 
-    index index.html index.htm index.php;
+    index index.php index.html;
 
     charset utf-8;
+
+#  Optional configure logs
+
+#  access_log /var/log/nginx/app.domain.com-access.log;
+#  error_log  /var/log/nginx/app.domain.com-error.log error;
+
     location / {
-      try_files $uri $uri/ /index.html;
-    }
-    location /srv {
-      alias /project-root/backend/public;
-      try_files $uri $uri/ @laravelapi;
-      location ~ \.php$ {
-        include snippets/fastcgi-php.conf;
-        fastcgi_pass unix:/var/run/php/php7.4-fpm.sock;
-        fastcgi_param SCRIPT_FILENAME $request_filename;
-      }
-    }
-    location @laravelapi {
-      rewrite /srv/(.*)?$ /srv/index.php?$is_args$args last;
+        try_files $uri $uri/ /index.php?$query_string;
     }
 
     location = /favicon.ico { access_log off; log_not_found off; }
     location = /robots.txt  { access_log off; log_not_found off; }
     error_page 404 /index.php;
 
-    location ~ /\.(?!well-known).* {
-      deny all;
+    location ~ \.php$ {
+        fastcgi_pass unix:/var/run/php/php7.4-fpm.sock;
+        fastcgi_param SCRIPT_FILENAME $realpath_root$fastcgi_script_name;
+        include fastcgi_params;
     }
-  }
 
+    location ~ /\.(?!well-known).* {
+        deny all;
+    }
 ```
 
 Despues acceder al directorio de backend e inicializar Laravel
@@ -214,6 +208,12 @@ composer install
 php artisan key:generate
 php artisan storage:link
 php artisan migrate:fresh --seed
+```
+
+O simplemente ejecutar el script de inicializacion `db.init.sh`
+
+```bash
+/project-root/backend/db.init.sh
 ```
 
 ### Compilacion Android

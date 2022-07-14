@@ -96,6 +96,7 @@ export default defineComponent({
     const $router = useRouter();
     onBeforeMount(() => {
       void $assignment.filter({ status: 0 });
+      if (markers.value.length) center.value = markers.value[0];
     });
     /**
      * -----------------------------------------
@@ -123,10 +124,10 @@ export default defineComponent({
       multiple: false,
       zoom: {
         max: 18,
-        min: 8,
+        min: 6,
       },
     });
-    const zoom = ref(12);
+    const zoom = ref(10);
     /**
      * -----------------------------------------
      *	Methods

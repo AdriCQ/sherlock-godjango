@@ -142,10 +142,10 @@ const settings = ref<IMaPSettings>({
   multiple: false,
   zoom: {
     max: 18,
-    min: 8,
+    min: 6,
   },
 });
-const zoom = ref(12);
+const zoom = ref(10);
 /**
  * -----------------------------------------
  *	Methods
@@ -207,5 +207,7 @@ onBeforeMount(async () => {
       });
     }
   });
+
+  if (markers.value.length) center.value = markers.value[0];
 });
 </script>

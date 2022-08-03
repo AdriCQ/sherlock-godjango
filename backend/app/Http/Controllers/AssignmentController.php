@@ -62,11 +62,18 @@ class AssignmentController extends Controller
         $validator = $validator->validate();
         $checkpoints = $validator['checkpoints'];
         unset($validator['checkpoints']);
+        $agent = null;
         // Agent
-        if (!isset($validator['agent_id']))
+        if (!isset($validator['agent_id'])){
+            $agent = Agent::find(2);
             $validator['agent_id'] = 2;
+        }
+        else
+            $agent = Agent::find($validator['agent_id']);
+        if($agent->bussy) return $this->sendResponse(null, 'El agente ya esta ocupado', 400);
+        $agent->bussy = true;
         $ass = new Assignment($validator);
-        if ($ass->save()) {
+        if ($ass->save() && $agent->save()) {
             if (isset($validator['checkpoints']))
                 $ass->checkpoints()->createMany($checkpoints);
             return $this->sendResponse(Assignment::query()->where('id', $ass->id)->with('checkpoints')->first(), 'Asignacion Creada', 201);
@@ -178,10 +185,14 @@ class AssignmentController extends Controller
         $model = Assignment::find($id);
         if (!$model || $model->status > 0) return $this->sendResponse(null, 'No encontrado', 400);
         if (isset($validator['agent_id'])) {
+            $oldAgent = $model->agent;
             $agent = Agent::find($validator['agent_id']);
             if (!$agent) return $this->sendResponse(null, 'Agente no encontrado', 400);
-            if ($agent->bussy) return $this->sendResponse(null, 'Agente ocupado', 400);
-            $agent->update(['bussy' => true]);
+            if ($oldAgent->id !== $agent->id && $agent->bussy) {
+                return $this->sendResponse(null, 'Agente ocupado', 400);
+                $agent->update(['bussy' => true]);
+                $oldAgent->update(['bussy' => false]);
+            }
         }
         $model->update($validator);
         return $this->sendResponse(Assignment::query()->where('id', $id)->with('checkpoints')->first());

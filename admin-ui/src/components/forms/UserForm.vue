@@ -120,7 +120,7 @@ const form = ref<IUserCreateRequest>({
   role_id: 2,
 });
 const isUpdate = computed(() => ($props.user ? true : false));
-const roles = computed(() => $user.roles);
+const roles = computed(() => $user.roles.filter((r) => r.name !== 'admin'));
 /**
  * validator
  */

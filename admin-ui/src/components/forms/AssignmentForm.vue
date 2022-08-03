@@ -69,12 +69,18 @@ const $agent = injectStrict(_agentInjectable);
 const $assignment = injectStrict(_assignmentInjectable);
 const $emit = defineEmits<{ (e: 'complete'): void; (e: 'cancel'): void }>();
 const $props = defineProps<{ assignment?: IAssignment }>();
+
 /**
  * -----------------------------------------
  *	Data
  * -----------------------------------------
  */
-const availableAgents = computed(() => $agent.availableAgents);
+const availableAgents = computed(() => {
+  const d = $agent.availableAgents;
+  if ($props.assignment && $props.assignment.agent)
+    d.unshift($props.assignment.agent);
+  return d;
+});
 const form = ref<IAssignmentCreateRequest | IAssignmentUpdateRequest>();
 /**
  * onSubmit
@@ -102,7 +108,8 @@ async function onSubmit() {
  *	Lifecycle
  * -----------------------------------------
  */
-onBeforeMount(() => {
+onBeforeMount(async () => {
+  await $agent.list();
   if ($props.assignment) {
     form.value = {
       agent_id: $props.assignment.agent_id,

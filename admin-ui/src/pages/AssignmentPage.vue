@@ -6,21 +6,13 @@
           <q-card-section class="q-gutter-y-sm">
             <div class="text-h6">{{ assignment.name }}</div>
             <div class="text-body1" v-if="isManager">
-              <q-btn
-                color="primary"
-                icon="mdi-pencil"
-                label="Administrar"
-                class="full-width"
-                @click="dialogForm = true"
-              />
+              <q-btn color="primary" icon="mdi-pencil" label="Administrar" class="full-width"
+                @click="dialogForm = true" />
             </div>
             <div class="text-subtitle1">
-              <q-chip
-                class="glossy"
-                :icon="assignment.status === 0 ? 'mdi-clock' : 'mdi-check'"
+              <q-chip class="glossy" :icon="assignment.status === 0 ? 'mdi-clock' : 'mdi-check'"
                 :label="assignment.status === 0 ? 'En Progreso' : 'Completado'"
-                :color="assignment.status === 0 ? '' : 'positive'"
-              />
+                :color="assignment.status === 0 ? '' : 'positive'" />
             </div>
           </q-card-section>
           <q-card-section>
@@ -52,24 +44,19 @@
                 </q-item-section>
                 <q-item-section>Todos</q-item-section>
               </q-item>
-              <q-item
-                v-for="(cp, cpIndex) in assignment.checkpoints"
-                :key="`checkpoint-${cp.id}-index-${cpIndex}`"
-              >
-                <q-item-section
-                  class="cursor-pointer"
-                  avatar
-                  @click="goToCheckpoint(cp.id)"
-                  v-if="isMobile"
-                >
+
+              <q-item clickable v-if="!isManager" @click="myPosition">
+                <q-item-section avatar>
+                  <q-icon name="mdi-map-marker" />
+                </q-item-section>
+                <q-item-section>Mi Posición</q-item-section>
+              </q-item>
+
+              <q-item v-for="(cp, cpIndex) in assignment.checkpoints" :key="`checkpoint-${cp.id}-index-${cpIndex}`">
+                <q-item-section class="cursor-pointer" avatar @click="goToCheckpoint(cp.id)" v-if="isMobile">
                   <q-icon name="mdi-eye" />
                 </q-item-section>
-                <q-item-section
-                  class="cursor-pointer"
-                  avatar
-                  @click="displayCheckpoint = cp"
-                  v-else
-                >
+                <q-item-section class="cursor-pointer" avatar @click="displayCheckpoint = cp" v-else>
                   <q-icon name="mdi-map-marker" />
                 </q-item-section>
                 <q-item-section>
@@ -77,46 +64,20 @@
                     {{ cp.name }}
                   </q-item-label>
                   <q-item-label caption lines="2">
-                    <q-chip
-                      class="glossy"
-                      size="sm"
-                      icon="mdi-clock"
-                      label="Pendiente"
-                      v-if="cp.status === 0"
-                    />
-                    <q-chip
-                      class="glossy"
-                      size="sm"
-                      icon="mdi-check"
-                      label="Completado"
-                      v-else
-                    />
+                    <q-chip class="glossy" size="sm" icon="mdi-clock" label="Pendiente" v-if="cp.status === 0" />
+                    <q-chip class="glossy" size="sm" icon="mdi-check" label="Completado" v-else />
                   </q-item-label>
                 </q-item-section>
 
-                <q-item-section
-                  avatar
-                  class="cursor-pointer"
-                  v-if="isManager"
-                  @click="removeCheckpoint(cp)"
-                >
+                <q-item-section avatar class="cursor-pointer" v-if="isManager" @click="removeCheckpoint(cp)">
                   <q-icon name="mdi-delete" color="negative" />
                 </q-item-section>
               </q-item>
 
               <!-- Add Checkpoint -->
-              <q-item
-                v-if="isManager"
-                clickable
-                @click="dialogCheckpoint = true"
-              >
+              <q-item v-if="isManager" clickable @click="dialogCheckpoint = true">
                 <q-item-section top avatar>
-                  <q-avatar
-                    color="positive"
-                    text-color="white"
-                    icon="mdi-plus"
-                    size="sm"
-                  />
+                  <q-avatar color="positive" text-color="white" icon="mdi-plus" size="sm" />
                 </q-item-section>
                 <q-item-section>
                   <q-item-label>Nuevo Checkpoint</q-item-label>
@@ -129,13 +90,8 @@
 
         <!-- Map Column -->
         <div class="col-sm-6 col-lg-8" v-if="!isMobile">
-          <map-widget
-            readonly
-            :markers="checkpointMarkers"
-            :center="checkpointMarkers[0]"
-            :zoom="mapZoom"
-            @update-zoom="(z) => (mapZoom = z)"
-          />
+          <map-widget readonly :markers="checkpointMarkers" :center="checkpointMarkers[0]" :zoom="mapZoom"
+            @update-zoom="(z) => (mapZoom = z)" />
         </div>
         <!-- / Map Column -->
       </div>
@@ -143,26 +99,25 @@
 
     <!-- Form Dialog -->
     <q-dialog v-model="dialogForm">
-      <assignment-form
-        style="min-width: 20rem"
-        :assignment="assignment"
-        @cancel="closeDialogs"
-        @complete="closeDialogs"
-      />
+      <assignment-form style="min-width: 20rem" :assignment="assignment" @cancel="closeDialogs"
+        @complete="closeDialogs" />
     </q-dialog>
     <!-- / Form Dialog -->
 
     <!-- Checkpoint Dialog -->
     <q-dialog v-model="dialogCheckpoint">
-      <checkpoint-form
-        style="min-width: 20rem"
-        v-if="assignment"
-        :assignment="assignment"
-        @cancel="closeDialogs"
-        @complete="closeDialogs"
-      />
+      <checkpoint-form style="min-width: 20rem" v-if="assignment" :assignment="assignment" @cancel="closeDialogs"
+        @complete="closeDialogs" />
     </q-dialog>
     <!-- / Checkpoint Dialog -->
+
+    <!-- Currento Position Dialog -->
+    <q-dialog v-model="dialogCurrentPos" v-if="currentGpsPosition">
+      <q-card style="min-width: 20rem;">
+        <map-widget :markers="[currentGpsPosition]" readonly />
+      </q-card>
+    </q-dialog>
+    <!-- / Currento Position Dialog -->
   </q-page>
 </template>
 
@@ -170,6 +125,7 @@
 import {
   injectStrict,
   _agentInjectable,
+  _app,
   _assignmentInjectable,
 } from 'src/injectables';
 import { computed, onBeforeMount, ref } from 'vue';
@@ -188,6 +144,7 @@ import { $router } from 'src/boot/router';
  *	Injectable
  * -----------------------------------------
  */
+const $app = injectStrict(_app);
 const $assignment = injectStrict(_assignmentInjectable);
 const $agent = injectStrict(_agentInjectable);
 const $gui = useGuiHelper();
@@ -205,6 +162,7 @@ const assignment = computed(() => {
   );
   return $agent.assignments[index];
 });
+const currentGpsPosition = computed(() => $app.currentPosition);
 const displayCheckpoint = ref<IAssignmentCheckpoint>();
 const checkpointMarkers = computed<LatLng[]>(() => {
   const markers: LatLng[] = [];
@@ -222,6 +180,7 @@ const checkpointMarkers = computed<LatLng[]>(() => {
   return markers;
 });
 const dialogCheckpoint = ref(false);
+const dialogCurrentPos = ref(false);
 const dialogForm = ref(false);
 const isManager = computed(() => $route.name === ROUTE_NAME.ADMIN_ASSIGNMENT);
 const isMobile = computed(() => Platform.is.mobile);
@@ -249,6 +208,17 @@ function goToCheckpoint(id: number) {
       params: { id },
     });
   }
+}
+/**
+ * myPosition
+ */
+async function myPosition() {
+  if (!currentGpsPosition.value) {
+    await $app.getGpsPosition();
+    if ($agent.agent && currentGpsPosition.value)
+      $agent.agent.position = currentGpsPosition.value;
+  }
+  dialogCurrentPos.value = true;
 }
 /**
  * Remove Checkpoint

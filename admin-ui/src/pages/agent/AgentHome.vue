@@ -4,40 +4,23 @@
       <q-card-section class="q-pa-xs">
         <div class="text-h6 text-center">Tarea Actual</div>
       </q-card-section>
-      <l-map
-        ref="map"
-        id="map--page-managerleaflet"
-        class="full-heigth"
-        :zoom="Number(zoom)"
-        :center="center"
-        :min-zoom="settings.zoom.min"
-        :max-zoom="settings.zoom.max"
-        @update:center="doMoveCenter"
-        @update:zoom="doMoveZoom"
-        :key="`map-key-${zoom}-${center.lat}-${center.lng}`"
-      >
+      <l-map ref="map" id="map--page-managerleaflet" class="full-heigth" :zoom="Number(zoom)" :center="center"
+        :min-zoom="settings.zoom.min" :max-zoom="settings.zoom.max" @update:center="doMoveCenter"
+        @update:zoom="doMoveZoom" :key="`map-key-${zoom}-${center.lat}-${center.lng}`">
         <l-tile-layer :url="MAP_URL" :attribution="ATTRIBUTION" />
 
         <!-- Controls -->
         <l-control v-if="markers.length">
-          <q-btn
-            color="white"
-            text-color="dark"
-            icon="mdi-eye"
-            @click="dialogMarkerSelector = true"
-          />
+          <q-btn color="white" text-color="dark" icon="mdi-eye" @click="dialogMarkerSelector = true" />
         </l-control>
         <!-- / Controls -->
-        <template
-          :key="`marker-${markerKey}`"
-          v-for="(marker, markerKey) in markers"
-        >
-          <l-marker
-            v-if="marker.visible"
-            :lat-lng="marker"
-            @click="checkpointDetails(marker.checkpoint?.id)"
-          />
+        <template :key="`marker-${markerKey}`" v-for="(marker, markerKey) in markers">
+          <l-marker v-if="marker.visible" :lat-lng="marker" @click="checkpointDetails(marker.checkpoint?.id)" />
         </template>
+        <!-- currentPosition -->
+        <l-marker v-if="currentPositonVisible && currentPositon" :lat-lng="[currentPositon]" />
+        <!--  /currentPosition -->
+
       </l-map>
     </q-card>
 
@@ -46,21 +29,25 @@
       <q-card class="no-box-shadow" style="min-width: 20rem">
         <q-card-section>
           <q-list bordered>
-            <q-item
-              v-for="(marker, mKey) in markers"
-              :key="`mlistas-${marker.checkpoint?.id}-key-${mKey}`"
-            >
+            <q-item>
+              <q-item-section>
+                <q-item-label>Mi Posicion</q-item-label>
+
+              </q-item-section>
+              <q-item-section avatar @click="currentPositonVisible = !currentPositonVisible">
+                <q-icon color="primary" :name="currentPositonVisible ? 'mdi-eye' : 'mdi-eye-off'" />
+              </q-item-section>
+            </q-item>
+
+            <q-item v-for="(marker, mKey) in markers" :key="`mlistas-${marker.checkpoint?.id}-key-${mKey}`">
               <q-item-section>
                 <q-item-label>{{ marker.checkpoint?.name }}</q-item-label>
                 <q-item-label caption lines="2">{{
-                  marker.checkpoint?.status === 0 ? 'Pendiente' : 'Completado'
-                }}</q-item-label></q-item-section
-              >
+                marker.checkpoint?.status === 0 ? 'Pendiente' : 'Completado'
+                }}</q-item-label>
+              </q-item-section>
               <q-item-section avatar @click="toggleMarkerVisible(marker)">
-                <q-icon
-                  color="primary"
-                  :name="marker.visible ? 'mdi-eye' : 'mdi-eye-off'"
-                />
+                <q-icon color="primary" :name="marker.visible ? 'mdi-eye' : 'mdi-eye-off'" />
               </q-item-section>
             </q-item>
           </q-list>
@@ -86,7 +73,7 @@ import {
   LTileLayer,
 } from '@vue-leaflet/vue-leaflet';
 import { DEFAULT_COORDINATES } from 'src/helpers';
-import { injectStrict, _agentInjectable } from 'src/injectables';
+import { $app, injectStrict, _agentInjectable } from 'src/injectables';
 import { useRouter } from 'vue-router';
 import { ROUTE_NAME } from 'src/router';
 import { IAssignmentCheckpoint } from 'src/types';
@@ -136,6 +123,8 @@ const $router = useRouter();
  */
 const assignments = computed(() => $agent.assignments);
 const center = ref<LatLng>(DEFAULT_COORDINATES);
+const currentPositon = computed(() => $app.currentPosition);
+const currentPositonVisible = ref(true);
 const dialogMarkerSelector = ref(false);
 const markers = ref<ILatLng[]>([]);
 const settings = ref<IMaPSettings>({

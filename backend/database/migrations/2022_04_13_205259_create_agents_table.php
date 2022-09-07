@@ -23,9 +23,8 @@ class CreateAgentsTable extends Migration
             $table->json('position')->nullable();
             $table->boolean('bussy')->default(false);
             $table->timestamps();
-        });
 
-        Schema::table('agents', function (Blueprint $table) {
+
             $table->foreignIdFor(User::class)->onDelete('cascade');
             $table->foreignIdFor(AgentGroup::class);
         });

@@ -21,10 +21,8 @@ class CreateAssignmentCheckpointsTable extends Migration
             $table->unsignedTinyInteger('status')->default(0);
             $table->string('contact')->nullable();
             $table->timestamps();
-        });
-
-        Schema::table('assignment_checkpoints', function (Blueprint $table) {
             $table->foreignIdFor(Assignment::class)->onDelete('cascade');
+
         });
     }
 

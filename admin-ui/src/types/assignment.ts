@@ -6,9 +6,9 @@ import { IAgent } from './agent';
 export interface IAssignment {
   id: number;
   name: string;
-  description: string;
+  description?: string;
   observations?: string;
-  event: string;
+  event?: string;
   status: 0 | 1 | 2;
   agent_id: number;
   agent?: IAgent;

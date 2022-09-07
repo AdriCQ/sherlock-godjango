@@ -44,9 +44,9 @@ class AssignmentController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'name' => ['required', 'string'],
-            'description' => ['required', 'string'],
-            'observations' => ['required', 'string'],
-            'event' => ['required', 'string'],
+            'description' => ['nullable', 'string'],
+            'observations' => ['nullable', 'string'],
+            'event' => ['nullable', 'string'],
             'agent_id' => ['nullable', 'integer'],
 
             'checkpoints' => ['nullable', 'array'],

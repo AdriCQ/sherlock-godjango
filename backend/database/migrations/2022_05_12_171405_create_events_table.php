@@ -20,10 +20,9 @@ class CreateEventsTable extends Migration
             $table->string('type');
             $table->text('details');
             $table->timestamps();
-        });
 
-        Schema::table('events', function (Blueprint $table) {
             $table->foreignIdFor(Agent::class);
+
         });
     }
 

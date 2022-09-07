@@ -16,9 +16,9 @@ class CreateAssignmentsTable extends Migration
         Schema::create('assignments', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->string('description');
+            $table->string('description')->nullable();;
             $table->string('observations')->nullable();
-            $table->string('event');
+            $table->string('event')->nullable();;
             $table->unsignedTinyInteger('status')->default(0);
             // $table->string('coordinates');
             $table->unsignedBigInteger('agent_id')->nullable();

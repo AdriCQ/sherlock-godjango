@@ -53,6 +53,10 @@ class Assignment extends Model
      * client
      */
     public function client(){
-        return $this->agent->user->client;
+        return $this->agent
+            && $this->agent->user
+            && $this->agent->user->client
+            ? $this->agent->user->client
+            : null;
     }
 }

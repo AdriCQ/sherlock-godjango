@@ -117,6 +117,8 @@ class EventController extends Controller
             return $this->sendResponse($validator->errors(), 'Verifique los datos enviados', 400);
         }
         $validator = $validator->validate();
+        if(!auth()->user()->client)
+            return $this->sendResponse(null, 'Cliente no encontrado', 401);
         $qry = Event::query()->where('client_id', auth()->user()->client->id);
         if (isset($validator['created_at'])) {
             $qry = $qry->whereDate('created_at', '>', $validator['created_at']);

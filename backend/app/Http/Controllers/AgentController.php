@@ -78,6 +78,8 @@ class AgentController extends Controller
      */
     public function list()
     {
+        if(!auth()->user()->client)
+            return $this->sendResponse(null, 'Cliente no encontrado', 401);
         return $this->sendResponse(Agent::whereHas('user', function (Builder $query) {
             $query->where('client_id', auth()->user()->client->id);
         })->get());

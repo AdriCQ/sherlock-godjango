@@ -21,6 +21,22 @@
         </div>
       </template>
     </q-card-section>
+    <q-card-actions>
+      <q-btn
+        @click="$emits('edit', $props.client.id)"
+        outline
+        icon="mdi-pencil"
+        color="primary"
+        label="Editar"
+        dense />
+      <q-btn
+        @click="$emits('remove', $props.client.id)"
+        outline
+        icon="mdi-delete"
+        color="negative"
+        label="Eliminar"
+        dense />
+    </q-card-actions>
   </q-card>
 </template>
 
@@ -32,4 +48,8 @@ import { IClient } from 'src/types';
  * -----------------------------------------
  */
 const $props = defineProps<{ client: IClient }>();
+const $emits = defineEmits<{
+  (e: 'remove', id: number):void,
+  (e: 'edit', id: number):void,
+}>();
 </script>

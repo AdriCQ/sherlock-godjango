@@ -19,10 +19,21 @@ class ClientController extends Controller
      */
     public function destroy(int $id){
         if($id===1) return $this->sendResponse(null, 'No se puede eliminar', 401);
-        $model = Client::find($id);
-        return $model && $model->delete()
-            ? $this->sendResponse()
-            : $this->sendResponse(null, 'No se encontro', 400);
+        $client = Client::find($id);
+        if($client){
+            if($client->events()->count() && !$client->events()->delete())
+                return $this->sendResponse($client->events, 'Error eliminando eventos', 502);
+            if($client->assignments()->count() && !$client->assignments()->delete())
+                return $this->sendResponse($client->assignments, 'Error eliminando Asignaciones', 502);
+            if($client->agentGroups()->count() && !$client->agentGroups()->delete())
+                return $this->sendResponse($client->agentGroups, 'Error eliminando Grupo de agentes', 502);
+            if($client->users()->count() && !$client->users()->delete())
+                return $this->sendResponse($client->users, 'Error eliminando Usuarios', 502);
+            if(!$client->delete())
+                return $this->sendResponse($client, 'Error eliminando Cliente', 502);
+            return $this->sendResponse();
+        }
+        return $this->sendResponse(null, 'No se encontro el cliente', 400);
     }
 
     /**

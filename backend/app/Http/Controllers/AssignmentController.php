@@ -8,6 +8,8 @@ use App\Models\AssignmentCheckpoint;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
+use function PHPUnit\Framework\isNull;
+
 class AssignmentController extends Controller
 {
     /**
@@ -62,6 +64,11 @@ class AssignmentController extends Controller
         $validator = $validator->validate();
         $checkpoints = $validator['checkpoints'];
         unset($validator['checkpoints']);
+        // Assignment client id
+        if(!auth()->user()->client)
+            return $this->sendResponse(null, 'Cliente no encontrado', 401);
+
+        $validator['client_id'] =  auth()->user()->client->id;
         $agent = null;
         // Agent
         if (!isset($validator['agent_id'])){
@@ -100,9 +107,11 @@ class AssignmentController extends Controller
             return $this->sendResponse($validator->errors(), 'Verifique los datos enviados', 400);
         }
         $validator = $validator->validate();
+        if(!auth()->user()->client)
+            return $this->sendResponse(null, 'Cliente no encontrado', 401);
         $assArray = [];
         foreach(Assignment::query()->where($validator)->orderByDesc('id')->get() as $assignment){
-            if($assignment->client()->id === auth()->user()->client->id)
+            if($assignment->client() && $assignment->client()->id === auth()->user()->client->id)
                 array_push($assArray, $assignment);
         }
         return $this->sendResponse($assArray);

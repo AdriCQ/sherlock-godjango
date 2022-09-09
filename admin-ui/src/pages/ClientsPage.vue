@@ -22,7 +22,8 @@
             <client-widget
               class="cursor-pointer"
               :client="client"
-              @click="edit(client)"
+              @edit="onEdit(client)"
+              @remove="onRemove(client)"
             />
           </div>
         </div>
@@ -44,8 +45,12 @@
 import { $api } from 'src/boot/axios';
 import { IApiResponse, IClient } from 'src/types';
 import { onBeforeMount, ref } from 'vue';
+import { useQuasar } from 'quasar';
 import ClientWidget from 'src/components/widgets/ClientWidget.vue';
 import ClientForm from 'src/components/forms/ClientForm.vue';
+import { notificationHelper } from 'src/helpers';
+
+const $q = useQuasar();
 
 const client = ref<IClient>();
 const clients = ref<IClient[]>([]);
@@ -61,21 +66,41 @@ function closeDialog() {
   dialog.value = false;
 }
 
-function edit(c: IClient) {
+function onEdit(c:IClient) {
   client.value = c;
   dialog.value = true;
+}
+
+function onRemove(c:IClient) {
+  closeDialog();
+  $q.dialog({
+    title: 'Eliminar Cliente',
+    message: 'Está seguro que desea ELIMINAR al Cliente? Esto eliminará todos los datos del cliente de forma permanente',
+    ok: 'Eliminar',
+    cancel: 'No'
+  }).onOk(async () => {
+    try {
+      await $api.delete(`clients/${c.id}`);
+      await loadData();
+    } catch (error) {
+      notificationHelper.axiosError(error);
+    }
+  })
 }
 async function onComplete() {
   closeDialog();
   await loadData();
 }
 async function loadData() {
-  try {
     const resp = await $api.get<IApiResponse<IClient[]>>('clients');
     clients.value = resp.data.data;
-  } catch (error) {}
 }
 onBeforeMount(async () => {
-  await loadData();
+  try{
+    await loadData();
+  }
+  catch (err) {
+    notificationHelper.axiosError(err);
+  }
 });
 </script>

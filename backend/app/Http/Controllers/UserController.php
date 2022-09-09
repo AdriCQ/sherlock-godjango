@@ -28,7 +28,7 @@ class UserController extends Controller
             'role_id' => ['required', 'integer']
         ]);
         if ($validator->fails()) {
-            return $this->sendResponse($validator->errors()->toArray(), 'Verifique los datos enviados', 400);
+            return $this->sendResponse($validator->errors()->toArray(), 'Verifique los datos enviados. No puede usar un email existente', 400);
         }
         $validator = $validator->validate();
         $role = Role::find($validator['role_id']);
@@ -63,7 +63,8 @@ class UserController extends Controller
      */
     public function list()
     {
-        // $roleId = Role::query()->where('name', 'user')->first();
+        if(!auth()->user()->client)
+            return $this->sendResponse(null, 'Cliente no encontrado', 401);
         return $this->sendResponse(User::query()->where([
             ['id', '>', 2],
             ['client_id', auth()->user()->client->id]

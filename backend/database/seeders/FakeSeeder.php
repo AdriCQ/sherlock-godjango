@@ -49,6 +49,17 @@ class FakeSeeder extends Seeder
             }
             Client::query()->insert($models);
         }
+
+        foreach (Client::query()->where('id', '>', 1)->get() as $client) {
+            User::query()->create([
+                'name' => $faker->name,
+                'email' => 'client'.$client->id.'@manager.com',
+                'phone' => $faker->phoneNumber,
+                'password' => bcrypt('password'),
+                'role_id' => 3,
+                'client_id'=>$client->id
+            ]);
+        }
     }
 
     /**
@@ -105,7 +116,7 @@ class FakeSeeder extends Seeder
     {
         $faker = Factory::create();
         $models = [];
-        foreach (User::query()->where('id', '>', 2)->get() as $user) {
+        foreach (User::query()->where(['role_id', 2])->get() as $user) {
             array_push($models, [
                 "address" => $faker->address,
                 "others" => $faker->text,
@@ -114,7 +125,7 @@ class FakeSeeder extends Seeder
                     'lat' => '22.4' . $faker->numerify(),
                     'lng' => '-79.9' . $faker->numerify()
                 ]),
-                "bussy" => $faker->boolean,
+                "bussy" => false,//$faker->boolean,
                 'agent_group_id' => $faker->numberBetween(1, AgentGroup::query()->count()),
                 'user_id' => $user->id,
             ]);
@@ -162,6 +173,7 @@ class FakeSeeder extends Seeder
                     'event' => $faker->word,
                     'status' => 0,
                     'agent_id' => $faker->numberBetween(1, Agent::count()),
+                    'client_id'=>$faker->numberBetween(2, Client::query()->count())
                 ]);
             }
             Assignment::query()->insert($models);

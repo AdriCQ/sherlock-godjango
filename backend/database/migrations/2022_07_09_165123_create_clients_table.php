@@ -22,13 +22,16 @@ class CreateClientsTable extends Migration
         });
 
         Schema::table('users', function(Blueprint $table){
-            $table->foreignIdFor(Client::class)->nullable();
+            $table->foreignIdFor(Client::class)->nullable()->onDelete('cascade');
+        });
+        Schema::table('assignments', function(Blueprint $table){
+            $table->foreignIdFor(Client::class)->nullable()->onDelete('cascade');
         });
         Schema::table('agent_groups', function(Blueprint $table){
-            $table->foreignIdFor(Client::class)->nullable();
+            $table->foreignIdFor(Client::class)->nullable()->onDelete('cascade');
         });
         Schema::table('events', function(Blueprint $table){
-            $table->foreignIdFor(Client::class)->nullable();
+            $table->foreignIdFor(Client::class)->nullable()->onDelete('cascade');
         });
     }
 

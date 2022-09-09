@@ -26,7 +26,7 @@ class CreateAgentsTable extends Migration
 
 
             $table->foreignIdFor(User::class)->onDelete('cascade');
-            $table->foreignIdFor(AgentGroup::class);
+            $table->foreignIdFor(AgentGroup::class)->onDelete('cascade');
         });
     }
 

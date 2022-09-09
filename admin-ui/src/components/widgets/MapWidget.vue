@@ -5,7 +5,6 @@
     class="full-heigth"
     :zoom="Number(zoom)"
     :center="center"
-    :min-zoom="settings.zoom.min"
     :max-zoom="settings.zoom.max"
     @click="eventOnClick"
     @update:center="(center) => $emit('update-center', center)"

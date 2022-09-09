@@ -10,7 +10,6 @@
         class="full-heigth"
         :zoom="Number(zoom)"
         :center="center"
-        :min-zoom="settings.zoom.min"
         :max-zoom="settings.zoom.max"
         @update:center="doMoveCenter"
         @update:zoom="doMoveZoom"

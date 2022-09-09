@@ -5,7 +5,7 @@
         <div class="text-h6 text-center">Tarea Actual</div>
       </q-card-section>
       <l-map ref="map" id="map--page-managerleaflet" class="full-heigth" :zoom="Number(zoom)" :center="center"
-        :min-zoom="settings.zoom.min" :max-zoom="settings.zoom.max" @update:center="doMoveCenter"
+         :max-zoom="settings.zoom.max" @update:center="doMoveCenter"
         @update:zoom="doMoveZoom" :key="`map-key-${zoom}-${center.lat}-${center.lng}`">
         <l-tile-layer :url="MAP_URL" :attribution="ATTRIBUTION" />
 
@@ -18,7 +18,7 @@
           <l-marker v-if="marker.visible" :lat-lng="marker" @click="checkpointDetails(marker.checkpoint?.id)" />
         </template>
         <!-- currentPosition -->
-        <l-marker v-if="currentPositonVisible && currentPositon" :lat-lng="[currentPositon]" />
+        <l-marker v-if="currentPositionVisible && currentPosition" :lat-lng="currentPosition" />
         <!--  /currentPosition -->
 
       </l-map>
@@ -34,8 +34,8 @@
                 <q-item-label>Mi Posicion</q-item-label>
 
               </q-item-section>
-              <q-item-section avatar @click="currentPositonVisible = !currentPositonVisible">
-                <q-icon color="primary" :name="currentPositonVisible ? 'mdi-eye' : 'mdi-eye-off'" />
+              <q-item-section avatar @click="currentPositionVisible = !currentPositionVisible">
+                <q-icon color="primary" :name="currentPositionVisible ? 'mdi-eye' : 'mdi-eye-off'" />
               </q-item-section>
             </q-item>
 
@@ -123,8 +123,8 @@ const $router = useRouter();
  */
 const assignments = computed(() => $agent.assignments);
 const center = ref<LatLng>(DEFAULT_COORDINATES);
-const currentPositon = computed(() => $app.currentPosition);
-const currentPositonVisible = ref(true);
+const currentPosition = computed(() => $app.currentPosition);
+const currentPositionVisible = ref(true);
 const dialogMarkerSelector = ref(false);
 const markers = ref<ILatLng[]>([]);
 const settings = ref<IMaPSettings>({

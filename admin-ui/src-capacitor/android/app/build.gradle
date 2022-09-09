@@ -6,8 +6,8 @@ android {
         applicationId "dev.godjango.sherlock.app"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 3
-        versionName "22.07.11"
+        versionCode 4
+        versionName "22.09.10"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
     buildTypes {

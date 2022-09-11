@@ -60,13 +60,15 @@ const enableRefresh = computed(
 /**
  * Emit Position
  */
-async function emitPosition() {
-  if (agent.value && currentGpsPosition.value) {
-    const resp = await $agent.update(agent.value.id, {
-      position: currentGpsPosition.value,
-    });
-    $agent.agent = resp;
-  }
+function emitPosition() {
+  setInterval(async () => {
+    if (agent.value && currentGpsPosition.value) {
+      const resp = await $agent.update(agent.value.id, {
+        position: currentGpsPosition.value,
+      });
+      $agent.agent = resp;
+    }
+  }, 5000);
 }
 /**
  * pullToRefresh
@@ -82,7 +84,7 @@ async function pullToRefresh(done: CallableFunction) {
 async function loadData() {
   $agent.load();
   try {
-    await $app.getGpsPosition();
+    await $app.watchGpsPosition();
     await $agent.whoami();
     void $agent.listAssignments();
     void emitPosition();

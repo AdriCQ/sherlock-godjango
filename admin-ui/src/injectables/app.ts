@@ -76,14 +76,16 @@ export class AppStore {
    * Get Gps Position
    * @returns
    */
-  async watchGpsPosition() {
+  async watchGpsPosition(showMessage = false) {
     if (!Platform.is.mobile) return;
-    Dialog.create({
-      title: 'Activación de GPS',
-      message: 'Para continuar active su conexión de GPS',
-      ok: 'Ya tengo GPS activo',
-      persistent: true,
-    });
+    if(showMessage){
+      Dialog.create({
+        title: 'Activación de GPS',
+        message: 'Para continuar active su conexión de GPS',
+        ok: 'Ya tengo GPS activo',
+        persistent: true,
+      });
+    }
     try {
       $capacitor.Geolocation_watchPosition();
       if ($agentInjectable.agent) {

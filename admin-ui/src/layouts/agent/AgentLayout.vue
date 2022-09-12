@@ -81,10 +81,10 @@ async function pullToRefresh(done: CallableFunction) {
 /**
  * Load Data
  */
-async function loadData() {
+async function loadData(showMessage=false) {
   $agent.load();
   try {
-    await $app.watchGpsPosition();
+    await $app.watchGpsPosition(showMessage);
     await $agent.whoami();
     void $agent.listAssignments();
     void emitPosition();
@@ -101,6 +101,6 @@ onBeforeMount(() => {
   useMeta({
     title: 'Sherlock Agente',
   });
-  loadData();
+  loadData(true);
 });
 </script>

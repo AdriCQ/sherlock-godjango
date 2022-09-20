@@ -10,7 +10,7 @@
       />
 
       <q-toolbar-title> {{ title }} </q-toolbar-title>
-      <template v-if="!$q.platform.is.mobile">
+      <template v-if="!$q.platform.is.mobile && !isAdmin">
         <q-btn
           flat
           round
@@ -60,12 +60,14 @@ import {
 import { computed } from 'vue';
 import { useQuasar } from 'quasar';
 import { ROUTE_NAME } from 'src/router';
-import { $router } from 'src/boot/router';
+import { useRoute, useRouter } from 'vue-router';
 
 const $app = injectStrict(_app);
 const $ass = injectStrict(_assignmentInjectable);
 const $event = injectStrict(_eventInjectable);
 const $q = useQuasar();
+const $route = useRoute();
+const $router = useRouter();
 /**
  * -----------------------------------------
  *	data
@@ -73,6 +75,7 @@ const $q = useQuasar();
  */
 const assignmentCounter = computed(() => $ass.assignments.length);
 const eventCounter = computed(() => $event.events.length);
+const isAdmin = computed(() => $route.name === ROUTE_NAME.ADMIN_CLIENTS);
 const title = computed(() =>
   $app.mode === 'manager' ? 'Sherlock Manager' : 'Sherlock Agente'
 );

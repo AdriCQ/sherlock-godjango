@@ -21,7 +21,7 @@
 import AppHeader from './ManagerHeader.vue';
 import MainFooter from './ManagerFooter.vue';
 import ManagerLeftDrawer from './ManagerLeftDrawer.vue';
-import { computed, onBeforeMount } from 'vue';
+import { computed, onBeforeMount, onBeforeUnmount, ref } from 'vue';
 import { useQuasar } from 'quasar';
 import {
   injectStrict,
@@ -53,6 +53,8 @@ const enableRefresh = computed(
     $route.name !== ROUTE_NAME.ADMIN_ASSIGNMENT &&
     $route.name !== ROUTE_NAME.ADMIN_AGENTS_MAP
 );
+
+const interval = ref();
 /**
  * pullToRefresh
  * @param done
@@ -82,5 +84,13 @@ onBeforeMount(() => {
   void pullToRefresh(() => {
     console.log('Main');
   });
+
+  interval.value = setInterval(() => {
+    $agent.list().catch(_e => { console.log('Error al listar agentes', _e) });
+  }, 20000)
 });
+
+onBeforeUnmount(() => {
+  clearInterval(interval.value);
+})
 </script>

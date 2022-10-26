@@ -1,20 +1,13 @@
 <template>
   <q-page padding>
     <q-card class="no-box-shadow" style="height: 90vh">
-      <map-widget
-        :markers="markers"
-        readonly
-        :center="markers[0]"
-        :zoom="12"
-        :settings="{
-          zoom: {
-            max: 18,
-            min: 9,
-          },
-          multiple: false,
-        }"
-        :marker-click-fn="onMarkerClick"
-      />
+      <map-widget :markers="markers" readonly :zoom="12" :settings="{
+        zoom: {
+          max: 18,
+          min: 6,
+        },
+        multiple: false,
+      }" :marker-click-fn="onMarkerClick" />
     </q-card>
   </q-page>
 </template>

@@ -15,7 +15,9 @@
     "build:android": "quasar build --mode capacitor --target android --ide"
   },
   "dependencies": {
-    "@capacitor/core": "^2.0.0",
+    "@capacitor/core": "^4.4.0",
+    "@capacitor/geolocation": "^4.0.1",
+    "@capacitor/preferences": "^4.0.1",
     "@quasar/extras": "^1.0.0",
     "@vue-leaflet/vue-leaflet": "^0.6.1",
     "@vuelidate/core": "^2.0.0-alpha.41",
@@ -30,6 +32,7 @@
   "devDependencies": {
     "@mdi/font": "^6.6.96",
     "@quasar/app-webpack": "^3.0.0",
+    "@quasar/icongenie": "^2.5.4",
     "@types/leaflet": "^1.7.9",
     "@types/node": "^12.20.21",
     "@typescript-eslint/eslint-plugin": "^5.10.0",

@@ -65,6 +65,6 @@ export default boot(({ app }) => {
  */
 const $csrf = async () => {
   if (!getCookie('XSRF-TOKEN'))
-    return axios.get<void>(`${baseURL}/sanctum/csrf-cookie`);
+    return console.log('XSRF-TOKEN');
 };
 export { $api, $csrf, baseURL };

@@ -963,6 +963,11 @@
     "@babel/helper-validator-identifier" "^7.16.7"
     to-fast-properties "^2.0.0"
 
+"@capacitor-community/background-geolocation@^1.2.6":
+  version "1.2.6"
+  resolved "http://localhost:4873/@capacitor-community%2fbackground-geolocation/-/background-geolocation-1.2.6.tgz#0609be6fc474ab0c2590f2000f37307da3015d47"
+  integrity sha512-zYe2gUf+CXoE7tbBzd6CNv3yW1SRCVAxVKg5t63zHbMQR2JfurVlfIEnXjLyc+strAMPavGwbIXEjiGv5jJvdA==
+
 "@capacitor/core@^4.4.0":
   version "4.4.0"
   resolved "https://registry.yarnpkg.com/@capacitor%2fcore/-/core-4.4.0.tgz#47e3911a3d5ebdf7496f731c7aada52fcc70af53"

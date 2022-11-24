@@ -15,6 +15,7 @@
     "build:android": "quasar build --mode capacitor --target android --ide"
   },
   "dependencies": {
+    "@capacitor-community/background-geolocation": "^1.2.6",
     "@capacitor/core": "^4.4.0",
     "@capacitor/geolocation": "^4.0.1",
     "@capacitor/preferences": "^4.0.1",

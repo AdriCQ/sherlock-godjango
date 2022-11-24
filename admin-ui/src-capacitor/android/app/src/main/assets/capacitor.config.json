@@ -2,6 +2,6 @@
 	"appId": "dev.godjango.sherlock",
 	"appName": "Sherlock",
 	"bundledWebRuntime": false,
-	"npmClient": "[object Object]",
+	"npmClient": "yarn",
 	"webDir": "www"
 }

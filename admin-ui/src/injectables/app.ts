@@ -78,31 +78,8 @@ export class AppStore {
    */
   async watchGpsPosition(showMessage = false) {
     if (!Platform.is.mobile) return;
-    if(showMessage){
-      Dialog.create({
-        title: 'Activación de GPS',
-        message: 'Para continuar active su conexión de GPS',
-        ok: 'Ya tengo GPS activo',
-        persistent: true,
-      });
-    }
-    try {
-      $capacitor.Geolocation_watchPosition();
-      if ($agentInjectable.agent) {
-        await $agentInjectable.update($agentInjectable.agent.id, {
-          position: this.currentPosition,
-        });
-      }
-    } catch (error) {
-      Dialog.create({
-        title: 'Activación de GPS',
-        message: 'Para continuar active su conexión de GPS',
-        ok: 'Ya tengo GPS activo',
-        persistent: true,
-      }).onOk(async () => {
-        await this.watchGpsPosition();
-      });
-    }
+    await $capacitor.Geolocation_watchPosition();
+    console.log(showMessage)
   }
   /**
    * toggleLeftDrawer

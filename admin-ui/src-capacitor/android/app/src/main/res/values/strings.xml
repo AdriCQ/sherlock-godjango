@@ -4,4 +4,12 @@
     <string name="title_activity_main">Sherlock</string>
     <string name="package_name">dev.godjango.sherlock</string>
     <string name="custom_url_scheme">dev.godjango.sherlock</string>
+
+    <string name="capacitor_background_geolocation_notification_channel_name">
+        Background Tracking
+    </string>
+
+    <string name="capacitor_background_geolocation_notification_icon">
+        drawable/ic_launcher
+    </string>
 </resources>

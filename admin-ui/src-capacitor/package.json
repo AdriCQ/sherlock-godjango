@@ -5,10 +5,13 @@
   "author": "AdriCQ <adrian.capote95@zoho.com>",
   "private": true,
   "dependencies": {
+    "@capacitor-community/background-geolocation": "^1.2.6",
     "@capacitor/android": "^4.4.0",
-    "@capacitor/cli": "^4.4.0",
     "@capacitor/core": "^4.4.0",
     "@capacitor/geolocation": "^4.0.1",
     "@capacitor/preferences": "^4.0.1"
+  },
+  "devDependencies": {
+    "@capacitor/cli": "^4.4.0"
   }
 }

@@ -1,24 +1,24 @@
 <template>
-  <q-layout view="lHh LpR fFf">
-    <!-- Agent Header -->
-    <agent-header />
-    <!-- / Agent Header -->
+	<q-layout view="lHh LpR fFf">
+		<!-- Agent Header -->
+		<agent-header />
+		<!-- / Agent Header -->
 
-    <q-page-container class="text-grey-9 bg-grey-4">
-      <q-pull-to-refresh @refresh="pullToRefresh" v-if="enableRefresh">
-        <router-view />
-      </q-pull-to-refresh>
-      <router-view v-else />
-    </q-page-container>
+		<q-page-container class="text-grey-9 bg-grey-4">
+			<q-pull-to-refresh @refresh="pullToRefresh" v-if="enableRefresh">
+				<router-view />
+			</q-pull-to-refresh>
+			<router-view v-else />
+		</q-page-container>
 
-    <!-- Left Drawer -->
-    <agent-left-drawer />
-    <!-- / Left Drawer -->
+		<!-- Left Drawer -->
+		<agent-left-drawer />
+		<!-- / Left Drawer -->
 
-    <!-- Agent Footer -->
-    <agent-footer v-if="$q.platform.is.mobile" />
-    <!-- / Agent Footer -->
-  </q-layout>
+		<!-- Agent Footer -->
+		<agent-footer v-if="$q.platform.is.mobile" />
+		<!-- / Agent Footer -->
+	</q-layout>
 </template>
 
 <script setup lang="ts">
@@ -27,7 +27,7 @@ import AgentHeader from './AgentHeader.vue';
 import AgentLeftDrawer from './AgentLeftDrawer.vue';
 import { useMeta, useQuasar } from 'quasar';
 import { computed, onBeforeMount } from 'vue';
-import { $app, injectStrict, _agentInjectable } from 'src/injectables';
+import { injectStrict, _agentInjectable, _map } from 'src/injectables';
 import { notificationHelper } from 'src/helpers';
 import { useRoute } from 'vue-router';
 import { ROUTE_NAME } from 'src/router';
@@ -37,6 +37,7 @@ import { ROUTE_NAME } from 'src/router';
  * -----------------------------------------
  */
 const $agent = injectStrict(_agentInjectable);
+const $map = injectStrict(_map);
 const $q = useQuasar();
 const $route = useRoute();
 /**
@@ -45,11 +46,11 @@ const $route = useRoute();
  * -----------------------------------------
  */
 const agent = computed(() => $agent.agent);
-const currentGpsPosition = computed(() => $app.currentPosition);
+const currentGpsPosition = computed(() => $map.gpsPosition);
 const enableRefresh = computed(
-  () =>
-    $route.name !== ROUTE_NAME.AGENT_HOME &&
-    $route.name !== ROUTE_NAME.AGENT_CHECKPOINT
+	() =>
+		$route.name !== ROUTE_NAME.AGENT_HOME &&
+		$route.name !== ROUTE_NAME.AGENT_CHECKPOINT
 );
 
 /**
@@ -61,36 +62,36 @@ const enableRefresh = computed(
  * Emit Position
  */
 function emitPosition() {
-  setInterval(async () => {
-    if (agent.value && currentGpsPosition.value) {
-      const resp = await $agent.update(agent.value.id, {
-        position: currentGpsPosition.value,
-      });
-      $agent.agent = resp;
-    }
-  }, 5000);
+	setInterval(async () => {
+		if (agent.value && currentGpsPosition.value) {
+			const resp = await $agent.update(agent.value.id, {
+				position: currentGpsPosition.value,
+			});
+			$agent.agent = resp;
+		}
+	}, 5000);
 }
 /**
  * pullToRefresh
  * @param done
  */
 async function pullToRefresh(done: CallableFunction) {
-  await loadData();
-  done();
+	await loadData();
+	done();
 }
 /**
  * Load Data
  */
-async function loadData(showMessage=false) {
-  $agent.load();
-  try {
-    await $app.watchGpsPosition(showMessage);
-    await $agent.whoami();
-    void $agent.listAssignments();
-    void emitPosition();
-  } catch (error) {
-    notificationHelper.axiosError(error);
-  }
+async function loadData() {
+	$agent.load();
+	try {
+		await $map.watchGpsPosition();
+		await $agent.whoami();
+		void $agent.listAssignments();
+		void emitPosition();
+	} catch (error) {
+		notificationHelper.axiosError(error);
+	}
 }
 /**
  * -----------------------------------------
@@ -98,9 +99,9 @@ async function loadData(showMessage=false) {
  * -----------------------------------------
  */
 onBeforeMount(() => {
-  useMeta({
-    title: 'Sherlock Agente',
-  });
-  loadData(true);
+	useMeta({
+		title: 'Sherlock Agente',
+	});
+	loadData();
 });
 </script>

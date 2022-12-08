@@ -2,6 +2,7 @@ import { LatLng } from 'leaflet';
 import { Dialog, Platform } from 'quasar';
 import { $capacitor, DEFAULT_COORDINATES } from 'src/helpers';
 import { InjectionKey, ref } from 'vue';
+import { $agentInjectable } from './agent';
 
 interface IMaPSettings {
   multiple: boolean;
@@ -22,6 +23,7 @@ class MapInjectable {
     },
   });
   private _zoom = ref(10);
+  private _watcherId = ref<string>()
   /**
    * -----------------------------------------
    *	getters & setters
@@ -51,6 +53,9 @@ class MapInjectable {
   set settings(s: IMaPSettings) {
     this._settings.value = s;
   }
+  get watcherId() { return this._watcherId.value }
+  set watcherId(w: string | undefined) { this._watcherId.value = w }
+
   get zoom() {
     return this._zoom.value;
   }
@@ -62,16 +67,25 @@ class MapInjectable {
    *	Mutations
    * -----------------------------------------
    */
+  /**
+   * Get Gps Position
+   * @returns
+   */
   async getGpsPosition() {
-    if (!Platform.is.capacitor) return;
+    if (!Platform.is.mobile) return;
     try {
       const coords = await $capacitor.Geolocation_currentPosition();
       this.gpsPosition = coords;
+      if ($agentInjectable.agent) {
+        await $agentInjectable.update($agentInjectable.agent.id, {
+          position: this.gpsPosition,
+        });
+      }
     } catch (error) {
       Dialog.create({
         title: 'Activación de GPS',
-        message: 'Necesitamos que active su conexión de GPS',
-        ok: true,
+        message: 'Para continuar active su conexión de GPS',
+        ok: 'Ya tengo GPS activo',
         persistent: true,
       }).onOk(async () => {
         await this.getGpsPosition();
@@ -89,6 +103,15 @@ class MapInjectable {
       this.zoom = 16;
     }
     await this.getGpsPosition();
+  }
+
+  /**
+   * Get Gps Position
+   * @returns
+   */
+  async watchGpsPosition() {
+    if (!Platform.is.mobile) return;
+    await $capacitor.Geolocation_watchPosition();
   }
 }
 

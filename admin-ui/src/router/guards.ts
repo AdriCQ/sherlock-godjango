@@ -1,4 +1,4 @@
-import { $app, $user } from 'src/injectables';
+import { $mapInjectable, $user } from 'src/injectables';
 import { NavigationGuard } from 'vue-router';
 import { ROUTE_NAME } from './names';
 
@@ -25,7 +25,7 @@ export const adminGuard: NavigationGuard = (to, from, next) => {
  */
 export const agentGuard: NavigationGuard = (to, from, next) => {
   if ($user.api_token && $user.profile.id && $user.profile.role.name === 'user') {
-    $app.watchGpsPosition();
+    $mapInjectable.watchGpsPosition();
     next();
   }
   else next({ name: ROUTE_NAME.LOGIN });

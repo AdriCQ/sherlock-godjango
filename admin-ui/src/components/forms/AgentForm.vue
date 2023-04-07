@@ -3,40 +3,19 @@
     <q-form @submit.prevent="onSubmit" v-if="form">
       <q-card-section class="q-gutter-y-sm">
         <!-- User -->
-        <q-select
-          v-model="selectedUserId"
-          :options="users"
-          label="Usuario"
-          emit-value
-          map-options
-          option-label="name"
-          option-value="id"
-          :readonly="$props.agent ? true : false"
-        />
+        <q-select v-model="selectedUserId" :options="users" label="Usuario" emit-value map-options option-label="name"
+          option-value="id" :readonly="$props.agent ? true : false" />
         <!-- / User -->
         <!-- NIck -->
         <q-input v-model="form.nick" required type="text" label="Nick" />
         <!-- / NIck -->
         <!-- Address -->
-        <q-input
-          v-model="form.address"
-          required
-          type="text"
-          label="Dirección"
-        />
+        <q-input v-model="form.address" required type="text" label="Dirección" />
         <!-- / Address -->
 
         <!-- Agent Group -->
-        <q-select
-          required
-          v-model="form.agent_group_id"
-          :options="agentGroups"
-          label="Grupo"
-          map-options
-          emit-value
-          option-label="name"
-          option-value="id"
-        />
+        <q-select required v-model="form.agent_group_id" :options="agentGroups" label="Grupo" map-options emit-value
+          option-label="name" option-value="id" />
         <!-- / Agent Group -->
 
         <!-- Others -->
@@ -45,14 +24,8 @@
       </q-card-section>
 
       <q-card-actions>
-        <q-btn
-          color="primary"
-          icon="mdi-close"
-          label="Cerrar"
-          outline
-          @click="$emit('cancel')"
-        />
-        <q-btn color="primary" icon="mdi-check" label="Guardar" type="submit" />
+        <q-btn color="primary" icon="mdi-close" label="Cerrar" outline @click="$emit('cancel')" />
+        <q-btn color="primary" :disable="loading" icon="mdi-check" label="Guardar" type="submit" />
       </q-card-actions>
     </q-form>
   </q-card>
@@ -60,7 +33,7 @@
 
 <script setup lang="ts">
 import { notificationHelper } from 'src/helpers';
-import { injectStrict, _agentInjectable, _user } from 'src/injectables';
+import { injectStrict, _agentInjectable, _user, _app } from 'src/injectables';
 import { IAgent, IAgentCreateRequest, IAgentUpdateRequest } from 'src/types';
 import { ref, computed, onBeforeMount } from 'vue';
 /**
@@ -70,6 +43,7 @@ import { ref, computed, onBeforeMount } from 'vue';
  */
 const $agent = injectStrict(_agentInjectable);
 const $user = injectStrict(_user);
+const $app = injectStrict(_app);
 const $emit = defineEmits<{ (e: 'cancel'): void; (e: 'complete'): void }>();
 const $props = defineProps<{ agent?: IAgent }>();
 /**
@@ -81,6 +55,7 @@ const agentGroups = computed(() => $agent.groups);
 const form = ref<IAgentCreateRequest | IAgentUpdateRequest>();
 const selectedUserId = ref();
 const users = computed(() => $user.allUsers);
+const loading = computed(() => $app.loading)
 /**
  * -----------------------------------------
  *	Methods

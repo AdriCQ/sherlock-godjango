@@ -21,8 +21,7 @@ class CreateEventsTable extends Migration
             $table->text('details');
             $table->timestamps();
 
-            $table->foreignIdFor(Agent::class);
-
+            $table->foreignIdFor(Agent::class)->constrained();
         });
     }
 

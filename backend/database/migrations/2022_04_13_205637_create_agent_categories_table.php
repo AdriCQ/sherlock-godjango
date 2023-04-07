@@ -17,8 +17,8 @@ class CreateAgentCategoriesTable extends Migration
     {
         Schema::create('agent_categories', function (Blueprint $table) {
             $table->id();
-            $table->foreignIdFor(Agent::class);
-            $table->foreignIdFor(Category::class);
+            $table->foreignIdFor(Agent::class)->constrained();
+            $table->foreignIdFor(Category::class)->constrained();
         });
     }
 

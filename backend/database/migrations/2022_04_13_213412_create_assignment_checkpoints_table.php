@@ -21,8 +21,7 @@ class CreateAssignmentCheckpointsTable extends Migration
             $table->unsignedTinyInteger('status')->default(0);
             $table->string('contact')->nullable();
             $table->timestamps();
-            $table->foreignIdFor(Assignment::class)->onDelete('cascade');
-
+            $table->foreignIdFor(Assignment::class)->constrained()->onDelete('cascade');
         });
     }
 

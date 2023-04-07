@@ -1,22 +1,10 @@
 <template>
-  <q-drawer
-    :model-value="sidebarOpen"
-    @update:model-value="updateSidebarOpen"
-    show-if-above
-    side="left"
-    :width="280"
-  >
+  <q-drawer :model-value="sidebarOpen" @update:model-value="updateSidebarOpen" show-if-above side="left" :width="280">
     <!-- profile -->
     <div class="text-center q-mt-md">
       <div class="text-grey-9 text-body1">Hola, {{ userName }}</div>
-      <q-chip
-        class="glossy"
-        clickable
-        :icon="agent?.bussy ? 'mdi-cancel' : 'mdi-check'"
-        :color="agent?.bussy ? '' : 'positive'"
-        :label="agent?.bussy ? 'Ocupado' : 'Disponible'"
-        @click="changeAgentStatus"
-      />
+      <q-chip class="glossy" :icon="agent?.bussy ? 'mdi-cancel' : 'mdi-check'" :color="agent?.bussy ? '' : 'positive'"
+        :label="agent?.bussy ? 'Ocupado' : 'Disponible'" />
     </div>
     <!-- / profile -->
 
@@ -88,7 +76,7 @@
 
 <script setup lang="ts">
 import { computed } from '@vue/reactivity';
-import { notificationHelper, useGuiHelper } from 'src/helpers';
+import { useGuiHelper } from 'src/helpers';
 import { injectStrict, _agentInjectable, _app, _user } from 'src/injectables';
 import { ROUTE_NAME } from 'src/router';
 import { useRouter } from 'vue-router';
@@ -109,24 +97,24 @@ const sidebarOpen = computed(() => $app.leftDrawer);
 /**
  * Change Agent Status
  */
-async function changeAgentStatus() {
-  $gui.deleteDialog({
-    message: 'Desea modificar su estado?',
-    title: 'Cambiar estado',
-    onOk: async () => {
-      if (agent.value) {
-        try {
-          const resp = await $agent.update(agent.value.id, {
-            bussy: !agent.value.bussy,
-          });
-          $agent.agent = resp;
-        } catch (error) {
-          notificationHelper.axiosError(error);
-        }
-      }
-    },
-  });
-}
+// async function changeAgentStatus() {
+//   $gui.deleteDialog({
+//     message: 'Desea modificar su estado?',
+//     title: 'Cambiar estado',
+//     onOk: async () => {
+//       if (agent.value) {
+//         try {
+//           const resp = await $agent.update(agent.value.id, {
+//             bussy: !agent.value.bussy,
+//           });
+//           $agent.agent = resp;
+//         } catch (error) {
+//           notificationHelper.axiosError(error);
+//         }
+//       }
+//     },
+//   });
+// }
 /**
  * logout
  */

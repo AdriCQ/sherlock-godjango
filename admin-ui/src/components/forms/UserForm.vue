@@ -2,14 +2,7 @@
   <q-card>
     <q-form @submit.prevent="onSubmit">
       <q-card-section class="q-gutter-y-md">
-        <q-input
-          v-model="form.name"
-          type="text"
-          label="Nombre"
-          name="name"
-          :error="$v.name.$error"
-          bottom-slots
-        >
+        <q-input v-model="form.name" type="text" label="Nombre" name="name" :error="$v.name.$error" bottom-slots>
           <template v-slot:error>
             <div v-for="e of $v.name.$errors" :key="e.$uid">
               {{ e.$message }}
@@ -17,15 +10,8 @@
           </template>
         </q-input>
 
-        <q-input
-          name="email"
-          v-model="form.email"
-          type="email"
-          label="Email"
-          :error="$v.email.$error"
-          bottom-slots
-          :readonly="isUpdate"
-        >
+        <q-input name="email" v-model="form.email" type="email" label="Email" :error="$v.email.$error" bottom-slots
+          :readonly="isUpdate">
           <template v-slot:error>
             <div v-for="e of $v.email.$errors" :key="e.$uid">
               {{ e.$message }}
@@ -33,14 +19,7 @@
           </template>
         </q-input>
 
-        <q-input
-          name="phone"
-          v-model="form.phone"
-          type="tel"
-          label="Teléfono"
-          bottom-slots
-          :error="$v.phone.$error"
-        >
+        <q-input name="phone" v-model="form.phone" type="tel" label="Teléfono" bottom-slots :error="$v.phone.$error">
           <template v-slot:error>
             <div v-for="e of $v.phone.$errors" :key="e.$uid">
               {{ e.$message }}
@@ -48,40 +27,16 @@
           </template>
         </q-input>
 
-        <q-select
-          v-model="form.role_id"
-          :options="roles"
-          emit-value
-          map-options
-          option-label="display_name"
-          option-value="id"
-          label="Permisos"
-        />
+        <q-select v-model="form.role_id" :options="roles" emit-value map-options option-label="display_name"
+          option-value="id" label="Permisos" />
 
-        <q-input
-          name="password"
-          v-model="form.password"
-          type="password"
-          label="Contraseña"
-          :required="!isUpdate"
-        />
+        <q-input name="password" v-model="form.password" type="password" label="Contraseña" :required="!isUpdate" />
 
-        <q-input
-          name="password_confirmation"
-          v-model="form.password_confirmation"
-          type="password"
-          label="Repita Contraseña"
-          :required="!isUpdate"
-        />
+        <q-input name="password_confirmation" v-model="form.password_confirmation" type="password"
+          label="Repita Contraseña" :required="!isUpdate" />
       </q-card-section>
       <q-card-actions>
-        <q-btn
-          color="primary"
-          outline
-          label="Cerrar"
-          icon="mdi-close"
-          @click="$emit('cancel')"
-        />
+        <q-btn color="primary" outline label="Cerrar" icon="mdi-close" @click="$emit('cancel')" />
         <q-btn color="primary" icon="mdi-check" label="Guardar" type="submit" />
       </q-card-actions>
     </q-form>
@@ -190,8 +145,8 @@ onBeforeMount(async () => {
     form.value = {
       email: '',
       name: '',
-      password: '',
-      password_confirmation: '',
+      password: undefined,
+      password_confirmation: undefined,
       phone: '',
       role_id: 2,
     };

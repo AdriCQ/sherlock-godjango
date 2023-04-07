@@ -69,7 +69,12 @@ class AgentController extends Controller
      */
     public function assignments(int $status = 0)
     {
-        return $this->sendResponse(auth()->user()->agent->assignments()->where('status', $status)->get());
+        return auth()->user()->agent ?
+            $this->sendResponse(
+                auth()->user()->agent
+                    ->assignments()->where('status', $status)->get()
+            )
+            : $this->sendResponse(null);
     }
 
     /**
@@ -152,7 +157,7 @@ class AgentController extends Controller
         $agent = Agent::find($id);
         if (!$agent) return $this->sendResponse(null, 'No encontrado', 400);
         // Check if belongs to same client
-        if($agent->user->client->id !== auth()->user()->client->id)
+        if ($agent->user->client->id !== auth()->user()->client->id)
             return $this->sendResponse(null, 'No tiene permisos', 401);
         // Update categories
         if (isset($validator['categories'])) {

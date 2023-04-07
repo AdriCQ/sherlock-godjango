@@ -21,14 +21,14 @@ class CreateClientsTable extends Migration
             $table->timestamps();
         });
 
-        Schema::table('users', function(Blueprint $table){
-            $table->foreignIdFor(Client::class)->nullable();
+        Schema::table('users', function (Blueprint $table) {
+            $table->foreignIdFor(Client::class)->constrained()->nullable();
         });
-        Schema::table('agent_groups', function(Blueprint $table){
-            $table->foreignIdFor(Client::class)->nullable();
+        Schema::table('agent_groups', function (Blueprint $table) {
+            $table->foreignIdFor(Client::class)->constrained()->nullable();
         });
-        Schema::table('events', function(Blueprint $table){
-            $table->foreignIdFor(Client::class)->nullable();
+        Schema::table('events', function (Blueprint $table) {
+            $table->foreignIdFor(Client::class)->constrained()->nullable();
         });
     }
 

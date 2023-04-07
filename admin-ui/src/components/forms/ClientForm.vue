@@ -4,12 +4,7 @@
       <q-card-section class="q-gutter-y-sm">
         <div class="text-body1">Datos del Cliente</div>
         <q-input v-model="form.name" required type="text" label="Nombre" />
-        <q-input
-          v-model="form.description"
-          required
-          type="textarea"
-          label="Detalles"
-        />
+        <q-input v-model="form.description" required type="textarea" label="Detalles" />
       </q-card-section>
       <q-card-section class="q-gutter-y-sm" v-if="user">
         <div class="text-body1">Datos del Manager</div>
@@ -18,19 +13,10 @@
         <q-input v-model="user.email" type="email" label="Email" />
         <q-input v-model="user.phone" type="tel" label="Telefono" />
         <q-input v-model="user.password" type="password" label="Password" />
-        <q-input
-          v-model="user.password_confirmation"
-          type="password"
-          label="Repita Password"
-        />
+        <q-input v-model="user.password_confirmation" type="password" label="Repita Password" />
       </q-card-section>
       <q-card-actions>
-        <q-btn
-          color="primary"
-          outlined
-          label="Cancelar"
-          @click="$emit('cancel')"
-        />
+        <q-btn color="primary" outlined label="Cancelar" @click="() => $emit('cancel')" />
         <q-btn color="primary" icon="mdi-check" label="Guardar" type="submit" />
       </q-card-actions>
     </q-form>

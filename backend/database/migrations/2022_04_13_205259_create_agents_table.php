@@ -25,8 +25,8 @@ class CreateAgentsTable extends Migration
             $table->timestamps();
 
 
-            $table->foreignIdFor(User::class)->onDelete('cascade');
-            $table->foreignIdFor(AgentGroup::class);
+            $table->foreignIdFor(User::class)->constrained()->onDelete('cascade');
+            $table->foreignIdFor(AgentGroup::class)->constrained();
         });
     }
 

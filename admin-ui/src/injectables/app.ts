@@ -1,5 +1,5 @@
 import { LatLng } from 'leaflet';
-import { Dialog, Platform } from 'quasar';
+// import { Dialog } from 'quasar';
 import { $capacitor } from 'src/helpers';
 import { IUserRoleName } from 'src/types';
 import { ref, InjectionKey } from 'vue';
@@ -51,7 +51,7 @@ export class AppStore {
    * @returns
    */
   async getGpsPosition() {
-    if (!Platform.is.mobile) return;
+    // if (!Platform.is.mobile) return;
     try {
       const coords = await $capacitor.Geolocation_currentPosition();
       this.currentPosition = coords;
@@ -61,14 +61,7 @@ export class AppStore {
         });
       }
     } catch (error) {
-      Dialog.create({
-        title: 'Activación de GPS',
-        message: 'Para continuar active su conexión de GPS',
-        ok: 'Ya tengo GPS activo',
-        persistent: true,
-      }).onOk(async () => {
-        await this.getGpsPosition();
-      });
+      console.log({ error })
     }
   }
   /**
